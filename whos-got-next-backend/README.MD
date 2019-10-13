@@ -1,3 +1,6 @@
+# Public ip Address
+http://34.220.132.159/
+
 # Who's Got Next - Backend
 
 Backend project for the Who's Got Next app.
