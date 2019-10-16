@@ -1,0 +1,2 @@
+exports.mongoDBUser = 
+exports.mongoDBPass = 

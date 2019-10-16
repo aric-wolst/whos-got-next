@@ -8,6 +8,17 @@
 var express = require('express');
 var router = express.Router();
 
+// MongoDB mDBConnector
+const MongoDBConnector = require('../utils/mongoDBConnector')
+const mDBConnector = MongoDBConnector.sharedInstance()
+
+// Data Models.
+const mongoose = require('mongoose')
+const userSchema = require('../model/user.js')
+const User = mongoose.model('user', userSchema, 'user')
+
+router.use(express.json());
+
 router.use(function(req, res, next) {
     console.log("You are in the userManager module");
     next();
@@ -16,5 +27,16 @@ router.use(function(req, res, next) {
 router.get('/self', (req, res) => {
     res.status(200).send("Here is your profile!")
 });
+
+router.post('/', (req, res) => {
+	const user = new User(req.body);
+	mDBConnector.create(user).then(savedUser => {
+		// console.log("saved user: " + savedUser);
+        res.status(200).send(savedUser);
+	}).catch((err) => {
+        res.status(500).send(err);
+        // console.error(err);
+    });
+})
 
 module.exports = router;
