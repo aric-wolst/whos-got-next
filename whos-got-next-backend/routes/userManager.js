@@ -24,9 +24,16 @@ router.use(function(req, res, next) {
     next();
 });
 
-router.get('/self', (req, res) => {
-    res.status(200).send("Here is your profile!")
-});
+router.post('/', (req, res) => {
+	const user = new User(req.body);
+	mDBConnector.create(user).then(savedUser => {
+		// console.log("saved user: " + savedUser);
+        res.status(200).send(savedUser);
+	}).catch((err) => {
+        res.status(500).send(err);
+        // console.error(err);
+    });
+})
 
 router.get('/:userId', (req, res) => {
     User.findById(req.params.userId, (err,user) => {
@@ -38,15 +45,14 @@ router.get('/:userId', (req, res) => {
     })
 });
 
-router.post('/', (req, res) => {
-	const user = new User(req.body);
-	mDBConnector.create(user).then(savedUser => {
-		// console.log("saved user: " + savedUser);
-        res.status(200).send(savedUser);
-	}).catch((err) => {
-        res.status(500).send(err);
-        // console.error(err);
-    });
-})
+router.get('/self', (req, res) => {
+    User.findById("5da6fec2307334139262c2bd", (err,user) => {
+        if (err) {
+            res.status(400).send(err)
+            return
+        }
+        res.status(200).send(user)
+    })
+});
 
 module.exports = router;
