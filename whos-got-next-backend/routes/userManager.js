@@ -28,6 +28,16 @@ router.get('/self', (req, res) => {
     res.status(200).send("Here is your profile!")
 });
 
+router.get('/:userId', (req, res) => {
+    User.findById(req.params.userId, (err,user) => {
+        if (err) {
+            res.status(400).send(err)
+            return
+        }
+        res.status(200).send(user)
+    })
+});
+
 router.post('/', (req, res) => {
 	const user = new User(req.body);
 	mDBConnector.create(user).then(savedUser => {
