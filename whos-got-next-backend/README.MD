@@ -32,3 +32,5 @@ Read more here: https://stackoverflow.com/a/28039894.
 
 * node.js (https://nodejs.org/en/) - JavaScript Runtime
 * npm (https://www.npmjs.com) - Package manager.
+* express.js (https://expressjs.com) - Lightweight framework for setting up an HTTP REST server more easily.
+* mongoose (https://mongoosejs.com/) - Schema-based framework for mongoDB (provides validation, type-casting and more).

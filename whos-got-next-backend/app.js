@@ -1,12 +1,12 @@
 var express = require('express');
 
-//Module definitions
-var userManager = require('./routes/userManager.js');
+// Module definitions.
+const userManager = require('./routes/userManager.js');
 
-// Set up the express app
+// Set up the express app.
 const app = express();
 
-//Make use of modules
+// Make use of modules.
 app.use('/users', userManager);
 
 app.get('/', (req, res) => {
