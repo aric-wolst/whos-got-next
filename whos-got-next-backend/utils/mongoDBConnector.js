@@ -19,34 +19,11 @@ class MongoDBConnector {
 
     async connect() {
         return mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true});
-
-        // return new Promise(async (resolve,reject) => {
-        //     // Connect to MongoDB Atlas Cluster.
-        //     try {
-        //         await mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true});
-        //     } catch (e) {
-        //         reject('Mongo DB connection error:' + e);
-        //     }
-        //
-        //     this.db = mongoose.connection;
-        //     // this.db.on('error', );
-        //     this.db.once('open', resolve(this));
-        // });
     }
 
     // MongoDB Data Funtions.
     async create(obj) {
         return obj.save();
-    	// return new Promise((resolve,reject) => {
-        //     obj.save((err, savedObj) => {
-        // 		if (err) {
-        //             reject(err);
-        //             return console.error(err);
-        //         }
-        // 		console.log(obj._id + " saved to " + obj.collection.name + " collection.");
-        //         resolve(savedObj);
-        // 	})
-        // })
     }
 
     async createUser() {
