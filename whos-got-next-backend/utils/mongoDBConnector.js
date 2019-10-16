@@ -18,7 +18,7 @@ class MongoDBConnector {
     }
 
     async connect() {
-        return mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true});
+        return mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
     }
 
     // MongoDB Data Funtions.

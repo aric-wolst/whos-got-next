@@ -27,11 +27,9 @@ router.use(function(req, res, next) {
 router.post('/', (req, res) => {
 	const user = new User(req.body);
 	mDBConnector.create(user).then(savedUser => {
-		// console.log("saved user: " + savedUser);
         res.status(200).send(savedUser);
 	}).catch((err) => {
-        res.status(500).send(err);
-        // console.error(err);
+        res.status(400).send(err);
     });
 })
 
@@ -45,12 +43,24 @@ router.get('/:userId', (req, res) => {
     })
 });
 
+router.put('/:userId', (req, res) => {
+    User.findByIdAndUpdate(req.params.userId, req.body, , (err,user) => {
+        if (err) {
+            res.status(400).send(err)
+            return
+        }
+
+        res.status(200).send(user)
+    })
+});
+
 router.get('/self', (req, res) => {
     User.findById("5da6fec2307334139262c2bd", (err,user) => {
         if (err) {
             res.status(400).send(err)
             return
         }
+
         res.status(200).send(user)
     })
 });
