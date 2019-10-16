@@ -20,6 +20,12 @@ Update fields for user with `:userId` (e.g. description, first name and birthday
 **Success Responses** `200 OK` Returns updated User object.
 **Error Responses** `400 BAD REQUEST` No user matching the  `:userId` was found.
 
+### `DELETE /users/:userId`
+DELETE user with `:userId`
+**Parameters** None
+**Success Responses** `200 OK` User was deleted.
+**Error Responses** `400 BAD REQUEST` No user matching the  `:userId` was found.
+
 ### `GET /users/self`
 Get profile for current user 
 **Parameters** None

@@ -44,7 +44,7 @@ router.get('/:userId', (req, res) => {
 });
 
 router.put('/:userId', (req, res) => {
-    User.findByIdAndUpdate(req.params.userId, req.body, , (err,user) => {
+    User.findByIdAndUpdate(req.params.userId, req.body, {returnOriginal: false}, (err,user) => {
         if (err) {
             res.status(400).send(err)
             return
@@ -53,6 +53,17 @@ router.put('/:userId', (req, res) => {
         res.status(200).send(user)
     })
 });
+
+router.delete('/:userId', (req, res) => {
+    User.findByIdAndDelete(req.params.userId, req.body, (err,user) => {
+        if (err) {
+            res.status(400).send(err)
+            return
+        }
+
+        res.status(200).send('User deleted')
+    })
+})
 
 router.get('/self', (req, res) => {
     User.findById("5da6fec2307334139262c2bd", (err,user) => {
