@@ -25,16 +25,6 @@ class MongoDBConnector {
     async create(obj) {
         return obj.save();
     }
-
-    async createUser() {
-        const user = new User({ email: "sam@mail.com", firstName: "John", lastName: "Doe" });
-        return user.save((err, savedUser) => {
-    		if (err) return console.error(err);
-            console.log("user saved");
-    		// console.log(obj + " saved to " + obj.collection + " collection.");
-            // return savedObj;
-    	})
-    }
 }
 
 class MongoDBSingleton {
