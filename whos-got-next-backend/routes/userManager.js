@@ -34,6 +34,10 @@ router.post('/', (req, res) => {
 })
 
 router.get('/:userId', (req, res) => {
+    if (req.params.userId == 'self') {
+        getSelf(req,res);
+        return;
+    }
     User.findById(req.params.userId, (err,user) => {
         if (err) {
             res.status(400).send(err)
@@ -65,8 +69,8 @@ router.delete('/:userId', (req, res) => {
     })
 })
 
-router.get('/self', (req, res) => {
-    User.findById("5da6fec2307334139262c2bd", (err,user) => {
+function getSelf(req,res) {
+    User.findById("5da7c3716b4b7e331ed0f688", (err,user) => {
         if (err) {
             res.status(400).send(err)
             return
@@ -74,6 +78,6 @@ router.get('/self', (req, res) => {
 
         res.status(200).send(user)
     })
-});
+}
 
 module.exports = router;
