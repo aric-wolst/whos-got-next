@@ -26,23 +26,36 @@ router.use(function(req, res, next) {
 
 router.post('/', (req, res) => {
 	const user = new User(req.body);
-	mDBConnector.create(user).then(savedUser => {
-        res.status(200).send(savedUser);
-	}).catch((err) => {
-        res.status(400).send(err);
+    User.findOne({'authentication.type': user.authentication.type, 'authentication.value': user.authentication.value}, (err,existingUser) => {
+        if (err) { res.status(400).send(err); return; }
+        if (existingUser) {
+            res.status(401).send('User with auth: ' + existingUser.authentication + ' is already in the database');
+        } else {
+            // Todo: Authenticate here.
+            mDBConnector.create(user).then(savedUser => {
+                res.status(200).send(savedUser);
+        	}).catch((err) => {
+                res.status(400).send(err);
+            });
+        }
     });
 })
 
 router.get('/:userId', (req, res) => {
-    if (req.params.userId == 'self') {
+    const userId = req.params.userId
+    if (userId == 'self') {
         getSelf(req,res);
         return;
     }
-    User.findById(req.params.userId, (err,user) => {
-        if (err) {
-            res.status(400).send(err)
-            return
-        }
+
+    if (req.params.userId == 'exists') {
+        getExists(req,res);
+        return;
+    }
+
+    User.findById(userId, (err,user) => {
+        if (err) { res.status(400).send(err); return; }
+        if (!user) { res.status(401).send('No user found with id: ' + userId)}
         res.status(200).send(user)
     })
 });
@@ -78,6 +91,14 @@ function getSelf(req,res) {
 
         res.status(200).send(user)
     })
+}
+
+function getExists(req,res) {
+    User.findOne({'authentication.type': req.body.authentication.type, 'authentication.value': req.body.authentication.value}, (err, user) => {
+        if (err) { res.status(400).send(err); return; }
+        if (!user) {console.log('no user exists')}
+        res.status(200).send(user);
+    });
 }
 
 module.exports = router;
