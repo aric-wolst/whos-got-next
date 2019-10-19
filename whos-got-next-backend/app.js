@@ -3,6 +3,7 @@ const MongoDBConnector = require('./utils/mongoDBConnector')
 
 // Module definitions.
 const userManager = require('./routes/userManager.js');
+const eventManager = require('./routes/eventManager.js');
 
 const mDBConnector = MongoDBConnector.sharedInstance()
 mDBConnector.connect().then(startApp).catch((err) => {console.error(err);})
@@ -10,10 +11,11 @@ mDBConnector.connect().then(startApp).catch((err) => {console.error(err);})
 function startApp() {
 	// Set up the express app.
 	const app = express();
-	
+
 	// Make use of modules.
 	app.use('/users', userManager);
-
+	app.use('/events', eventManager);
+	
 	app.get('/', (req, res) => {
 		res.status(200).send({
 		    success: 'true',

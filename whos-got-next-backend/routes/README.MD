@@ -1,36 +1,117 @@
 # API Documentation
 
-## Open Endpoints
-
-### `POST /users`
+## User Endpoints
+`POST /users`
 Creates a new user.
-**Parameters** User (see datamodel)
+**Parameters** User (see datamodel).
+**Example**
+```bash
+curl -X POST http://34.220.132.159/users/ \
+-H 'content-type:application/json' \
+-d '{"email": "john@mail.com", "firstName": "Maria", "lastName": "Raboy", "birthday": "1993-10-07", "description": "Hello world!", "sports": [{"sport": "basketball", "level": 1}, {"sport": "volleball", "level": 3}]}'
+```
 **Success Responses** `200 OK` Returns created User object.
 **Error Responses** `400 BAD REQUEST` User object isn't valid.
 
-### `GET /users/:userId`
+
+`GET /users/:userId`
 Get profile for user with `:userId`.
-**Parameters** None
+**Parameters** userId.
 **Success Responses** `200 OK` Returns User object.
 **Error Responses** `400 BAD REQUEST` No user is found.
 
-### `PUT /users/:userId`
+
+`PUT /users/:userId`
 Update fields for user with `:userId` (e.g. description, first name and birthday)
-**Parameters** JSON with user fields to update
+**Parameters** JSON with user fields to update.
 **Success Responses** `200 OK` Returns updated User object.
 **Error Responses** `400 BAD REQUEST` No user matching the  `:userId` was found.
 
-### `DELETE /users/:userId`
+
+`DELETE /users/:userId`
 DELETE user with `:userId`
-**Parameters** None
+**Parameters** userId.
 **Success Responses** `200 OK` User was deleted.
 **Error Responses** `400 BAD REQUEST` No user matching the  `:userId` was found.
 
-### `GET /users/self`
+
+`GET /users/self`
 Get profile for current user 
-**Parameters** None
+**Parameters** userId.
 **Success Responses** `200 OK` Returns User object.
 **Error Responses** `400 BAD REQUEST` Bad Request.
 
 
-## Authenticated Endpoints
+## Event Endpoints
+`POST /events`
+Creates a new event.
+**Parameters** Event (see datamodel)
+**Example**
+```bash
+curl -X POST http://34.220.132.159/events/ \
+-H 'content-type:application/json' \
+-d '{"name": "Pickup Basketball", "organizers": ["5da6fec2307334139262c2bd"], "players": ["5da6fec2307334139262c2bd"], "description": "Join us for some basketball tomorrow...", "location": {"type": "Point", "coordinates": [-123.252343, 49.262452]}, "date": "2019-11-30T12:00:00", "pendingPlayerRequests": [], "sport": "basketball"}'
+```
+**Success Responses** `200 OK` Returns created Event object.
+**Error Responses** `400 BAD REQUEST` Event object isn't valid.
+
+
+`GET /events/:eventId`
+Get info for event with `:eventId`.
+**Parameters** eventId.
+**Example**
+```bash
+curl -X GET http://34.220.132.159/events/5dab3e97f5bf8f09c5e4e163
+```
+**Success Responses** `200 OK` Returns Event object.
+**Error Responses** `400 BAD REQUEST` No event is found.
+
+
+`PUT /events/:eventId`
+Update fields for event with `:eventId` (e.g. name and sport)
+**Parameters** JSON with event fields to update
+**Example**
+```bash
+curl -X PUT http://34.220.132.159/events/5dab3e97f5bf8f09c5e4e163 \
+-H 'content-type:application/json' \
+-d '{"name": "Pickup Volleyball", "sport": "volleyball"}'
+```
+**Success Responses** `200 OK` Returns updated Event object.
+**Error Responses** `400 BAD REQUEST` No event matching the  `:eventId` was found.
+
+
+`DELETE /events/:eventId`
+DELETE event with `:eventId`.
+**Parameters** None.
+**Example**
+```bash
+curl -X DELETE http://34.220.132.159/events/5dab40bcf5bf8f09c5e4e168
+```
+**Success Responses** `200 OK` Event was deleted.
+**Error Responses** `400 BAD REQUEST` No event matching the  `:eventId` was found.
+
+
+`GET /events/nearby`
+Get nearby events.
+**Parameters** location.
+```bash
+curl -X GET http://34.220.132.159/events/nearby \
+-H 'content-type:application/json' \
+-d '{"location": {"type": "Point", "coordinates": [-123.252343, 49.262452]}}'
+```
+**Success Responses** `200 OK` Returns list of nearby events.
+**Error Responses** `400 BAD REQUEST` Bad Request.
+
+`PUT /events/:eventID/request-to-join`
+Request for user to join event with `:eventId`.
+**Parameters** user (userId).
+**Example**
+```bash
+curl -X PUT http://34.220.132.159/events/5dab3e97f5bf8f09c5e4e163/request-to-join \
+-H 'content-type:application/json' \
+-d '{"user": "5da6e183e89611f4370b1298"}'
+```
+**Success Responses** `200 OK` Returns list of nearby events.
+**Error Responses**
+`400 BAD REQUEST` Bad Request.
+`401 BAD REQUEST` User is already added to event.
