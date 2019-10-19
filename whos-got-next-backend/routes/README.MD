@@ -8,17 +8,30 @@ Creates a new user.
 ```bash
 curl -X POST http://34.220.132.159/users/ \
 -H 'content-type:application/json' \
--d '{"email": "john@mail.com", "firstName": "Maria", "lastName": "Raboy", "birthday": "1993-10-07", "description": "Hello world!", "sports": [{"sport": "basketball", "level": 1}, {"sport": "volleball", "level": 3}]}'
+-d '{"authentication": {"type": "email", "value": "john@mail.com"}, "firstName": "Maria", "lastName": "Raboy", "birthday": "1993-10-07", "description": "Hello world!", "sports": [{"sport": "basketball", "level": 1}, {"sport": "volleball", "level": 3}]}'
 ```
 **Success Responses** `200 OK` Returns created User object.
 **Error Responses** `400 BAD REQUEST` User object isn't valid.
 
+`GET /users/exists`
+Get user profile for user with `:userId` if it exists.
+**Parameters** Authentication object (see authenticationSchema).
+**Example**
+```bash
+curl -X GET http://34.220.132.159/users/exists \
+-H 'content-type:application/json' \
+-d '{auth: {"type": "FacebookId", "value": "xxxxxxxxxxxxxxxxx"}}'
+```
+**Success Responses** `200 OK` Returns User object if it exists. Else it will return a null response. 
+**Error Responses** `400 BAD REQUEST` Bad Request.
 
 `GET /users/:userId`
 Get profile for user with `:userId`.
 **Parameters** userId.
 **Success Responses** `200 OK` Returns User object.
-**Error Responses** `400 BAD REQUEST` No user is found.
+**Error Responses**
+`400 BAD REQUEST` Bad Request.
+`401 BAD REQUEST` No user is found.
 
 
 `PUT /users/:userId`
