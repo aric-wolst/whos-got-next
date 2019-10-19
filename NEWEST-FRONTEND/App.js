@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AsyncStorage, ActivityIndicator, StatusBar, StyleSheet, Text, View, Button, TouchableOpacity, Alert } from 'react-native';
+import { AsyncStorage, ActivityIndicator, StatusBar, StyleSheet, Text, View, Button, TouchableHighlight, Alert, Image, TouchableOpacity } from 'react-native';
 import Profile from './screens/Profile';
 import Settings from './screens/Settings';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
@@ -70,10 +70,13 @@ class SignInScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Welcome to Who's Got Next!</Text>
+        <Text style = {styles.whosgotnext}>Who's Got Next?</Text>
+
+        <Image style = {styles.logo} source={require('./img/logo.png')} />
+
         <TouchableOpacity onPress = {() => this.logIn()}>
-          <View style = {{width: '50%', borderRadius: 4, padding: 24, backgroundColor: '#3b5998'}}>
-            <Text style = {{color: 'white'}}>Login with Facebook</Text>
+          <View style = {{width: '70%', borderRadius: 10, padding: 24, backgroundColor: '#ff8c00', borderColor: "#ff8c00", borderWidth: 5}}>
+            <Text style = {{color: 'black', fontWeight: 'bold', fontSize: 20}}>Login with Facebook</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -130,6 +133,16 @@ export default createAppContainer(
   )
 );
 
-
-
-
+const styles = StyleSheet.create({
+  logo: {
+    width: 375,
+    height: 150,
+    resizeMode: "stretch",
+    marginBottom: 100,
+   },
+   whosgotnext: {
+    fontWeight: "bold",
+    fontSize: 45,
+    color: 'black',
+   },
+});
