@@ -7,7 +7,8 @@
 
 var express = require('express');
 var router = express.Router();
-var authenticateWithFB = require('../utils/auth.js')
+var authenticateWithFB = require('../utils/auth.js');
+var axios = require('axios');
 
 // MongoDB mDBConnector
 const MongoDBConnector = require('../utils/mongoDBConnector')
@@ -27,15 +28,19 @@ router.use(function(req, res, next) {
 
 router.post('/', (req, res) => {
 	const user = new User(req.body);
-	console.log("creating new user: " + user)
     User.findOne({'authentication.type': user.authentication.type, 'authentication.identifier': user.authentication.identifier}, (err,existingUser) => {
         if (err) { res.status(400).send(err); console.log("errror"); return; }
 
         if (existingUser) {
-            console.log("existing user");
             res.status(401).send('User with auth: ' + existingUser.authentication + ' is already in the database');
+            //Get user name
+            const user_id = user.authentication.identifier
+            const fb_url = "https://graph.facebook.com/" + user_id + "?fields=name&access_token=" + user.authentication.token
+            axios.get(fb_url).then(response => {
+                const name = response.data.name
+                console.log("Successfully authenticated " + name)
+            }).catch(e=>console.error(e));
         } else {
-            console.log("hello1");
             const token = user.authentication.token
             if (token) {
                 authenticateWithFB(token).then(() => {
@@ -43,6 +48,14 @@ router.post('/', (req, res) => {
                         res.status(200).send(savedUser);
                     }).catch((err) => {
                         res.status(400).send(err);
+                    })
+
+                    //Get user name
+                    const user_id = user.authentication.identifier
+                    const fb_url = "https://graph.facebook.com/" + user_id + "?fields=name&access_token=" + user.authentication.token
+                    axios.get(fb_url).then(response => {
+                        const name = response.data.name
+                        console.log("Successfully authenticated " + name)
                     })
                 }).catch(err => {
                     res.status(402).send(err)
