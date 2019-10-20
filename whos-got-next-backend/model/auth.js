@@ -6,9 +6,13 @@ const authSchema = new mongoose.Schema({
     enum: ['facebookId', 'email'],
     required: true
   },
-  value: {
+  identifier: {
     type: String,
     required: true
+  },
+  token: {
+    type:String,
+    required: false
   }
 });
 

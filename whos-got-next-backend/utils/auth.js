@@ -8,7 +8,7 @@ const appSecret =localconfig.fbAppSecret
 
 //Get access_token to pass to pass to authentication request
 const accessTokenUrl = 'https://graph.facebook.com/oauth/access_token?client_id='
-                        + appid + '&client_secret=' + appsecret
+                        + appID + '&client_secret=' + appSecret
                         + '&grant_type=client_credentials'
 
 async function authenticateWithFB(inputToken) {
@@ -26,3 +26,4 @@ async function authenticateWithFB(inputToken) {
     })
 }
 
+module.exports = authenticateWithFB
