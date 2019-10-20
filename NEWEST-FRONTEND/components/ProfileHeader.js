@@ -11,8 +11,8 @@ export default class ProfileHeader extends Component {
                     </View>
 
                     <View style = {styles.personalInfo}>
-                        <Text style = {styles.name}>Rune Højlund</Text>
-                        <Text style = {styles.age}>26 years old</Text>
+                        <Text style = {styles.name}>{this.props.firstName}</Text>
+                        <Text style = {styles.age}>{this.props.birthday}</Text>
                         <Text style = {styles.genderAndHeight}>6'2 Male</Text>
                     </View>
                 </View>
@@ -56,7 +56,8 @@ const styles = StyleSheet.create({
         marginTop: 20,
         fontSize: 28,
         fontWeight: 'bold',
-        color: 'black'
+        color: 'black',
+        textAlign: 'right'
     },
     genderAndHeight: {
         fontSize: 14,

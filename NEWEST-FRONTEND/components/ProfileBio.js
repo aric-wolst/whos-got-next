@@ -6,10 +6,7 @@ export default class ProfileBio extends Component {
         return(
             <View style = {styles.header}>
                 <Text style = {styles.textHeader}>BIO</Text>
-                <Text style = {styles.textBox}>Hey! I'm from the Netherlands, and I'm looking to
-                join a volleyball team for the UBC Intramurals! I love playing the guitar in my spare
-                time. Maybe we can have jam sessions after practices!
-                </Text>
+                <Text style = {styles.textBox}>{this.props.description}</Text>
             </View>
         );
     }
