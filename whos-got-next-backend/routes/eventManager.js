@@ -85,56 +85,88 @@ function getNearbyEvents(req,res) {
     });
 }
 
-router.put('/:eventId/request-to-join', (req,res) => {
+router.put('/:eventId/requests/:userId/request-to-join', (req,res) => {
     Event.findById(req.params.eventId, (err,event) => {
         if (err) { res.status(400).send(err); return; }
-        const user = req.body.user;
-        if (event.players.includes(user) || event.organizers.includes(user) || event.pendingPlayerRequests.includes(user)) {
-            res.status(401).send('Event already has added user.');
-            return;
-        }
-        event.pendingPlayerRequests.push(user);
-        event.save((err,events) => {
-            if (err) { res.status(400).send(err); return; }
-            res.status(200).send(event);
-        });
-    })
-});
+        const userId = req.params.userId;
 
-router.put('/:eventId/requests/:userId/accept', (req,res) => {
-    const userId = req.params.userId;
-    Event.findById(req.params.eventId, (err,event) => {
-        if (err) { res.status(400).send(err); return; }
         User.findById(userId, (err,user) => {
             if (err) { res.status(400).send(err); return; }
             if (!user) {
-                res.status(402).send('No user matching id: ' + userId);
+                res.status(401).send('No user matching id: ' + userId);
                 return;
             }
             if (!event) {
-                res.status(403).send('No event matching id: ' + eventId);
+                res.status(402).send('No event matching id: ' + eventId);
                 return;
             }
 
-            if (event.players.includes(userId) || event.organizers.includes(userId)) {
-                res.status(401).send('Event already has accepted request from user.');
+            if (event.players.includes(userId) || event.organizers.includes(userId) || event.pendingPlayerRequests.includes(userId)) {
+                res.status(403).send('Event already has added user.');
                 return;
             }
-
-            const i = event.pendingPlayerRequests.indexOf(userId);
-            if (i > -1) {
-                event.pendingPlayerRequests.splice(i, 1)
-            } else {
-                console.error('No user matching user id ' + userId + 'in the pendingRequests')
-            }
-            event.players.push(userId);
-            
+            event.pendingPlayerRequests.push(userId);
             event.save((err,events) => {
                 if (err) { res.status(400).send(err); return; }
                 res.status(200).send(event);
             });
         });
+
+    })
+});
+
+router.put('/:eventId/requests/:userId/accept', (req,res) => {
+    const userId = req.params.userId;
+
+    Event.findById(req.params.eventId, (err,event) => {
+        if (err) { res.status(400).send(err); return; }
+
+        if (!event) { res.status(402).send('No event matching id: ' + eventId); return; }
+
+        if (event.players.includes(userId) || event.organizers.includes(userId)) {
+            res.status(403).send('Event already has accepted request from user.');
+            return;
+        }
+
+        const i = event.pendingPlayerRequests.indexOf(userId);
+        if (i > -1) {
+            event.pendingPlayerRequests.splice(i, 1)
+        } else {
+            res.status(401).send('No user matching user id ' + userId + 'in the pendingRequests')
+            return;
+        }
+
+        event.players.push(userId);
+
+        event.save((err,events) => {
+            if (err) { res.status(400).send(err); return; }
+            res.status(200).send(event);
+        });
     });
 });
+
+router.put('/:eventId/requests/:userId/decline', (req,res) => {
+    const userId = req.params.userId;
+
+    Event.findById(req.params.eventId, (err,event) => {
+        if (err) { res.status(400).send(err); return; }
+
+        if (!event) { res.status(402).send('No event matching id: ' + eventId); return; }
+
+        const i = event.pendingPlayerRequests.indexOf(userId);
+        if (i > -1) {
+            event.pendingPlayerRequests.splice(i, 1)
+        } else {
+            res.status(401).send('No user matching user id ' + userId + 'in the pendingRequests')
+            return;
+        }
+
+        event.save((err,events) => {
+            if (err) { res.status(400).send(err); return; }
+            res.status(200).send(event);
+        });
+    });
+});
+
 
 module.exports = router;
