@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     FindTeams: {
-        marginTop: 20,
+        marginTop: 30,
         marginBottom: 20,
         fontSize: 32,
         fontWeight: 'bold',

@@ -1,9 +1,11 @@
 const mongoose = require('mongoose')
 
+const Auth = require('../model/auth.js')
+
 const userSchema = new mongoose.Schema({
-    email: {
-        type: String,
-        required: [true, 'Email is required']
+    authentication: {
+        type: Auth,
+        required: [true, 'Email or Facebook Id is required for authentication']
     },
     firstName: {
         type: String,
@@ -31,6 +33,10 @@ const userSchema = new mongoose.Schema({
     },
     sports: {
         type: Array,
+        required: [false]
+    },
+    expoPushToken: {
+        type: String,
         required: [false]
     }
 })

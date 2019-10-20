@@ -3,49 +3,72 @@
 ## User Endpoints
 `POST /users`
 Creates a new user.
-**Parameters** User (see datamodel).
+**Body** User (see datamodel).
 **Example**
 ```bash
 curl -X POST http://34.220.132.159/users/ \
 -H 'content-type:application/json' \
--d '{"email": "john@mail.com", "firstName": "Maria", "lastName": "Raboy", "birthday": "1993-10-07", "description": "Hello world!", "sports": [{"sport": "basketball", "level": 1}, {"sport": "volleball", "level": 3}]}'
+-d '{"authentication": {"type": "facebookId", "identifier": "xxxxxxxxxxxxxxxxx", "token": "xxxxxxxxxxxxxxxxx"}, "firstName": "Maria", "lastName": "Raboy", "birthday": "1993-10-07", "description": "Hello world!", "sports": [{"sport": "basketball", "level": 1}, {"sport": "volleball", "level": 3}]}'
 ```
 **Success Responses** `200 OK` Returns created User object.
-**Error Responses** `400 BAD REQUEST` User object isn't valid.
+**Error Responses**
+`400 BAD REQUEST` User object isn't valid.
+`401 BAD REQUEST` User object already exists.
+`402 BAD REQUEST` Facebook Authentication Failed.
 
+`GET /users/exists`
+Get user profile for user with matching authentication query parameters if it exists.
+**Body** None.
+**Parameters**
+`type`: enum, which is either *facebookId* or *email* (depending on which method we use to authenticate the user).
+`identifier`: string with actual facebookId or email.
+**Example**
+```bash
+curl -X GET 'http://34.220.132.159/users/exists?type=facebookId&identifier=xxxxxxxxxxxxxxxxx'
+```
+**Success Responses** `200 OK` Returns User object if it exists. Else it will return a null response. 
+**Error Responses** `400 BAD REQUEST` Bad Request.
 
 `GET /users/:userId`
 Get profile for user with `:userId`.
-**Parameters** userId.
+**Body** userId.
 **Success Responses** `200 OK` Returns User object.
-**Error Responses** `400 BAD REQUEST` No user is found.
+**Error Responses**
+`400 BAD REQUEST` Bad Request.
+`401 BAD REQUEST` No user is found.
 
 
 `PUT /users/:userId`
 Update fields for user with `:userId` (e.g. description, first name and birthday)
-**Parameters** JSON with user fields to update.
+**Body** JSON with user fields to update.
 **Success Responses** `200 OK` Returns updated User object.
 **Error Responses** `400 BAD REQUEST` No user matching the  `:userId` was found.
 
 
 `DELETE /users/:userId`
 DELETE user with `:userId`
-**Parameters** userId.
+**Body** userId.
 **Success Responses** `200 OK` User was deleted.
 **Error Responses** `400 BAD REQUEST` No user matching the  `:userId` was found.
 
 
 `GET /users/self`
 Get profile for current user 
-**Parameters** userId.
+**Body** userId.
 **Success Responses** `200 OK` Returns User object.
 **Error Responses** `400 BAD REQUEST` Bad Request.
 
 
+`PUT /:userId/saveExpoPushToken/:expoPushToken`
+Set expo push token for user with `:userId`.
+**Body** None.
+**Success Responses** `200 OK` Returns updated user object.
+**Error Responses** `400 BAD REQUEST` Bad Request.
+
 ## Event Endpoints
 `POST /events`
 Creates a new event.
-**Parameters** Event (see datamodel)
+**Body** Event (see datamodel)
 **Example**
 ```bash
 curl -X POST http://34.220.132.159/events/ \
@@ -58,7 +81,7 @@ curl -X POST http://34.220.132.159/events/ \
 
 `GET /events/:eventId`
 Get info for event with `:eventId`.
-**Parameters** eventId.
+**Body** eventId.
 **Example**
 ```bash
 curl -X GET http://34.220.132.159/events/5dab3e97f5bf8f09c5e4e163
@@ -69,7 +92,7 @@ curl -X GET http://34.220.132.159/events/5dab3e97f5bf8f09c5e4e163
 
 `PUT /events/:eventId`
 Update fields for event with `:eventId` (e.g. name and sport)
-**Parameters** JSON with event fields to update
+**Body** JSON with event fields to update
 **Example**
 ```bash
 curl -X PUT http://34.220.132.159/events/5dab3e97f5bf8f09c5e4e163 \
@@ -82,7 +105,7 @@ curl -X PUT http://34.220.132.159/events/5dab3e97f5bf8f09c5e4e163 \
 
 `DELETE /events/:eventId`
 DELETE event with `:eventId`.
-**Parameters** None.
+**Body** None.
 **Example**
 ```bash
 curl -X DELETE http://34.220.132.159/events/5dab40bcf5bf8f09c5e4e168
@@ -93,7 +116,7 @@ curl -X DELETE http://34.220.132.159/events/5dab40bcf5bf8f09c5e4e168
 
 `GET /events/nearby`
 Get nearby events.
-**Parameters** location.
+**Body** location.
 ```bash
 curl -X GET http://34.220.132.159/events/nearby \
 -H 'content-type:application/json' \
@@ -102,16 +125,43 @@ curl -X GET http://34.220.132.159/events/nearby \
 **Success Responses** `200 OK` Returns list of nearby events.
 **Error Responses** `400 BAD REQUEST` Bad Request.
 
-`PUT /events/:eventID/request-to-join`
-Request for user to join event with `:eventId`.
-**Parameters** user (userId).
+`PUT /events/:eventID/requests/:userId/request-to-join`
+Request for user with `:userId` to join event with `:eventId`.
+**Body** None.
 **Example**
 ```bash
-curl -X PUT http://34.220.132.159/events/5dab3e97f5bf8f09c5e4e163/request-to-join \
--H 'content-type:application/json' \
--d '{"user": "5da6e183e89611f4370b1298"}'
+curl -X PUT http://34.220.132.159/events/5dab3e97f5bf8f09c5e4e163/requests/5da6e183e89611f4370b1298/request-to-join
 ```
-**Success Responses** `200 OK` Returns list of nearby events.
+**Success Responses** `200 OK` Returns updated Event object.
 **Error Responses**
 `400 BAD REQUEST` Bad Request.
-`401 BAD REQUEST` User is already added to event.
+`401 BAD REQUEST` No user is found with `:userId`.
+`402 BAD REQUEST` No event is found with `:eventId`.
+`403 BAD REQUEST` User request is already added to event.
+
+`PUT /events/:eventID/requests/:userId/accept`
+Accept request from user with `:userId` to join event with `:eventId`.
+**Body** None.
+**Example**
+```bash
+curl -X PUT http://34.220.132.159/events/5dab3e97f5bf8f09c5e4e163/requests/5da6e183e89611f4370b1298/accept
+```
+**Success Responses** `200 OK` Returns updated Event object.
+**Error Responses**
+`400 BAD REQUEST` Bad Request.
+`401 BAD REQUEST` No user is found with `:userId`.
+`402 BAD REQUEST` No event is found with `:eventId`.
+`403 BAD REQUEST` Event already has accepted request from user.
+
+`PUT /events/:eventID/requests/:userId/decline`
+Decline request from user with `:userId` to join event with `:eventId`.
+**Body** None.
+**Example**
+```bash
+curl -X PUT http://34.220.132.159/events/5dab3e97f5bf8f09c5e4e163/requests/5da6e183e89611f4370b1298/decline
+```
+**Success Responses** `200 OK` Returns updated Event object.
+**Error Responses**
+`400 BAD REQUEST` Bad Request.
+`401 BAD REQUEST` No user is found with `:userId`.
+`402 BAD REQUEST` No event is found with `:eventId`.
