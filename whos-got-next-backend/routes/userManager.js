@@ -7,6 +7,8 @@
 
 var express = require('express');
 var router = express.Router();
+var authenticateWithFB = require('../utils/auth.js');
+var axios = require('axios');
 
 // MongoDB mDBConnector
 const MongoDBConnector = require('../utils/mongoDBConnector')
@@ -26,23 +28,51 @@ router.use(function(req, res, next) {
 
 router.post('/', (req, res) => {
 	const user = new User(req.body);
-	mDBConnector.create(user).then(savedUser => {
-        res.status(200).send(savedUser);
-	}).catch((err) => {
-        res.status(400).send(err);
+    User.findOne({'authentication.type': user.authentication.type, 'authentication.identifier': user.authentication.identifier}, (err,existingUser) => {
+        if (err) { res.status(400).send(err); console.log("errror"); return; }
+
+        if (existingUser) {
+            res.status(401).send('User with auth: ' + existingUser.authentication + ' is already in the database');
+        } else {
+            const token = user.authentication.token
+            if (token) {
+                authenticateWithFB(token).then(() => {
+                    mDBConnector.create(user).then(savedUser => {
+                        res.status(200).send(savedUser);
+                    }).catch((err) => {
+                        res.status(400).send(err);
+                    })
+                    
+                    //Get user name
+                    const user_id = user.authentication.identifier
+                    const fb_url = "https://graph.facebook.com/" + user_id + "?fields=name&access_token=" + user.authentication.token
+                    axios.get(fb_url).then(response => {
+                        const name = response.data.name
+                        console.log("Successfully authenticated " + name)
+                    })
+                }).catch(err => {
+                    res.status(402).send(err)
+                })
+            }
+        }
     });
 })
 
 router.get('/:userId', (req, res) => {
-    if (req.params.userId == 'self') {
+    const userId = req.params.userId
+    if (userId == 'self') {
         getSelf(req,res);
         return;
     }
-    User.findById(req.params.userId, (err,user) => {
-        if (err) {
-            res.status(400).send(err)
-            return
-        }
+
+    if (req.params.userId == 'exists') {
+        getExists(req,res);
+        return;
+    }
+
+    User.findById(userId, (err,user) => {
+        if (err) { res.status(400).send(err); return; }
+        if (!user) { res.status(401).send('No user found with id: ' + userId)}
         res.status(200).send(user)
     })
 });
@@ -78,6 +108,14 @@ function getSelf(req,res) {
 
         res.status(200).send(user)
     })
+}
+
+function getExists(req,res) {
+    User.findOne({'authentication.type': req.body.authentication.type, 'authentication.identifier': req.body.authentication.identifier}, (err, user) => {
+        if (err) { res.status(400).send(err); return; }
+        if (!user) {console.log('no user exists')}
+        res.status(200).send(user);
+    });
 }
 
 module.exports = router;
