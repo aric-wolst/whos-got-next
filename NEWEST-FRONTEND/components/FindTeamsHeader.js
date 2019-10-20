@@ -5,7 +5,7 @@ export default class FindTeamsHeader extends Component {
     render() {
         return(
             <View style = {styles.FindTeamsHeaderBackground}>
-                <Text style = {styles.FindTeams}>Find Teams</Text>
+                <Text style = {styles.FindTeams}>Find Live Events</Text>
             </View>
         );
     }

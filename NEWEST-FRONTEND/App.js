@@ -8,6 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { createStackNavigator } from 'react-navigation-stack';
 import Teams from './screens/Teams';
 import * as Facebook from 'expo-facebook';
+import TeamProfile from './screens/TeamProfile';
 
 
 class AuthLoadingScreen extends React.Component {
@@ -84,10 +85,15 @@ class SignInScreen extends React.Component {
   }
 }
 
+const TeamsStack = createStackNavigator({
+  FindTeams: Teams,
+  TeamProfile: TeamProfile,
+});
+
 const AppTabs = createBottomTabNavigator(
   {
   Profile: Profile,
-  Teams: Teams,
+  Events: TeamsStack,
   Settings: Settings,
   },
   {
@@ -100,7 +106,7 @@ const AppTabs = createBottomTabNavigator(
           iconName = `ios-information-circle${focused ? '' : '-outline'}`;
         } else if (routeName === 'Profile') {
           iconName = `ios-contact`;
-        } else if (routeName == 'Teams') {
+        } else if (routeName == 'Events') {
           iconName = `ios-people`;
         } else if (routeName == 'Settings') {
           iconName = 'ios-settings';
@@ -119,6 +125,7 @@ const AppTabs = createBottomTabNavigator(
 const AuthStack = createStackNavigator({
   SignIn: SignInScreen,
 })
+
 
 export default createAppContainer(
   createSwitchNavigator(
@@ -139,10 +146,10 @@ const styles = StyleSheet.create({
     height: 150,
     resizeMode: "stretch",
     marginBottom: 100,
-   },
+  },
    whosgotnext: {
     fontWeight: "bold",
     fontSize: 45,
     color: 'black',
-   },
+  },
 });
