@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { AsyncStorage, ActivityIndicator, StatusBar, StyleSheet, Text, View, Button, TouchableHighlight, Alert, Image, TouchableOpacity } from 'react-native';
+import { AsyncStorage, ActivityIndicator, StatusBar, StyleSheet, Text, View, Button, TouchableOpacity, Alert, Image } from 'react-native';
+import MyProfile from './screens/MyProfile';
 import Profile from './screens/Profile';
 import Settings from './screens/Settings';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
@@ -8,7 +9,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { createStackNavigator } from 'react-navigation-stack';
 import Teams from './screens/Teams';
 import * as Facebook from 'expo-facebook';
-
+import TeamProfile from './screens/TeamProfile';
+import registerForPushNotificationsAsync from "./utils/PushNotificationsManager";
+import config from './config';
+import backendRequest from "./utils/RequestManager";
 
 class AuthLoadingScreen extends React.Component {
   componentDidMount() {
@@ -16,9 +20,8 @@ class AuthLoadingScreen extends React.Component {
   }
 
   _bootstrapAsync = async () => {
-    const userToken = await AsyncStorage.getItem('userToken');
-
-    this.props.navigation.navigate(userToken ? 'App' : 'Auth');
+    const userId = await AsyncStorage.getItem(config.userIdKey);
+    this.props.navigation.navigate(userId ? 'App' : 'Auth');
   };
 
   render() {
@@ -50,13 +53,39 @@ class SignInScreen extends React.Component {
       if (type === 'success') {
         // Get the user's name using Facebook's Graph API
         await AsyncStorage.setItem('userToken', token);
-        const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
+        const response = await fetch(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,birthday`);
         const json = await response.json();
-        console.log(token);
         console.log(json);
-        console.log('here2');
-        Alert.alert('Logged in!', `Hi ${json.name}!`);
-        this.props.navigation.navigate('App');
+
+        backendRequest('/users/exists', {type: 'facebookId', identifier: json.id}, 'GET').then(user => {
+            if (user) {
+              console.log('user: ' + user);
+              AsyncStorage.setItem(config.userIdKey, user._id).then(() => {
+                Alert.alert('Logged in!', `Hi ${json.name}!`);
+                this.presentApp();
+              });
+            } else {
+              backendRequest('/users',{},'POST',{
+                "authentication":
+                  {
+                    "type": "facebookId",
+                    "identifier": json.id,
+                    "token": token
+                  },
+                "firstName": json.name,
+                "lastName": json.name,
+                "birthday": json.birthday,
+                "description": "Go to Settings to change your bio.",
+                "sports": []
+              }).then( user => {
+                AsyncStorage.setItem(config.userIdKey, user._id).then(() => {
+                  Alert.alert('Logged in!', `Hi ${json.name}!`);
+                  this.presentApp();
+                });
+              })
+            }
+          }
+        )
       } else {
         // type === 'cancel'
         Alert.alert('Did not work', `Sorry`);
@@ -66,7 +95,12 @@ class SignInScreen extends React.Component {
     }
   }
 
-
+  presentApp() {
+      this.props.navigation.navigate('App');
+      AsyncStorage.getItem(config.userIdKey).then(userId => {
+        registerForPushNotificationsAsync(userId)
+      });
+  }
   render() {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -84,10 +118,15 @@ class SignInScreen extends React.Component {
   }
 }
 
+const TeamsStack = createStackNavigator({
+  FindTeams: Teams,
+  TeamProfile: TeamProfile,
+});
+
 const AppTabs = createBottomTabNavigator(
   {
-  Profile: Profile,
-  Teams: Teams,
+  MyProfile: MyProfile,
+  Events: TeamsStack,
   Settings: Settings,
   },
   {
@@ -98,9 +137,9 @@ const AppTabs = createBottomTabNavigator(
         let iconName;
         if(routeName === 'Home') {
           iconName = `ios-information-circle${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Profile') {
+        } else if (routeName === 'MyProfile') {
           iconName = `ios-contact`;
-        } else if (routeName == 'Teams') {
+        } else if (routeName == 'Events') {
           iconName = `ios-people`;
         } else if (routeName == 'Settings') {
           iconName = 'ios-settings';
@@ -119,6 +158,7 @@ const AppTabs = createBottomTabNavigator(
 const AuthStack = createStackNavigator({
   SignIn: SignInScreen,
 })
+
 
 export default createAppContainer(
   createSwitchNavigator(
@@ -139,10 +179,10 @@ const styles = StyleSheet.create({
     height: 150,
     resizeMode: "stretch",
     marginBottom: 100,
-   },
+  },
    whosgotnext: {
     fontWeight: "bold",
     fontSize: 45,
     color: 'black',
-   },
+  },
 });

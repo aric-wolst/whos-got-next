@@ -5,71 +5,49 @@ import ProfileBio from '../components/ProfileBio';
 import Legend from '../components/Legend';
 import Data from '../components/Data';
 import Constants from 'expo-constants';
+import SportCell from '../components/SportCell'
+import config from '../config';
+import backendRequest from "../utils/RequestManager";
 
 class Profile extends Component {
     constructor(props) {
         super(props);
         this.initData = Data;
         this.state = {
-            data: this.initData
+            isLoading: true,
+            id: 'default',
+            firstName: '',
+            lastName: '',
+            email: '',
+            birthday: '',
+            description: '',
+            sports: [],
         };
     }
 
-  
+    componentDidMount() {
+      backendRequest('/users/' + this.props.id)
+      .then (user => {
+        this.setState({
+          isLoading: false,
+          id: this.props.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          birthday: user.birthday,
+          description: user.description,
+          sports: user.sports,
+        });
+      })
+      .catch ( (error)  => {
+        console.log(error);
+      });
+
+    }
+
     renderItem = ({item}) => {
-      return(
-        <View style = {styles.sportList}>
-            {item.volleyball[0] == 1 ? 
-            <View style = {[styles.sportTab, {backgroundColor: 'tomato'}]} >
-              <View style = {styles.logo}>
-                <Image style = {styles.sportIcon} source={require('../img/volleyball.png')} />
-              </View>
-              <View style = {styles.label}>
-                <Text style = {styles.position}>Setter</Text>
-              </View>
-            </View>
-            : null }
-            {item.basketball[0] == 1 ? 
-            <View style = {[styles.sportTab, {backgroundColor: 'yellow'}]} >
-              <View style = {styles.logo}>
-                <Image style = {styles.sportIcon} source={require('../img/basketball.png')} />
-              </View>
-              <View style = {styles.label}>
-                <Text style = {styles.position}>Point Guard</Text>
-              </View>
-            </View>
-            : null }
-            {item.football[0] == 1 ? 
-            <View style = {[styles.sportTab, {backgroundColor: 'skyblue'}]} >
-              <View style = {styles.logo}>
-                <Image style = {styles.sportIcon} source={require('../img/rugby.png')} />
-              </View>
-              <View style = {styles.label}>
-                <Text style = {styles.position}>Wide Receiver</Text>
-              </View>
-            </View>
-            : null }
-            {item.soccer[0] == 1 ? 
-            <View style = {[styles.sportTab, {backgroundColor: 'lightgreen'}]} >
-              <View style = {styles.logo}>
-                <Image style = {styles.sportIcon} source={require('../img/football.png')} />
-              </View>
-              <View style = {styles.label}>
-                <Text style = {styles.position}>Striker</Text>
-              </View>
-            </View>
-            : null }
-            {item.tennis[0] == 1 ? 
-            <View style = {[styles.sportTab, {backgroundColor: 'yellow'}]} >
-              <View style = {styles.logo}>
-                <Image style = {styles.sportIcon} source={require('../img/tennis.png')} />
-              </View>
-              <View style = {styles.label}>
-                <Text style = {styles.position}>Singles</Text>
-              </View>
-            </View>
-            : null }
-        </View>
+      return (
+        <SportCell sport = {item.sport} level = {item.level} />
       );
     }
 
@@ -77,15 +55,15 @@ class Profile extends Component {
     render() {
         return (
             <View>
-                <ProfileHeader />
+                <ProfileHeader firstName = {this.state.firstName} birthday = {this.state.birthday} />
                 <ScrollView>
-                    <ProfileBio />
+                    <ProfileBio description = {this.state.description} />
                     <Legend />
                     <SafeAreaView>
                         <FlatList
-                            data = {this.state.data}
+                            data = {this.state.sports}
                             renderItem={this.renderItem}
-                            keyExtractor={(item) => item.id.toString()}
+                            keyExtractor={(item) => item.sport}
                         />
                     </SafeAreaView>
                 </ScrollView>

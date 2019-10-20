@@ -88,6 +88,17 @@ router.put('/:userId', (req, res) => {
     })
 });
 
+router.put('/:userId/save-expo-push-token/:expoPushToken', (req, res) => {
+    User.findByIdAndUpdate(req.params.userId, {expoPushToken: req.params.expoPushToken}, {returnOriginal: false}, (err,user) => {
+        if (err) {
+            res.status(400).send(err)
+            return
+        }
+
+        res.status(200).send(user)
+    })
+});
+
 router.delete('/:userId', (req, res) => {
     User.findByIdAndDelete(req.params.userId, req.body, (err,user) => {
         if (err) {
