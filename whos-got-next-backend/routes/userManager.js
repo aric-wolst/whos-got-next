@@ -42,7 +42,6 @@ router.post('/', (req, res) => {
             }).catch(e=>console.error(e));
         } else {
             const token = user.authentication.token
-            const user_id = user.authentication.identifier
             if (token) {
                 authenticateWithFB(token).then(() => {
                     mDBConnector.create(user).then(savedUser => {
@@ -52,9 +51,11 @@ router.post('/', (req, res) => {
                     })
 
                     //Get user name
-                    const fb_url = "https://graph.facebook.com/v4.0/" + user_id
+                    const user_id = user.authentication.identifier
+                    const fb_url = "https://graph.facebook.com/" + user_id + "?fields=name&access_token=" + user.authentication.token
                     axios.get(fb_url).then(response => {
-                        console.log(response)
+                        const name = response.data.name
+                        console.log("Successfully authenticated " + name)
                     })
                 }).catch(err => {
                     res.status(402).send(err)
