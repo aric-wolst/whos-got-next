@@ -17,10 +17,10 @@ curl -X POST http://34.220.132.159/users/ \
 `402 BAD REQUEST` Facebook Authentication Failed.
 
 `GET /users/exists`
-Get user profile for user with `:userId` if it exists.
+Get user profile for user with matching authentication query parameters if it exists.
 **Body** None.
 **Parameters**
-`type`: either *facebookId* or *email*
+`type`: enum, which is either *facebookId* or *email* (depending on which method we use to authenticate the user).
 `identifier`: string with actual facebookId or email.
 **Example**
 ```bash
@@ -58,6 +58,12 @@ Get profile for current user
 **Success Responses** `200 OK` Returns User object.
 **Error Responses** `400 BAD REQUEST` Bad Request.
 
+
+`PUT /:userId/saveExpoPushToken/:expoPushToken`
+Set expo push token for user with `:userId`.
+**Body** None.
+**Success Responses** `200 OK` Returns updated user object.
+**Error Responses** `400 BAD REQUEST` Bad Request.
 
 ## Event Endpoints
 `POST /events`

@@ -34,6 +34,10 @@ const userSchema = new mongoose.Schema({
     sports: {
         type: Array,
         required: [false]
+    },
+    expoPushToken: {
+        type: String,
+        required: [false]
     }
 })
 
