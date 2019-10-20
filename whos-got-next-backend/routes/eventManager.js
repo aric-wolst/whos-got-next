@@ -74,7 +74,7 @@ router.delete('/:eventId', (req, res) => {
 
 function getNearbyEvents(req,res) {
     // Todo: Actually find nearby events.
-    console.log('Fetching events near: ' + req.body.location.coordinates);
+    console.log('Fetching events near: [' + req.query.longitude +', ' + req.query.latitude +']');
     Event.find({}, (err, events) => {
         if (err) {
             res.status(400).send(err);
