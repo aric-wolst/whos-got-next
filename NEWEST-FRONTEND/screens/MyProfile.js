@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ActivityIndicator, AsyncStorage, Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text } from 'react-native';
 import Profile from './Profile';
+import config from '../config';
 
 class MyProfile extends Component {
 
@@ -14,7 +15,7 @@ class MyProfile extends Component {
     }
 
     componentDidMount() {
-        AsyncStorage.getItem('myId')
+        AsyncStorage.getItem(config.userIdKey)
         .then((userId) => {
             this.setState({
                 isLoading: false,
@@ -23,7 +24,7 @@ class MyProfile extends Component {
         });
     }
 
-    
+
     render() {
         if(this.state.isLoading) {
             return <ActivityIndicator />

@@ -10,7 +10,8 @@ import { createStackNavigator } from 'react-navigation-stack';
 import Teams from './screens/Teams';
 import * as Facebook from 'expo-facebook';
 import TeamProfile from './screens/TeamProfile';
-
+import config from './config';
+import backendRequest from "./utils/RequestManager";
 
 class AuthLoadingScreen extends React.Component {
   componentDidMount() {
@@ -18,9 +19,8 @@ class AuthLoadingScreen extends React.Component {
   }
 
   _bootstrapAsync = async () => {
-    const userToken = await AsyncStorage.getItem('myId');
-
-    this.props.navigation.navigate(userToken ? 'App' : 'Auth');
+    const userId = await AsyncStorage.getItem(config.userIdKey);
+    this.props.navigation.navigate(userId ? 'App' : 'Auth');
   };
 
   render() {
@@ -38,48 +38,6 @@ class SignInScreen extends React.Component {
     title: 'Sign In',
   };
 
-  request = async (url,method,body) => {
-    return new Promise((resolve,reject) => {
-      if (method === 'GET') {
-        console.log('GOT1');
-        fetch(url)
-        .then(response => {
-          console.log('START');
-          console.log(response);
-          // if (response != null) {
-          // }
-          console.log(response.headers.get("content-length"));
-          if(response.headers.get("content-length") == 0) {
-            return 0;
-          }
-          var responseJson = response.json();
-          console.log(responseJson);
-          console.log('END');
-          return responseJson;
-        })
-        .then(data => {
-          console.log('GOT2');
-          resolve(data)
-        })
-        .catch(err => {
-          console.log('GOT3');
-          reject(err)
-        });
-      } else {
-        fetch(url, {
-          method: method,
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(body)
-        }).then(response => response.json())
-        .then(data => resolve(data))
-        .catch(err => reject(err));
-      }
-    });
-  }
-
   logIn = async () => {
     try {
       const {
@@ -94,54 +52,39 @@ class SignInScreen extends React.Component {
       if (type === 'success') {
         // Get the user's name using Facebook's Graph API
         await AsyncStorage.setItem('userToken', token);
-        //await AsyncStorage.setItem('myId', '5da6fec2307334139262c2bd');
         const response = await fetch(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,birthday`);
         const json = await response.json();
         console.log(json);
-        this.request('http://34.220.132.159/users/exists?type=facebookId&identifier=' + encodeURIComponent(json.id),'GET')
-        .then((user) => {
-          console.log('GOT HERE');
-          console.log(user);
-          if (user) {
-            console.log('inside IF');
-            AsyncStorage.setItem('myId', user._id);
-          } else {
-            console.log('inside ELSE');
-            fetch('http://34.220.132.159/users/', {
-              method: 'POST',
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(
-                {
-                  "authentication": 
-                    {
-                      "type": "facebookId",
-                      "identifier": json.id,
-                      "token": token
-                    }, 
-                  "firstName": json.name, 
-                  "lastName": json.name, 
-                  "birthday": json.birthday, 
-                  "description": "Go to Settings to change your bio.", 
-                  "sports": []
-                }
-              ),
-            }).then( (newUserResponse) => {
-              console.log('AFTER POST REQUEST');
-              const newUser = newUserResponse.json();
-              console.log(newUser);
-              console.log('GOT HERE');
-              AsyncStorage.setItem('myId', newUser._id);
-            })
+
+        backendRequest('/users/exists', {type: 'facebookId', identifier: json.id}, 'GET').then(user => {
+            if (user) {
+              console.log('user: ' + user);
+              AsyncStorage.setItem(config.userIdKey, user._id).then(() => {
+                Alert.alert('Logged in!', `Hi ${json.name}!`);
+                this.props.navigation.navigate('App');
+              });
+            } else {
+              backendRequest('/users',{},'POST',{
+                "authentication":
+                  {
+                    "type": "facebookId",
+                    "identifier": json.id,
+                    "token": token
+                  },
+                "firstName": json.name,
+                "lastName": json.name,
+                "birthday": json.birthday,
+                "description": "Go to Settings to change your bio.",
+                "sports": []
+              }).then( user => {
+                AsyncStorage.setItem(config.userIdKey, user._id).then(() => {
+                  Alert.alert('Logged in!', `Hi ${json.name}!`);
+                  this.props.navigation.navigate('App');
+                });
+              })
+            }
           }
-        })
-        //console.log(token);
-        //console.log(json);
-        //console.log('here2');
-        Alert.alert('Logged in!', `Hi ${json.name}!`);
-        this.props.navigation.navigate('App');
+        )
       } else {
         // type === 'cancel'
         Alert.alert('Did not work', `Sorry`);

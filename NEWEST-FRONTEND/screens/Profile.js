@@ -6,6 +6,8 @@ import Legend from '../components/Legend';
 import Data from '../components/Data';
 import Constants from 'expo-constants';
 import SportCell from '../components/SportCell'
+import config from '../config';
+import backendRequest from "../utils/RequestManager";
 
 class Profile extends Component {
     constructor(props) {
@@ -24,25 +26,23 @@ class Profile extends Component {
     }
 
     componentDidMount() {
-      return fetch('http://34.220.132.159/users/' + this.props.id)
-      .then( (response) => response.json() )
-      .then ( (responseJson) => {
-        //console.log(responseJson);
+      backendRequest('/users/' + this.props.id)
+      .then (user => {
         this.setState({
           isLoading: false,
           id: this.props.id,
-          firstName: responseJson.firstName,
-          lastName: responseJson.lastName,
-          email: responseJson.email,
-          birthday: responseJson.birthday,
-          description: responseJson.description,
-          sports: responseJson.sports,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          birthday: user.birthday,
+          description: user.description,
+          sports: user.sports,
         });
       })
       .catch ( (error)  => {
         console.log(error);
       });
-      
+
     }
 
     renderItem = ({item}) => {
