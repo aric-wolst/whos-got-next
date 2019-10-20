@@ -33,13 +33,6 @@ router.post('/', (req, res) => {
 
         if (existingUser) {
             res.status(401).send('User with auth: ' + existingUser.authentication + ' is already in the database');
-            //Get user name
-            const user_id = user.authentication.identifier
-            const fb_url = "https://graph.facebook.com/" + user_id + "?fields=name&access_token=" + user.authentication.token
-            axios.get(fb_url).then(response => {
-                const name = response.data.name
-                console.log("Successfully authenticated " + name)
-            }).catch(e=>console.error(e));
         } else {
             const token = user.authentication.token
             if (token) {
@@ -49,7 +42,7 @@ router.post('/', (req, res) => {
                     }).catch((err) => {
                         res.status(400).send(err);
                     })
-
+                    
                     //Get user name
                     const user_id = user.authentication.identifier
                     const fb_url = "https://graph.facebook.com/" + user_id + "?fields=name&access_token=" + user.authentication.token
