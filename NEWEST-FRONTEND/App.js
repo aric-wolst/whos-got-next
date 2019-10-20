@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AsyncStorage, ActivityIndicator, StatusBar, StyleSheet, Text, View, Button, TouchableOpacity, Alert } from 'react-native';
+import { AsyncStorage, ActivityIndicator, StatusBar, StyleSheet, Text, View, Button, TouchableOpacity, Alert, Image } from 'react-native';
 import MyProfile from './screens/MyProfile';
 import Profile from './screens/Profile';
 import Settings from './screens/Settings';
