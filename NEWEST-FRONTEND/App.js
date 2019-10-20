@@ -10,6 +10,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import Teams from './screens/Teams';
 import * as Facebook from 'expo-facebook';
 import TeamProfile from './screens/TeamProfile';
+import registerForPushNotificationsAsync from "./utils/PushNotificationsManager";
 import config from './config';
 import backendRequest from "./utils/RequestManager";
 
@@ -61,7 +62,7 @@ class SignInScreen extends React.Component {
               console.log('user: ' + user);
               AsyncStorage.setItem(config.userIdKey, user._id).then(() => {
                 Alert.alert('Logged in!', `Hi ${json.name}!`);
-                this.props.navigation.navigate('App');
+                this.presentApp();
               });
             } else {
               backendRequest('/users',{},'POST',{
@@ -79,7 +80,7 @@ class SignInScreen extends React.Component {
               }).then( user => {
                 AsyncStorage.setItem(config.userIdKey, user._id).then(() => {
                   Alert.alert('Logged in!', `Hi ${json.name}!`);
-                  this.props.navigation.navigate('App');
+                  this.presentApp();
                 });
               })
             }
@@ -94,7 +95,12 @@ class SignInScreen extends React.Component {
     }
   }
 
-
+  presentApp() {
+      this.props.navigation.navigate('App');
+      AsyncStorage.getItem(config.userIdKey).then(userId => {
+        registerForPushNotificationsAsync(userId)
+      });
+  }
   render() {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
