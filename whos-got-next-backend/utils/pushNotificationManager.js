@@ -111,3 +111,5 @@ function sendNotifications(pushTokens, pushTitle, pushBody) {
       }
     })();
 }
+
+module.exports = sendNotifications

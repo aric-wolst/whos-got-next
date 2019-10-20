@@ -8,6 +8,8 @@
 var express = require('express');
 var router = express.Router();
 
+const sendNotifications = require('../utils/pushNotificationManager')
+
 // MongoDB mDBConnector
 const MongoDBConnector = require('../utils/mongoDBConnector');
 const mDBConnector = MongoDBConnector.sharedInstance();
@@ -30,6 +32,11 @@ router.post('/', (req, res) => {
 	const event = new Event(req.body);
 	mDBConnector.create(event).then(savedEvent => {
         res.status(200).send(savedEvent);
+        User.find({"expoPushToken": {$exists: true}}, (err, events) => {
+            if (err) { console.error(err); return; }
+            const tokens = events.map(event => event.expoPushToken)
+            sendNotifications(tokens,"New Event: " + savedEvent.name, "There is a new event near you.")
+        })
 	}).catch((err) => {
         res.status(400).send(err);
     });
