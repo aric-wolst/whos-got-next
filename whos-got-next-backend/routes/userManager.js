@@ -42,7 +42,7 @@ router.post('/', (req, res) => {
                     }).catch((err) => {
                         res.status(400).send(err);
                     })
-                    
+
                     //Get user name
                     const user_id = user.authentication.identifier
                     const fb_url = "https://graph.facebook.com/" + user_id + "?fields=name&access_token=" + user.authentication.token
@@ -111,7 +111,7 @@ function getSelf(req,res) {
 }
 
 function getExists(req,res) {
-    User.findOne({'authentication.type': req.body.authentication.type, 'authentication.identifier': req.body.authentication.identifier}, (err, user) => {
+    User.findOne({'authentication.type': req.query.type, 'authentication.identifier': req.query.identifier}, (err, user) => {
         if (err) { res.status(400).send(err); return; }
         if (!user) {console.log('no user exists')}
         res.status(200).send(user);

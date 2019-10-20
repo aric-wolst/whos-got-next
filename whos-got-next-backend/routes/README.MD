@@ -18,12 +18,13 @@ curl -X POST http://34.220.132.159/users/ \
 
 `GET /users/exists`
 Get user profile for user with `:userId` if it exists.
-**Body** Authentication object (see authenticationSchema).
+**Body** None.
+**Parameters**
+`type`: either *facebookId* or *email*
+`identifier`: string with actual facebookId or email.
 **Example**
 ```bash
-curl -X GET http://34.220.132.159/users/exists \
--H 'content-type:application/json' \
--d '{auth: {"type": "facebookId", "identifier": "xxxxxxxxxxxxxxxxx"}}'
+curl -X GET 'http://34.220.132.159/users/exists?type=facebookId&identifier=xxxxxxxxxxxxxxxxx'
 ```
 **Success Responses** `200 OK` Returns User object if it exists. Else it will return a null response. 
 **Error Responses** `400 BAD REQUEST` Bad Request.
