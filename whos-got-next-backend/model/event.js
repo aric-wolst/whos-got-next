@@ -41,6 +41,10 @@ const eventSchema = new mongoose.Schema({
     imageId: {
         type: String,
         required: [false]
+    },
+    address : {
+        type : String,
+        required: [false]
     }
 })
 

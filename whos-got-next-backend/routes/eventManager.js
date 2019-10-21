@@ -5,9 +5,10 @@
  * Retrieval requests for a specific event are also handled here.
  */
 
-var express = require('express');
-var router = express.Router();
-var defineRegion = require('../utils/region.js');
+const express = require('express');
+const router = express.Router();
+const defineRegion = require('../utils/region.js');
+const axios = require('axios');
 
 const sendNotifications = require('../utils/pushNotificationManager')
 
@@ -30,18 +31,29 @@ router.use(function(req, res, next) {
 });
 
 router.post('/', (req, res) => {
-	const event = new Event(req.body);
-	mDBConnector.create(event).then(savedEvent => {
-        res.status(200).send(savedEvent);
-        User.find({"expoPushToken": {$exists: true}}, (err, events) => {
-            if (err) { console.error(err); return; }
-            const tokens = events.map(event => event.expoPushToken)
-            sendNotifications(tokens,"New Event: " + savedEvent.name, "There is a new event near you.")
-        })
-	}).catch((err) => {
-        res.status(400).send(err);
+    const event = new Event(req.body);
+
+    const latitude = req.body.location.coordinates[1];
+    const longitude = req.body.location.coordinates[0];
+
+    //Endpoint to get address from coordinates
+    const url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + latitude + '&lon=' + longitude;
+    getAddress(url).then(response => {
+        event.address = response;
+        mDBConnector.create(event).then(savedEvent => {
+            res.status(200).send(savedEvent);
+            User.find({"expoPushToken": {$exists: true}}, (err, events) => {
+                if (err) { console.error(err); return; }
+                const tokens = events.map(event => event.expoPushToken)
+                sendNotifications(tokens,"New Event: " + savedEvent.name, "There is a new event near you.")
+            })
+        }).catch((err) => {
+            res.status(400).send(err);
+        });
+    }).catch(err => {
+        console.error(err);
     });
-})
+});
 
 router.get('/:eventId', (req, res) => {
     if (req.params.eventId == 'nearby') {
@@ -79,6 +91,24 @@ router.delete('/:eventId', (req, res) => {
         res.status(200).send('Event deleted');
     })
 })
+
+async function getAddress(url) {
+    let res = await axios.get(url).catch(err => {
+        console.error("Could not retrieve address");
+    });
+
+
+    return await stitchAddress(res.data.address);
+}
+
+async function stitchAddress(address) {
+    let number = address.house_number;
+    let road = address.road;
+    let city = address.city;
+    let state = address.state;
+    let addr = number +' ' + road + ", " + city + ', ' + state;
+    return addr;
+}
 
 function getNearbyEvents(req,res) {
     console.log('Fetching events near: [' + req.query.longitude +', ' + req.query.latitude +']');
