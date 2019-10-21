@@ -56,7 +56,6 @@ function defineRegion(longitude, latitude, distance) {
 
     // Calculate the north boundary point.
     let north_lat = calcLat(lat, distance, northBearing);
-    let north_lon = calcLon(lon, lat, distance, northBearing, north_lat);
 
     // Calculate the east boundary point.
     let east_lat = calcLat(lat, distance, eastBearing);
@@ -64,30 +63,12 @@ function defineRegion(longitude, latitude, distance) {
 
     // Calculate the south boundary point.
     let south_lat = calcLat(lat, distance, southBearing);
-    let south_lon = calcLon(lon, lat, distance, southBearing, south_lat);
 
     // Calculate the west boundary point.
     let west_lat = calcLat(lat, distance, westBearing);
     let west_lon = calcLon(lon, lat, distance, westBearing, west_lat);
 
-    let region = {
-        "northBound" : {
-            "longitude" : north_lon,
-            "latitude" : north_lat
-        },
-        "eastBound" : {
-            "longitude" : east_lon,
-            "latitude": east_lat
-        },
-        "southBound" : {
-            "longitude" : south_lon,
-            "latitude": south_lat
-        },
-        "westBound" : {
-            "longitude" : west_lon,
-            "latitude": west_lat
-        }
-    };
+    let region = { n : north_lat, e : east_lon, s : south_lat, w : west_lon };
 
     return region;
 }

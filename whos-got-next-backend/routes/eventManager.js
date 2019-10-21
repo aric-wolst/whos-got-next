@@ -132,30 +132,25 @@ async function stitchAddress(address) {
 }
 
 function getNearbyEvents(req,res) {
-    console.log('Fetching events near: [' + req.query.longitude +', ' + req.query.latitude +']');
+    getEventsNear(req.query, 5).then(events => res.status(200).send(events)).catch(err => res.status(400).send(err))
+}
 
-    //Define a region of 5km around the user
-    let distance = 5;
-    const region = defineRegion(req.query.longitude, req.query.latitude, distance);
-    let right_lon = region.eastBound.longitude;
-    let left_lon = region.westBound.longitude;
-    let up_lat = region.northBound.latitude;
-    let down_lat = region.southBound.latitude;
+async function getEventsNear(location, distance) {
+    console.log('Fetching events near: [' + location.longitude +', ' + location.latitude +']');
 
-    Event.find({"location.coordinates.0" : {
-            $gt : left_lon,
-            $lt : right_lon
-        }, "location.coordinates.1" : {
-            $gt : down_lat,
-            $lt : up_lat
-        }}, (err, events) => {
-        if (err) {
-            res.status(400).send(err);
-            return
-        }
-        console.log("Nearby events retrieved successfully");
-        res.status(200).send(events);
-    });
+    // Define a region of 5km around the location.
+    const {n, e, s, w} = defineRegion(location.longitude, location.latitude, distance);
+    const filter = {"location.coordinates.0" : { $gt : w, $lt : e }, "location.coordinates.1" : { $gt : s, $lt : n }}
+
+    return new Promise((resolve,reject) => {
+        Event.find(filter, (err, events) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(events);
+            }
+        });
+    })
 }
 
 router.put('/:eventId/requests/:userId/request-to-join', (req,res) => {
