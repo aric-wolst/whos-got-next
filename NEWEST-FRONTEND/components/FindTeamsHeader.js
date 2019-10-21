@@ -13,7 +13,7 @@ export default class FindTeamsHeader extends Component {
 
 const styles = StyleSheet.create({
     FindTeamsHeaderBackground: {
-        backgroundColor: '#ff8c00',
+        backgroundColor: 'white',
         alignItems: 'center'
     },
     FindTeams: {
@@ -21,6 +21,6 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         fontSize: 32,
         fontWeight: 'bold',
-        color: 'white',
+        color: '#ff8c00',
     },
 });
