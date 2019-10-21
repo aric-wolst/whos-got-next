@@ -7,19 +7,39 @@ class SportCell extends Component {
 
     render () {
         let imageUrl = '';
-        if(this.props.sport = "volleyball") {
+        if(this.props.sport === "volleyball") {
             imageUrl = '../img/volleyball.png';
-        } else{
+        } else if (this.props.sport ==="basketball") {
             imageUrl = '../img/basketball.png';
+        } else if (this.props.sport === "badminton") {
+            imageUrl = '../img/shuttlecock.png';
+        } else if (this.props.sport === "baseball") {
+            imageUrl = '../img/baseball.png';
+        } else if (this.props.sport === "football") {
+            imageUrl = '../img/rugby.png';
+        } else if (this.props.sport === "hockey") {
+            imageUrl = '../img/puck.png';
+        } else if (this.props.sport === "soccer") {
+            imageUrl = '../img/football.png';
+        } else if (this.props.sport === "streetfighting") {
+            imageUrl = '../img/brass-knuckles.png';
+        } else if (this.props.sport === "tennis") {
+            imageUrl = '../img/tennis.png';
+        } else {
+            imageUrl = '../img/logo.png';
         }
 
         let color = '';
+        let level = '';
         if(this.props.level === 1) {
-            color = 'yellow';
+            color = '#fbdC9d';
+            level = 'Beginner';
         } else if (this.props.level === 2) {
-            color = 'lightgreen';
+            color = '#fec044';
+            level = 'Intermmediate';
         } else if (this.props.level === 3) {
-            color = 'skyblue';
+            color = '#ff8c00';
+            level = 'Elite';
         } else if (this.props.level === 4) {
             color = 'tomato';
         } else {
@@ -34,7 +54,7 @@ class SportCell extends Component {
                 <Image style = {styles.sportIcon} source={require('../img/volleyball.png')} />
               </View>
               <View style = {styles.label}>
-                <Text style = {styles.position}>POSITION</Text>
+                <Text style = {styles.position}>{level}</Text>
               </View>
             </View>
             : null }
@@ -44,7 +64,7 @@ class SportCell extends Component {
                 <Image style = {styles.sportIcon} source={require('../img/basketball.png')} />
               </View>
               <View style = {styles.label}>
-                <Text style = {styles.position}>POSITION</Text>
+                <Text style = {styles.position}>{level}</Text>
               </View>
             </View>
             : null }
@@ -54,7 +74,7 @@ class SportCell extends Component {
                 <Image style = {styles.sportIcon} source={require('../img/rugby.png')} />
               </View>
               <View style = {styles.label}>
-                <Text style = {styles.position}>POSITION</Text>
+                <Text style = {styles.position}>{level}</Text>
               </View>
             </View>
             : null }
@@ -64,7 +84,7 @@ class SportCell extends Component {
                 <Image style = {styles.sportIcon} source={require('../img/football.png')} />
               </View>
               <View style = {styles.label}>
-                <Text style = {styles.position}>POSITION</Text>
+                <Text style = {styles.position}>{level}</Text>
               </View>
             </View>
             : null }
@@ -74,7 +94,48 @@ class SportCell extends Component {
                 <Image style = {styles.sportIcon} source={require('../img/tennis.png')} />
               </View>
               <View style = {styles.label}>
-                <Text style = {styles.position}>POSITION</Text>
+                <Text style = {styles.position}>{level}</Text>
+              </View>
+            </View>
+            : null }
+            {this.props.sport == 'streetfighting' ? 
+            <View style = {[styles.sportTab, {backgroundColor: color}]} >
+              <View style = {styles.logo}>
+                <Image style = {styles.sportIcon} source={require('../img/brass-knuckles.png')} />
+              </View>
+              <View style = {styles.label}>
+                <Text style = {styles.position}>{level}</Text>
+              </View>
+            </View>
+            : null 
+            }
+            {this.props.sport == 'baseball' ? 
+            <View style = {[styles.sportTab, {backgroundColor: color}]} >
+              <View style = {styles.logo}>
+                <Image style = {styles.sportIcon} source={require('../img/baseball.png')} />
+              </View>
+              <View style = {styles.label}>
+                <Text style = {styles.position}>{level}</Text>
+              </View>
+            </View>
+            : null }
+            {this.props.sport == 'hockey' ? 
+            <View style = {[styles.sportTab, {backgroundColor: color}]} >
+              <View style = {styles.logo}>
+                <Image style = {styles.sportIcon} source={require('../img/puck.png')} />
+              </View>
+              <View style = {styles.label}>
+                <Text style = {styles.position}>{level}</Text>
+              </View>
+            </View>
+            : null }
+            {this.props.sport == 'badminton' ? 
+            <View style = {[styles.sportTab, {backgroundColor: color}]} >
+              <View style = {styles.logo}>
+                <Image style = {styles.sportIcon} source={require('../img/shuttlecock.png')} />
+              </View>
+              <View style = {styles.label}>
+                <Text style = {styles.position}>{level}</Text>
               </View>
             </View>
             : null }
