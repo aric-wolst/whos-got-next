@@ -102,11 +102,32 @@ async function getAddress(url) {
 }
 
 async function stitchAddress(address) {
+    let addr = '';
+    let hood = address.neighbourhood;
     let number = address.house_number;
     let road = address.road;
     let city = address.city;
     let state = address.state;
-    let addr = number +' ' + road + ", " + city + ', ' + state;
+
+    if (hood) {
+        addr = addr + hood + ',';
+    }
+
+    if (number) {
+        addr = addr + ' ' + number;
+    }
+
+    if (road) {
+        addr = addr + ' ' + road;
+    }
+
+    if (city) {
+        addr = addr + ', ' + city;
+    }
+
+    if (state) {
+        addr = addr + ', ' + state;
+    }
     return addr;
 }
 
