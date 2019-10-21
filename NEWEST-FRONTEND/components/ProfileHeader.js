@@ -13,7 +13,7 @@ export default class ProfileHeader extends Component {
                     <View style = {styles.personalInfo}>
                         <Text style = {styles.name}>{this.props.firstName}</Text>
                         <Text style = {styles.age}>{this.props.birthday}</Text>
-                        <Text style = {styles.genderAndHeight}>6'2 Male</Text>
+                        <Text style = {styles.genderAndHeight}>{this.props.gender}</Text>
                     </View>
                 </View>
             </View>
@@ -35,8 +35,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     profilepicWrap: {
-        width: 150,
-        height: 150,
+        width: 80,
+        height: 80,
         borderRadius: 100,
         borderWidth: 10,
         borderColor: 'rgba(0,0,0, 0.4)',

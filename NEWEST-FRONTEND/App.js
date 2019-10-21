@@ -122,11 +122,11 @@ class SignInScreen extends React.Component {
 const TeamsStack = createStackNavigator({
   FindTeams: Teams,
   TeamProfile: TeamProfile,
-});
+  CreateEvent: CreateEvent,
+}, { headerLayoutPreset: 'center' });
 
 const AppTabs = createBottomTabNavigator(
   {
-  CreateEvent: CreateEvent,
   MyProfile: MyProfile,
   Events: TeamsStack,
   Settings: Settings,

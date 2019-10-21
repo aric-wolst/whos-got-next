@@ -5,6 +5,20 @@ import backendRequest from "../utils/RequestManager";
 import config from '../config';
 
 export default class CreateEvent extends Component {
+    static navigationOptions = {
+        headerTintColor: 'white',
+        headerStyle: {
+          backgroundColor: '#ff8c00',
+        },
+        headerBackTitleStyle: {
+            color: 'white',
+            fontWeight: 'bold'
+        },
+        headerBackImageStyle: {
+            tintColor: 'white',
+        }
+    };
+
     constructor(props) {
         super(props);
         this.state = {
@@ -24,10 +38,16 @@ export default class CreateEvent extends Component {
                Alert.alert('Invalid Entry', 'Please make sure to fill in all fields.');
         } else {
             const userId = await AsyncStorage.getItem(config.userIdKey);
-            var today = new Date();
+            const { navigation } = this.props;
+            var latitude = navigation.getParam('latitude', 0);
+            var longitude = navigation.getParam('longitude', 0);
+            var date = new Date();
+            var utcDate = new Date(date.toUTCString());
+            utcDate.setHours(utcDate.getHours()-7);
+            var today = new Date(utcDate);
             var userArray = new Array();
             userArray[0] = userId;
-            var eventLocation = {coordinates: [-123.176158, 49.269551], type: "Point",};
+            var eventLocation = {coordinates: [longitude, latitude], type: "Point",};
             backendRequest('/events',{}, 'POST', {
                 "name": this.state.eventName,
                 "organizers": userArray,
@@ -38,8 +58,15 @@ export default class CreateEvent extends Component {
                 "pendingPlayerRequests": [],
                 "sport": this.state.sport,
             }).then( (response) => {
-                console.log(response);
+                //console.log(response);
                 Alert.alert('Success', 'You have created a new event!');
+                this.setState({
+                    sport: '',
+                    eventName: '',
+                    eventDescription: '',
+                    duration: '',
+                });
+                this.props.navigation.goBack(null);
             });
         }
     }
@@ -101,6 +128,7 @@ export default class CreateEvent extends Component {
                         style = {styles.textinput} 
                         placeholder = "Your event name"
                         onChangeText = {(eventName) => this.setState({eventName})}
+                        maxLength = {28}
                         value = {this.state.eventName}
                      />
                     <Text>Event Description</Text>

@@ -160,9 +160,6 @@ class Settings extends React.Component {
             }).then ( () => {
                 Alert.alert('Success', 'Your profile has been updated!');
                 this.setState({
-                    firstName: '',
-                    gender: '',
-                    description: '',
                     badminton: [false,'Beginner'],
                     baseball: [false,'Beginner'],
                     basketball: [false,'Beginner'],
@@ -173,6 +170,7 @@ class Settings extends React.Component {
                     tennis: [false,'Beginner'],
                     volleyball: [false,'Beginner'],
                 });
+                this.props.navigation.navigate('MyProfile');
             })
             .catch( (err) => console.log(err));
         })

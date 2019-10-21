@@ -4,7 +4,7 @@ import ProfileHeader from '../components/ProfileHeader';
 import ProfileBio from '../components/ProfileBio';
 import Legend from '../components/Legend';
 import Data from '../components/Data';
-import Constants from 'expo-constants';
+import Constants, { UserInterfaceIdiom } from 'expo-constants';
 import SportCell from '../components/SportCell'
 import config from '../config';
 import backendRequest from "../utils/RequestManager";
@@ -22,6 +22,7 @@ class Profile extends Component {
             birthday: '',
             description: '',
             sports: [],
+            gender: '',
         };
         this.GetData();
     }
@@ -35,6 +36,7 @@ class Profile extends Component {
             birthday: '',
             description: '',
             sports: [],
+            gender: '',
       });
       this.GetData();
     }
@@ -51,6 +53,7 @@ class Profile extends Component {
           birthday: user.birthday,
           description: user.description,
           sports: user.sports,
+          gender: user.gender,
         });
       })
       .catch ( (error)  => {
@@ -69,7 +72,7 @@ class Profile extends Component {
     render() {
         return (
             <View>
-                <ProfileHeader firstName = {this.state.firstName} birthday = {this.state.birthday} />
+                <ProfileHeader firstName = {this.state.firstName} birthday = {this.state.birthday} gender = {this.state.gender} />
                 <ScrollView refreshControl = {<RefreshControl refreshing = {this.state.refreshing} onRefresh={this.onRefresh.bind(this)}/>} >
                     <ProfileBio description = {this.state.description} />
                     <Legend />
