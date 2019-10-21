@@ -5,10 +5,9 @@ export default class Legend extends Component {
     render() {
         return(
             <View style = {styles.container}>
-                <View style = {{backgroundColor: 'yellow', flex: 1}}><Text style = {styles.label}>Beginner</Text></View>
-                <View style = {{backgroundColor: 'lightgreen', flex: 1}}><Text style = {styles.label}>Intermmediate</Text></View>
-                <View style = {{backgroundColor: 'skyblue', flex: 1}}><Text style = {styles.label}>Advanced</Text></View>
-                <View style = {{backgroundColor: 'tomato', flex: 1}}><Text style = {styles.label}>Elite</Text></View>
+                <View style = {{backgroundColor: '#fbdC9d', flex: 1}}><Text style = {styles.label}>Beginner</Text></View>
+                <View style = {{backgroundColor: '#fec044', flex: 1}}><Text style = {styles.label}>Intermmediate</Text></View>
+                <View style = {{backgroundColor: '#ff8c00', flex: 1}}><Text style = {styles.label}>Elite</Text></View>
             </View>
         );
     }

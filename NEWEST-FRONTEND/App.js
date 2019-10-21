@@ -13,6 +13,7 @@ import TeamProfile from './screens/TeamProfile';
 import registerForPushNotificationsAsync from "./utils/PushNotificationsManager";
 import config from './config';
 import backendRequest from "./utils/RequestManager";
+import CreateEvent from './screens/CreateEvent';
 
 class AuthLoadingScreen extends React.Component {
   componentDidMount() {
@@ -125,6 +126,7 @@ const TeamsStack = createStackNavigator({
 
 const AppTabs = createBottomTabNavigator(
   {
+  CreateEvent: CreateEvent,
   MyProfile: MyProfile,
   Events: TeamsStack,
   Settings: Settings,
@@ -142,6 +144,8 @@ const AppTabs = createBottomTabNavigator(
         } else if (routeName == 'Events') {
           iconName = `ios-people`;
         } else if (routeName == 'Settings') {
+          iconName = 'ios-settings';
+        } else {
           iconName = 'ios-settings';
         }
 

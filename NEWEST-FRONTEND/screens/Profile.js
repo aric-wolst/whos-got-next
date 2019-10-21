@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text } from 'react-native';
+import { RefreshControl, Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text } from 'react-native';
 import ProfileHeader from '../components/ProfileHeader';
 import ProfileBio from '../components/ProfileBio';
 import Legend from '../components/Legend';
@@ -14,7 +14,7 @@ class Profile extends Component {
         super(props);
         this.initData = Data;
         this.state = {
-            isLoading: true,
+            refreshing: true,
             id: 'default',
             firstName: '',
             lastName: '',
@@ -23,13 +23,27 @@ class Profile extends Component {
             description: '',
             sports: [],
         };
+        this.GetData();
     }
 
-    componentDidMount() {
+    onRefresh() {
+      this.setState({
+        id: 'default',
+            firstName: '',
+            lastName: '',
+            email: '',
+            birthday: '',
+            description: '',
+            sports: [],
+      });
+      this.GetData();
+    }
+
+    GetData = () => {
       backendRequest('/users/' + this.props.id)
       .then (user => {
         this.setState({
-          isLoading: false,
+          refreshing: false,
           id: this.props.id,
           firstName: user.firstName,
           lastName: user.lastName,
@@ -56,7 +70,7 @@ class Profile extends Component {
         return (
             <View>
                 <ProfileHeader firstName = {this.state.firstName} birthday = {this.state.birthday} />
-                <ScrollView>
+                <ScrollView refreshControl = {<RefreshControl refreshing = {this.state.refreshing} onRefresh={this.onRefresh.bind(this)}/>} >
                     <ProfileBio description = {this.state.description} />
                     <Legend />
                     <SafeAreaView>
