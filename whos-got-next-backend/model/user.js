@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-
 const Auth = require('../model/auth.js');
+const pointSchema = require('../model/point.js');
 
 const userSchema = new mongoose.Schema({
     authentication: {
@@ -51,7 +51,11 @@ const userSchema = new mongoose.Schema({
     expoPushToken: {
         type: String,
         required: [false]
+    },
+    location : {
+        type: pointSchema,
+        required: [false]
     }
-})
+});
 
 module.exports = userSchema
