@@ -111,7 +111,7 @@ router.delete('/:userId', (req, res) => {
 })
 
 function getSelf(req,res) {
-    User.findById("5da7c3716b4b7e331ed0f688", (err,user) => {
+    User.findOne({}, (err,user) => {
         if (err) {
             res.status(400).send(err)
             return
