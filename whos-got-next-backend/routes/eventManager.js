@@ -7,6 +7,7 @@
 
 var express = require('express');
 var router = express.Router();
+var defineRegion = require('../utils/region.js');
 
 const sendNotifications = require('../utils/pushNotificationManager')
 
@@ -80,13 +81,31 @@ router.delete('/:eventId', (req, res) => {
 })
 
 function getNearbyEvents(req,res) {
-    // Todo: Actually find nearby events.
     console.log('Fetching events near: [' + req.query.longitude +', ' + req.query.latitude +']');
-    Event.find({}, (err, events) => {
+
+    //Define a region of 10km around the user
+    let distance = 10;
+    var region = defineRegion(req.query.longitude, req.query.latitude, distance);
+    console.log(region);
+    let left_lon = region.eastBound.longitude;
+    let right_lon = region.westBound.longitude;
+    let up_lat = region.northBound.latitude;
+    let down_lat = region.southBound.latitude;
+
+    Event.findOne({}, (err, event) => {
+        console.log(event.location.coordinates[0]);
+    })
+
+    Event.find({"location.coordinates.0" : {
+        $gt : left_lon,
+        $lt : right_lon
+        }}, (err, events) => {
         if (err) {
             res.status(400).send(err);
             return
         }
+
+        console.log(events);
 
         res.status(200).send(events);
     });

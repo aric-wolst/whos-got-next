@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-const Auth = require('../model/auth.js')
+const Auth = require('../model/auth.js');
 
 const userSchema = new mongoose.Schema({
     authentication: {
