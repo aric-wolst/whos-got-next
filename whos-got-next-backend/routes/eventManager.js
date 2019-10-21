@@ -45,7 +45,7 @@ router.post('/', (req, res) => {
             User.find({"expoPushToken": {$exists: true}}, (err, events) => {
                 if (err) { console.error(err); return; }
                 const tokens = events.map(event => event.expoPushToken);
-                //sendNotifications(tokens,"New Event: " + savedEvent.name, "There is a new event near you.")
+                sendNotifications(tokens,"New Event: " + savedEvent.name, "There is a new event near you.")
             })
         }).catch((err) => {
             res.status(400).send(err);
