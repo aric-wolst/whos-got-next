@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-const Auth = require('../model/auth.js')
+const Auth = require('../model/auth.js');
 
 const userSchema = new mongoose.Schema({
     authentication: {
@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
+        enum: ['male', 'female', 'other'],
         required: [false]
     },
     description: {
@@ -32,7 +33,19 @@ const userSchema = new mongoose.Schema({
         required: [false]
     },
     sports: {
-        type: Array,
+        type: [{
+            sport : {
+                type: String,
+                enum : ['Badminton', 'Baseball', 'Basketball', 'Cricket', 'Football', 'Handball',
+                    'Hockey', 'Rugby', 'Soccer', 'Street Fighting', 'Squash', 'Tennis', 'Volleyball'],
+                required: true
+            },
+            level : {
+                type : Number,
+                enum : [1, 2, 3],
+                required : true
+            }
+        }],
         required: [false]
     },
     expoPushToken: {
