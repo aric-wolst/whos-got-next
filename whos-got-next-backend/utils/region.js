@@ -48,7 +48,7 @@ function defineRegion(longitude, latitude, distance) {
     const northBearing = 0;
     const eastBearing = toRadians(90);
     const southBearing = toRadians(180);
-    const westBearing = toRadians(360);
+    const westBearing = toRadians(270);
 
     //Convert given longitude and latitude to radians
     let lon = toRadians(longitude);

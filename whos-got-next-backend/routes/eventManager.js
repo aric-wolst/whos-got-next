@@ -83,32 +83,79 @@ router.delete('/:eventId', (req, res) => {
 function getNearbyEvents(req,res) {
     console.log('Fetching events near: [' + req.query.longitude +', ' + req.query.latitude +']');
 
-    //Define a region of 10km around the user
-    let distance = 10;
-    var region = defineRegion(req.query.longitude, req.query.latitude, distance);
-    console.log(region);
+    //Define a region of 5km around the user
+    let distance = 5;
+    const region = defineRegion(req.query.longitude, req.query.latitude, distance);
     let left_lon = region.eastBound.longitude;
     let right_lon = region.westBound.longitude;
     let up_lat = region.northBound.latitude;
     let down_lat = region.southBound.latitude;
 
-    Event.findOne({}, (err, event) => {
-        console.log(event.location.coordinates[0]);
-    })
+    if (req.query.longitude < 0 && req.query.latitude > 0) {
+        Event.find({"location.coordinates.0" : {
+                $gt : right_lon,
+                $lt : left_lon
+            }, "location.coordinates.1" : {
+                $gt : down_lat,
+                $lt : up_lat
+            }}, (err, events) => {
+            if (err) {
+                res.status(400).send(err);
+                return
+            }
 
-    Event.find({"location.coordinates.0" : {
-        $gt : left_lon,
-        $lt : right_lon
-        }}, (err, events) => {
-        if (err) {
-            res.status(400).send(err);
-            return
-        }
+            console.log("Nearby events retrieved successfully");
+            res.status(200).send(events);
+        });
+    } else if (req.query.longitude > 0 && req.query.latitude < 0) {
+        Event.find({"location.coordinates.0" : {
+                $gt : left_lon,
+                $lt : right_lon
+            }, "location.coordinates.1" : {
+                $gt : up_lat,
+                $lt : down_lat
+            }}, (err, events) => {
+            if (err) {
+                res.status(400).send(err);
+                return
+            }
 
-        console.log(events);
+            console.log("Nearby events retrieved successfully");
+            res.status(200).send(events);
+        });
+    } else if (req.query.longitude > 0 && req.query.latitude > 0) {
+        Event.find({"location.coordinates.0" : {
+                $gt : left_lon,
+                $lt : right_lon
+            }, "location.coordinates.1" : {
+                $gt : down_lat,
+                $lt : up_lat
+            }}, (err, events) => {
+            if (err) {
+                res.status(400).send(err);
+                return
+            }
 
-        res.status(200).send(events);
-    });
+            console.log("Nearby events retrieved successfully");
+            res.status(200).send(events);
+        });
+    } else {
+        Event.find({"location.coordinates.0" : {
+                $gt : right_lon,
+                $lt : left_lon
+            }, "location.coordinates.1" : {
+                $gt : up_lat,
+                $lt : down_lat
+            }}, (err, events) => {
+            if (err) {
+                res.status(400).send(err);
+                return
+            }
+
+            console.log("Nearby events retrieved successfully");
+            res.status(200).send(events);
+        });
+    }
 }
 
 router.put('/:eventId/requests/:userId/request-to-join', (req,res) => {
