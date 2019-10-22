@@ -129,8 +129,6 @@ async function stitchAddress(address) {
 }
 
 function getNearbyEvents(req,res) {
-    console.log('Fetching events near: [' + req.query.longitude +', ' + req.query.latitude +']');
-
     // Define a region of a given distance in km around the location.
     const distance = 5;
     const {n, e, s, w} = defineRegion(req.query.longitude, req.query.latitude, distance);
@@ -149,7 +147,7 @@ function getNearbyEvents(req,res) {
 function sendPushNotificationToUsersNear(notification, location, distance) {
     // Define a region of a given distance in km around the location.
     const {n, e, s, w} = defineRegion(location.coordinates[0], location.coordinates[1], distance);
-    console.log('n:' + n + ', e: ' + e + ', s: ' + s + ', w: ' + w);
+
     // Fetch events in this region.
     const filter = {
         "location.coordinates.0" : { $gt : w, $lt : e },
