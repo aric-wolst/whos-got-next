@@ -42,11 +42,8 @@ router.post('/', (req, res) => {
         event.address = response;
         mDBConnector.create(event).then(savedEvent => {
             res.status(200).send(savedEvent);
-            User.find({"expoPushToken": {$exists: true}}, (err, events) => {
-                if (err) { console.error(err); return; }
-                const tokens = events.map(event => event.expoPushToken);
-                sendNotifications(tokens,"New Event: " + savedEvent.name, "There is a new event near you.")
-            })
+            const notification = {title: "New Event: " + savedEvent.name, body: "There is a new event near you."};
+            sendPushNotificationToUsersNear(notification, savedEvent.location, 5);
         }).catch((err) => {
             res.status(400).send(err);
         });
@@ -132,25 +129,39 @@ async function stitchAddress(address) {
 }
 
 function getNearbyEvents(req,res) {
-    getEventsNear(req.query, 5).then(events => res.status(200).send(events)).catch(err => res.status(400).send(err))
+    console.log('Fetching events near: [' + req.query.longitude +', ' + req.query.latitude +']');
+
+    // Define a region of a given distance in km around the location.
+    const distance = 5;
+    const {n, e, s, w} = defineRegion(req.query.longitude, req.query.latitude, distance);
+
+    // Fetch events in this region.
+    const filter = {"location.coordinates.0" : { $gt : w, $lt : e }, "location.coordinates.1" : { $gt : s, $lt : n }}
+    Event.find(filter).limit(30).exec((err, events) => {
+        if (err) {
+            res.status(400).send(err);
+            return;
+        }
+        res.status(200).send(events);
+    });
 }
 
-async function getEventsNear(location, distance) {
-    console.log('Fetching events near: [' + location.longitude +', ' + location.latitude +']');
+function sendPushNotificationToUsersNear(notification, location, distance) {
+    // Define a region of a given distance in km around the location.
+    const {n, e, s, w} = defineRegion(location.coordinates[0], location.coordinates[1], distance);
+    console.log('n:' + n + ', e: ' + e + ', s: ' + s + ', w: ' + w);
+    // Fetch events in this region.
+    const filter = {
+        "location.coordinates.0" : { $gt : w, $lt : e },
+        "location.coordinates.1" : { $gt : s, $lt : n },
+        "expoPushToken": {$exists: true}
+    }
 
-    // Define a region of 5km around the location.
-    const {n, e, s, w} = defineRegion(location.longitude, location.latitude, distance);
-    const filter = {"location.coordinates.0" : { $gt : w, $lt : e }, "location.coordinates.1" : { $gt : s, $lt : n }}
-
-    return new Promise((resolve,reject) => {
-        Event.find(filter, (err, events) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(events);
-            }
-        });
-    })
+    User.find(filter, (err, users) => {
+        if (err) { console.error(err); return; }
+        const tokens = users.map(user => user.expoPushToken);
+        sendNotifications(tokens,notification.title, notification.body)
+    });
 }
 
 router.put('/:eventId/requests/:userId/request-to-join', (req,res) => {

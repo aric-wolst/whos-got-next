@@ -8,6 +8,12 @@
 
 const { Expo } = require('expo-server-sdk');
 
+/*
+ * Description. Send Push Notification to a list of users.
+ * @param {Array}   pushTokens   List of pushTokens (each token represents a user who has opted in).
+ * @param {String}  pushTitle    Title of push notification.
+ * @param {String}  pushBody     Message body of push notification.
+ */
 function sendNotifications(pushTokens, pushTitle, pushBody) {
     // Create a new Expo SDK client
     let expo = new Expo();
