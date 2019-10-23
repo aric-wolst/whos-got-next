@@ -59,7 +59,7 @@ Get profile for current user
 **Error Responses** `400 BAD REQUEST` Bad Request.
 
 
-`PUT /:userId/saveExpoPushToken/:expoPushToken`
+`PUT /:userId/save-expo-push-token/:expoPushToken`
 Set expo push token for user with `:userId`.
 **Body** None.
 **Success Responses** `200 OK` Returns updated user object.
