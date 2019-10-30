@@ -60,7 +60,7 @@ class SignInScreen extends React.Component {
 
         backendRequest('/users/exists', {type: 'facebookId', identifier: json.id}, 'GET').then(user => {
             if (user) {
-              console.log('user: ' + user);
+              console.log('user: ' + JSON.stringify(user));
               AsyncStorage.setItem(config.userIdKey, user._id).then(() => {
                 Alert.alert('Logged in!', `Hi ${json.name}!`);
                 this.presentApp();
