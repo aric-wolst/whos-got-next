@@ -1,4 +1,4 @@
-# whos-got-next
+# Who's Got Next?
 
 ## Authors
 Rune Hoejlund
