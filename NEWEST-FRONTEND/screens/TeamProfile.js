@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text, ActivityIndicator, TouchableOpacity, ListView } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 
+/* Displays information about an event */
 class TeamProfile extends Component {
+    
+    /* Page header */
     static navigationOptions = {
         headerTintColor: 'white',
         headerStyle: {
@@ -17,6 +20,7 @@ class TeamProfile extends Component {
         }
     };
 
+    /* Takes the date and formats it to a readable state */
     formatDate(data) {
         var hour = new Date(data);
         var min = new Date(data);
@@ -31,19 +35,22 @@ class TeamProfile extends Component {
         month = month.getUTCMonth() + 1;
         year = year.getFullYear();
         
-        if(hour > 12){
+        if(hour > 12 && hour <= 23){
             hour = hour % 12;
             ampm = "PM"
+        } else if(hour == 24){
+            hour = 12;
         }
 
         if(min < 10){
-            min = "0"+min;
+            min = "0" + min;
         }
         
         var date = hour + ":" + min + " " + ampm + " " + month + "/" + day + "/" + year;
         return date;
     }
 
+    /* Displays the information about the event, given the parameters passed to the page */
     render(){
         const { navigation } = this.props;
         return(
@@ -73,6 +80,7 @@ class TeamProfile extends Component {
     }
 }
 
+/* Style sheet for rendered items */
 const styles = StyleSheet.create({
     header: {
         backgroundColor: "#ff8c00",

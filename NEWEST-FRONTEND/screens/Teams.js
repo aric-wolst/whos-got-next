@@ -8,6 +8,7 @@ import * as Permissions from 'expo-permissions';
 import backendRequest from "../utils/RequestManager";
 import config from '../config';
 
+/* Displays the page with all events within 5km and the create event button */
 class Teams extends Component {
     constructor(props) {
         super(props);
@@ -19,6 +20,7 @@ class Teams extends Component {
         this.GetData();
     }
 
+    /* Page header */
     static navigationOptions = {
         headerTitle: "Live Events",
         headerStyle: {
@@ -37,10 +39,14 @@ class Teams extends Component {
     };
 
     GetData = () =>{
+        /* Get user's current location */
         this._getLocationAsync().then(() => {
+        
+        /* Give the backend the users current location to retrieve events within 5km */
         fetch("http://34.220.132.159/events/nearby?longitude=" + this.state.location.coords.longitude + "&latitude=" + this.state.location.coords.latitude, {
             method: "GET",
         })
+        /* Store returned events into datasource and stop refreshing */
         .then(response => response.json())
         .then((responseJson)=> {
           this.setState({
@@ -48,6 +54,7 @@ class Teams extends Component {
            dataSource: responseJson
           })
         })
+        /* Store user ID into async storage and send user coordinates to the backend */
         .then(() => AsyncStorage.getItem(config.userIdKey))
         .then((userId) => {
             var userLocation = {coordinates: [this.state.location.coords.longitude, this.state.location.coords.latitude], type: "Point",};
@@ -59,12 +66,16 @@ class Teams extends Component {
         })
     }
 
+    /* When the page is pulled down, it refreshes, sets the datasource to empty and calls GetData */
     onRefresh() {
         this.setState({ dataSource: [] });
         this.GetData();
-      }
+    }
 
+    /* Gets user's current location */
     _getLocationAsync = async () => {
+        
+        /* Gets permission to retrieve user's location */
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (status !== 'granted') {
           this.setState({
@@ -72,10 +83,12 @@ class Teams extends Component {
           });
         }
 
+        /* Sets location to the highest possible accuracy */
         const locationSettings = {
             accuracy: Location.Accuracy.Highest,
         }
     
+        /* Sets the location state to the current location */
         let location = await Location.getCurrentPositionAsync(locationSettings,{});
         this.setState({
             location: location 
@@ -83,6 +96,7 @@ class Teams extends Component {
         console.log(location);
     };
     
+    /* Styling line separator between events */
     FlatListItemSeparator = () => {
         return (
           <View style={{
@@ -95,6 +109,7 @@ class Teams extends Component {
         );
     }
 
+    /* Takes the date and formats it to a readable state */
     formatDate(data) {
         var hour = new Date(data);
         var min = new Date(data);
@@ -109,19 +124,22 @@ class Teams extends Component {
         month = month.getUTCMonth() + 1;
         year = year.getFullYear();
         
-        if(hour > 12){
+        if(hour > 12 && hour <= 23){
             hour = hour % 12;
             ampm = "PM"
+        } else if(hour == 24){
+            hour = 12;
         }
 
         if(min < 10){
-            min = "0"+min;
+            min = "0" + min;
         }
         
         var date = hour + ":" + min + " " + ampm + " " + month + "/" + day + "/" + year;
         return date;
     }
-        
+    
+    /* Renders each individual event, that redirects to e new page when the event is pressed */
     renderItem=(data)=>
     <View style = {{flexDirection: 'row'}}>
         <TouchableOpacity onPress={() => {this.props.navigation.navigate('TeamProfile', {
@@ -141,13 +159,15 @@ class Teams extends Component {
     </View>
     
     render() {
+        /* Renders a spinning wheel if we are refreshing */
         if(this.state.refreshing){
             return( 
               <View style={styles.loader}> 
                 <ActivityIndicator size="large" color="black"/>
               </View>
         )}
-
+        
+        /* Renders the page with the create event button and nearby events */
         return(
             <View>
                 <ScrollView
@@ -157,7 +177,7 @@ class Teams extends Component {
                                   onRefresh={this.onRefresh.bind(this)}
                                 />
                               }>
-                    <TouchableOpacity 
+                    <TouchableOpacity /* Create event button */
                         style={{height: 70, textAlign: 'center', justifyContent:'center', alignContent: 'center'}}
                         onPress = {() => this.props.navigation.navigate('CreateEvent', {
                             latitude: this.state.location.coords.latitude,
@@ -168,6 +188,7 @@ class Teams extends Component {
                     <View style={{height: 5, width:"100%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
                     <View style={styles.container}>
                         {<FlatList
+                            /* Creates each event */
                             data = {this.state.dataSource}
                             ItemSeparatorComponent = {this.FlatListItemSeparator}
                             renderItem= {item=> this.renderItem(item)}
@@ -182,6 +203,7 @@ class Teams extends Component {
 
 export default Teams;
 
+/* Style sheet for rendered items */
 const styles = StyleSheet.create({
     container: {
       flex: 1,
