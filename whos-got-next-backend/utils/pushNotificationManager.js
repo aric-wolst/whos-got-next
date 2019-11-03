@@ -6,7 +6,7 @@
  * which explains how to send push notifications with expo.
  */
 
-const { Expo } = require('expo-server-sdk');
+const { Expo } = require("expo-server-sdk");
 
 /*
  * Description. Send Push Notification to a list of users.
@@ -31,7 +31,7 @@ function sendNotifications(pushTokens, pushTitle, pushBody) {
       // Construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications.html)
       messages.push({
         to: pushToken,
-        sound: 'default',
+        sound: "default",
         body: pushBody,
         title: pushTitle
       })
@@ -99,9 +99,9 @@ function sendNotifications(pushTokens, pushTitle, pushBody) {
           // The receipts specify whether Apple or Google successfully received the
           // notification and information about an error, if one occurred.
           for (let receipt of receipts) {
-            if (receipt.status === 'ok') {
+            if (receipt.status === "ok") {
               continue;
-            } else if (receipt.status === 'error') {
+            } else if (receipt.status === "error") {
               console.error(`There was an error sending a notification: ${receipt.message}`);
               if (receipt.details && receipt.details.error) {
                 // The error codes are listed in the Expo documentation:

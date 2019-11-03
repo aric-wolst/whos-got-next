@@ -1,9 +1,9 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose")
 
 const authSchema = new mongoose.Schema({
   type: {
     type: String,
-    enum: ['facebookId', 'email'],
+    enum: ["facebookId", "email"],
     required: true
   },
   identifier: {

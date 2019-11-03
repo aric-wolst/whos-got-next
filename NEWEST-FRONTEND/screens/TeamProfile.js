@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
-import { Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text, ActivityIndicator, TouchableOpacity, ListView } from 'react-native';
-import { createStackNavigator } from 'react-navigation-stack';
+import React, { Component } from "react";
+import { Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text, ActivityIndicator, TouchableOpacity, ListView } from "react-native";
+import { createStackNavigator } from "react-navigation-stack";
 
 /* Displays information about an event */
 class TeamProfile extends Component {
     
     /* Page header */
     static navigationOptions = {
-        headerTintColor: 'white',
+        headerTintColor: "white",
         headerStyle: {
-          backgroundColor: '#ff8c00',
+          backgroundColor: "#ff8c00",
         },
         headerBackTitleStyle: {
-            color: 'white',
-            fontWeight: 'bold'
+            color: "white",
+            fontWeight: "bold"
         },
         headerBackImageStyle: {
-            tintColor: 'white',
+            tintColor: "white",
         }
     };
 
@@ -54,26 +54,26 @@ class TeamProfile extends Component {
     render(){
         const { navigation } = this.props;
         return(
-            <ScrollView style = {{flexDirection: 'column'}}>
+            <ScrollView style = {{flexDirection: "column"}}>
                 <View style={styles.header}>
                     <Text style={styles.headerText}>
-                        {navigation.getParam('eventName', 'No Event Name')}
+                        {navigation.getParam("eventName", "No Event Name")}
                     </Text>
                 </View>
                 <View style={styles.subheader}>
                     <Text style={styles.sportText}>
-                        {navigation.getParam('sport', 'No Sport Specified')} 
+                        {navigation.getParam("sport", "No Sport Specified")} 
                     </Text>
                     <Text style={styles.location}>
-                        {navigation.getParam('location', 'No Location Specified')}
+                        {navigation.getParam("location", "No Location Specified")}
                     </Text>
                     <Text style={styles.dateText}>
-                        {this.formatDate(navigation.getParam('date', 'No League Specified'))}
+                        {this.formatDate(navigation.getParam("date", "No League Specified"))}
                     </Text>
                 </View>
                 <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
                 <Text style={styles.bio}>
-                    {navigation.getParam('eventBio', ' ')}
+                    {navigation.getParam("eventBio", " ")}
                 </Text>
             </ScrollView>
         )
@@ -84,15 +84,15 @@ class TeamProfile extends Component {
 const styles = StyleSheet.create({
     header: {
         backgroundColor: "#ff8c00",
-        alignContent: 'center',
+        alignContent: "center",
         justifyContent: "center",
-        alignItems: 'center'
+        alignItems: "center"
     },
     header: {
         backgroundColor: "#ff8c00",
-        alignContent: 'center',
+        alignContent: "center",
         justifyContent: "center",
-        alignItems: 'center'
+        alignItems: "center"
       },
     headerText: {
         marginTop: 20,
@@ -100,10 +100,10 @@ const styles = StyleSheet.create({
         fontSize: 35,
         marginLeft: 5,
         marginRight: 5,
-        fontWeight: 'bold',
-        color: 'white',
-        alignSelf: 'center',
-        textAlign: 'center',
+        fontWeight: "bold",
+        color: "white",
+        alignSelf: "center",
+        textAlign: "center",
     },
     sportText: {
         marginTop: 5,
@@ -111,10 +111,10 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         marginRight: 5,
         fontSize: 35,
-        fontWeight: 'bold',
-        color: '#ff8c00',
-        alignSelf: 'center',
-        textAlign: 'center',
+        fontWeight: "bold",
+        color: "#ff8c00",
+        alignSelf: "center",
+        textAlign: "center",
     },
     location: {
         marginTop: 5,
@@ -122,10 +122,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginLeft: 5,
         marginRight: 5,
-        fontWeight: 'bold',
-        color: 'black',
-        alignSelf: 'center',
-        textAlign: 'center',
+        fontWeight: "bold",
+        color: "black",
+        alignSelf: "center",
+        textAlign: "center",
     },
     dateText: {
         marginTop: 5,
@@ -133,15 +133,15 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         marginRight: 5,
         fontSize: 20,
-        fontWeight: 'bold',
-        color: 'black',
-        alignSelf: 'center',
-        textAlign: 'center',
+        fontWeight: "bold",
+        color: "black",
+        alignSelf: "center",
+        textAlign: "center",
     },
     bio: {
-        color: 'black',
-        alignSelf: 'center',
-        textAlign: 'center',
+        color: "black",
+        alignSelf: "center",
+        textAlign: "center",
         fontSize: 18,
         margin: 5,
     }

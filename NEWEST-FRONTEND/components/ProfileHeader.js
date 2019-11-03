@@ -8,7 +8,7 @@ export default class ProfileHeader extends Component {
             <View style = {styles.headerBackground}>
                 <View style = {styles.header}>
                     <View style = {styles.profilepicWrap}>
-                        <Image style = {styles.profilepic} source={require('../img/profilepic.jpg')} />
+                        <Image style = {styles.profilepic} source={require("../img/profilepic.jpg")} />
                     </View>
 
                     <View style = {styles.personalInfo}>
@@ -31,15 +31,15 @@ const styles = StyleSheet.create({
         paddingTop: 30,
         paddingBottom: 10,
         paddingHorizontal: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+        flexDirection: "row",
+        justifyContent: "space-between"
     },
     profilepicWrap: {
         width: 80,
         height: 80,
         borderRadius: 100,
         borderWidth: 10,
-        borderColor: 'rgba(0,0,0, 0.4)',
+        borderColor: "rgba(0,0,0, 0.4)",
     },
     sportIcons: {
         width: 20,
@@ -49,33 +49,33 @@ const styles = StyleSheet.create({
         flex: 1,
         width: null,
         borderRadius: 100,
-        borderColor: '#fff',
+        borderColor: "#fff",
         borderWidth: 4
     },
     name: {
         marginTop: 20,
         fontSize: 28,
-        fontWeight: 'bold',
-        color: 'black',
-        textAlign: 'right'
+        fontWeight: "bold",
+        color: "black",
+        textAlign: "right"
     },
     genderAndHeight: {
         fontSize: 14,
-        color: 'black',
-        textAlign: 'right'
+        color: "black",
+        textAlign: "right"
     },
     age: {
         fontSize: 14,
-        color: 'black',
-        fontWeight: '300',
-        textAlign: 'right'
+        color: "black",
+        fontWeight: "300",
+        textAlign: "right"
     },
     personalInfo: {
-        justifyContent: 'center'
+        justifyContent: "center"
     },
     sportInfo: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        textAlign: 'right'
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        textAlign: "right"
     }
 });

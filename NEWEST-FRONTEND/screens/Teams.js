@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { AsyncStorage, Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text, ActivityIndicator, TouchableOpacity, ListView, RefreshControl } from 'react-native';
-import FindTeamsHeader from '../components/FindTeamsHeader';
-import { createStackNavigator } from 'react-navigation-stack';
-import Constants from 'expo-constants';
-import * as Location from 'expo-location';
-import * as Permissions from 'expo-permissions';
+import React, { Component } from "react";
+import { AsyncStorage, Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text, ActivityIndicator, TouchableOpacity, ListView, RefreshControl } from "react-native";
+import FindTeamsHeader from "../components/FindTeamsHeader";
+import { createStackNavigator } from "react-navigation-stack";
+import Constants from "expo-constants";
+import * as Location from "expo-location";
+import * as Permissions from "expo-permissions";
 import backendRequest from "../utils/RequestManager";
-import config from '../config';
+import config from "../config";
 
 /* Displays the page with all events within 5km and the create event button */
 class Teams extends Component {
@@ -24,17 +24,17 @@ class Teams extends Component {
     static navigationOptions = {
         headerTitle: "Live Events",
         headerStyle: {
-          backgroundColor: '#ff8c00',
-          color: 'white',
-          textAlign: 'center',
-          alignContent: 'center',
+          backgroundColor: "#ff8c00",
+          color: "white",
+          textAlign: "center",
+          alignContent: "center",
         },
         headerTitleStyle: {
-          fontWeight: 'bold',
-          color: 'white',
+          fontWeight: "bold",
+          color: "white",
           fontSize: 30,
-          alignSelf: 'center',
-          textAlign: 'center'
+          alignSelf: "center",
+          textAlign: "center"
         },
     };
 
@@ -58,7 +58,7 @@ class Teams extends Component {
         .then(() => AsyncStorage.getItem(config.userIdKey))
         .then((userId) => {
             var userLocation = {coordinates: [this.state.location.coords.longitude, this.state.location.coords.latitude], type: "Point",};
-            backendRequest('/users/' + userId, {}, 'PUT', {
+            backendRequest("/users/" + userId, {}, "PUT", {
                 "location": userLocation,
             })
         })
@@ -77,9 +77,9 @@ class Teams extends Component {
         
         /* Gets permission to retrieve user's location */
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
-        if (status !== 'granted') {
+        if (status !== "granted") {
           this.setState({
-            errorMessage: 'Permission to access location was denied',
+            errorMessage: "Permission to access location was denied",
           });
         }
 
@@ -141,15 +141,15 @@ class Teams extends Component {
     
     /* Renders each individual event, that redirects to e new page when the event is pressed */
     renderItem=(data)=>
-    <View style = {{flexDirection: 'row'}}>
-        <TouchableOpacity onPress={() => {this.props.navigation.navigate('TeamProfile', {
+    <View style = {{flexDirection: "row"}}>
+        <TouchableOpacity onPress={() => {this.props.navigation.navigate("TeamProfile", {
             eventName: data.item.name,
             sport: data.item.sport,
             eventBio: data.item.description,
             date: data.item.date,
             location: data.item.address
         })}}>
-            <View style = {{height: 150, width: '100%'}}>
+            <View style = {{height: 150, width: "100%"}}>
                 <Text style={styles.sport}>{data.item.sport}</Text>
                 <Text style={styles.titleName}>{data.item.name}</Text>
                 <Text style={styles.date}>{this.formatDate(data.item.date)}</Text>
@@ -178,8 +178,8 @@ class Teams extends Component {
                                 />
                               }>
                     <TouchableOpacity /* Create event button */
-                        style={{height: 70, textAlign: 'center', justifyContent:'center', alignContent: 'center'}}
-                        onPress = {() => this.props.navigation.navigate('CreateEvent', {
+                        style={{height: 70, textAlign: "center", justifyContent:"center", alignContent: "center"}}
+                        onPress = {() => this.props.navigation.navigate("CreateEvent", {
                             latitude: this.state.location.coords.latitude,
                             longitude: this.state.location.coords.longitude,
                             })}>
@@ -249,15 +249,15 @@ const styles = StyleSheet.create({
         width: 60, 
         height: 60, 
         borderRadius: 60/2, 
-        backgroundColor: '#ff8c00', 
+        backgroundColor: "#ff8c00", 
         padding: 8, 
-        alignItems: 'center', 
-        justifyContent: 'center'
+        alignItems: "center", 
+        justifyContent: "center"
     },
     createEventText: {
         fontSize: 30,
-        textAlign: 'center',
-        fontWeight: 'bold',
-        color: '#ff8c00',
+        textAlign: "center",
+        fontWeight: "bold",
+        color: "#ff8c00",
     },
   });
