@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { RefreshControl, SafeAreaView, StyleSheet, ScrollView, FlatList, View } from "react-native";
+import { RefreshControl, SafeAreaView, ScrollView, FlatList, View } from "react-native";
 import ProfileHeader from "../components/ProfileHeader";
 import ProfileBio from "../components/ProfileBio";
 import Legend from "../components/Legend";

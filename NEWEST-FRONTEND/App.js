@@ -87,7 +87,7 @@ class SignInScreen extends React.Component {
         )
       } else {
         // type === "cancel"
-        Alert.alert("Did not work", `Sorry`);
+        Alert.alert("Did not work", "Sorry");
       }
     } catch ({ message }) {
       alert(`Facebook Login Error: ${message}`);
@@ -136,11 +136,11 @@ const AppTabs = createBottomTabNavigator(
         let IconComponent = Ionicons;
         let iconName;
         if(routeName === "Home") {
-          iconName = `ios-information-circle${focused ? "" : "-outline"}`;
+          iconName = "ios-information-circle${focused ? '' : '-outline'}";
         } else if (routeName === "MyProfile") {
-          iconName = `ios-contact`;
+          iconName = "ios-contact";
         } else if (routeName == "Events") {
-          iconName = `ios-people`;
+          iconName = "ios-people";
         } else if (routeName == "Settings") {
           iconName = "ios-settings";
         } else {
