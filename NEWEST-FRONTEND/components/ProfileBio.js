@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Text, View, Image } from 'react-native';
+import React, { Component } from "react";
+import { AppRegistry, StyleSheet, Text, View, Image } from "react-native";
 
 export default class ProfileBio extends Component {
     render() {
@@ -15,7 +15,7 @@ export default class ProfileBio extends Component {
 
 const styles = StyleSheet.create({
     header: {
-        alignItems: 'center',
+        alignItems: "center",
         marginVertical: 10,
         marginHorizontal: 20
     },
@@ -25,6 +25,6 @@ const styles = StyleSheet.create({
     },
     textBox: {
         fontSize: 16,
-        color: 'rgba(0,0,0, 0.6)'
+        color: "rgba(0,0,0, 0.6)"
     }
 });

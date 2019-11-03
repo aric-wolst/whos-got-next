@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { ActivityIndicator, AsyncStorage, Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text } from 'react-native';
-import Profile from './Profile';
-import config from '../config';
+import React, { Component } from "react";
+import { ActivityIndicator, AsyncStorage, Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text } from "react-native";
+import Profile from "./Profile";
+import config from "../config";
 
 class MyProfile extends Component {
 
@@ -10,7 +10,7 @@ class MyProfile extends Component {
         this.initData = Data;
         this.state = {
             isLoading: true,
-            id: '',
+            id: "",
         };
     }
 

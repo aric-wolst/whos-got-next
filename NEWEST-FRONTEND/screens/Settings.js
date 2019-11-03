@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { TextInput, KeyboardAvoidingView, Alert, AsyncStorage, Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text } from 'react-native';
-import { Dropdown } from 'react-native-material-dropdown';
+import React, { Component } from "react";
+import { TextInput, KeyboardAvoidingView, Alert, AsyncStorage, Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text } from "react-native";
+import { Dropdown } from "react-native-material-dropdown";
 import backendRequest from "../utils/RequestManager";
-import config from '../config';
+import config from "../config";
 
 
 
@@ -11,18 +11,18 @@ class Settings extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            firstName: '',
-            gender: '',
-            description: '',
-            badminton: [false,'Beginner'],
-            baseball: [false,'Beginner'],
-            basketball: [false,'Beginner'],
-            football: [false,'Beginner'],
-            hockey:[false,'Beginner'],
-            soccer:[false,'Beginner'],
-            streetfighting: [false,'Beginner'],
-            tennis: [false,'Beginner'],
-            volleyball: [false,'Beginner'],
+            firstName: "",
+            gender: "",
+            description: "",
+            badminton: [false,"Beginner"],
+            baseball: [false,"Beginner"],
+            basketball: [false,"Beginner"],
+            football: [false,"Beginner"],
+            hockey:[false,"Beginner"],
+            soccer:[false,"Beginner"],
+            streetfighting: [false,"Beginner"],
+            tennis: [false,"Beginner"],
+            volleyball: [false,"Beginner"],
         }
         this.updateProfile=this.updateProfile.bind(this);
         this.addBadminton=this.addBadminton.bind(this);
@@ -43,9 +43,9 @@ class Settings extends React.Component {
         var level;
 
         if(this.state.badminton[0] === true) {
-            if(this.state.badminton[1] === 'Beginner') {
+            if(this.state.badminton[1] === "Beginner") {
                 level = 1;
-            } else if (this.state.badminton[1] === 'Intermmediate') {
+            } else if (this.state.badminton[1] === "Intermmediate") {
                 level = 2;
             } else {
                 level = 3;
@@ -55,9 +55,9 @@ class Settings extends React.Component {
         }
 
         if(this.state.baseball[0] === true) {
-            if(this.state.baseball[1] === 'Beginner') {
+            if(this.state.baseball[1] === "Beginner") {
                 level = 1;
-            } else if (this.state.baseball[1] === 'Intermmediate') {
+            } else if (this.state.baseball[1] === "Intermmediate") {
                 level = 2;
             } else {
                 level = 3;
@@ -67,9 +67,9 @@ class Settings extends React.Component {
         }
 
         if(this.state.basketball[0] === true) {
-            if(this.state.basketball[1] === 'Beginner') {
+            if(this.state.basketball[1] === "Beginner") {
                 level = 1;
-            } else if (this.state.basketball[1] === 'Intermmediate') {
+            } else if (this.state.basketball[1] === "Intermmediate") {
                 level = 2;
             } else {
                 level = 3;
@@ -79,9 +79,9 @@ class Settings extends React.Component {
         }
 
         if(this.state.football[0] === true) {
-            if(this.state.football[1] === 'Beginner') {
+            if(this.state.football[1] === "Beginner") {
                 level = 1;
-            } else if (this.state.football[1] === 'Intermmediate') {
+            } else if (this.state.football[1] === "Intermmediate") {
                 level = 2;
             } else {
                 level = 3;
@@ -91,9 +91,9 @@ class Settings extends React.Component {
         }
 
         if(this.state.hockey[0] === true) {
-            if(this.state.hockey[1] === 'Beginner') {
+            if(this.state.hockey[1] === "Beginner") {
                 level = 1;
-            } else if (this.state.hockey[1] === 'Intermmediate') {
+            } else if (this.state.hockey[1] === "Intermmediate") {
                 level = 2;
             } else {
                 level = 3;
@@ -103,9 +103,9 @@ class Settings extends React.Component {
         }
 
         if(this.state.soccer[0] === true) {
-            if(this.state.soccer[1] === 'Beginner') {
+            if(this.state.soccer[1] === "Beginner") {
                 level = 1;
-            } else if (this.state.soccer[1] === 'Intermmediate') {
+            } else if (this.state.soccer[1] === "Intermmediate") {
                 level = 2;
             } else {
                 level = 3;
@@ -115,9 +115,9 @@ class Settings extends React.Component {
         }
 
         if(this.state.streetfighting[0] === true) {
-            if(this.state.streetfighting[1] === 'Beginner') {
+            if(this.state.streetfighting[1] === "Beginner") {
                 level = 1;
-            } else if (this.state.streetfighting[1] === 'Intermmediate') {
+            } else if (this.state.streetfighting[1] === "Intermmediate") {
                 level = 2;
             } else {
                 level = 3;
@@ -127,9 +127,9 @@ class Settings extends React.Component {
         }
 
         if(this.state.tennis[0] === true) {
-            if(this.state.tennis[1] === 'Beginner') {
+            if(this.state.tennis[1] === "Beginner") {
                 level = 1;
-            } else if (this.state.tennis[1] === 'Intermmediate') {
+            } else if (this.state.tennis[1] === "Intermmediate") {
                 level = 2;
             } else {
                 level = 3;
@@ -139,9 +139,9 @@ class Settings extends React.Component {
         }
 
         if(this.state.volleyball[0] === true) {
-            if(this.state.volleyball[1] === 'Beginner') {
+            if(this.state.volleyball[1] === "Beginner") {
                 level = 1;
-            } else if (this.state.volleyball[1] === 'Intermmediate') {
+            } else if (this.state.volleyball[1] === "Intermmediate") {
                 level = 2;
             } else {
                 level = 3;
@@ -152,25 +152,25 @@ class Settings extends React.Component {
         
         AsyncStorage.getItem(config.userIdKey)
         .then((id) => {
-            backendRequest('/users/' + id, {}, 'PUT', {
+            backendRequest("/users/" + id, {}, "PUT", {
                 "firstName": this.state.firstName,
                 "gender": this.state.gender,
                 "description": this.state.description,
                 "sports": sports,    
             }).then ( () => {
-                Alert.alert('Success', 'Your profile has been updated!');
+                Alert.alert("Success", "Your profile has been updated!");
                 this.setState({
-                    badminton: [false,'Beginner'],
-                    baseball: [false,'Beginner'],
-                    basketball: [false,'Beginner'],
-                    football: [false,'Beginner'],
-                    hockey:[false,'Beginner'],
-                    soccer:[false,'Beginner'],
-                    streetfighting: [false,'Beginner'],
-                    tennis: [false,'Beginner'],
-                    volleyball: [false,'Beginner'],
+                    badminton: [false,"Beginner"],
+                    baseball: [false,"Beginner"],
+                    basketball: [false,"Beginner"],
+                    football: [false,"Beginner"],
+                    hockey:[false,"Beginner"],
+                    soccer:[false,"Beginner"],
+                    streetfighting: [false,"Beginner"],
+                    tennis: [false,"Beginner"],
+                    volleyball: [false,"Beginner"],
                 });
-                this.props.navigation.navigate('MyProfile');
+                this.props.navigation.navigate("MyProfile");
             })
             .catch( (err) => console.log(err));
         })
@@ -180,7 +180,7 @@ class Settings extends React.Component {
 
     signOut = async () => {
         await AsyncStorage.clear();
-        this.props.navigation.navigate('Auth');
+        this.props.navigation.navigate("Auth");
     }
 
 
@@ -232,11 +232,11 @@ class Settings extends React.Component {
 
     render() {
         let levels = [{  
-            value: 'Beginner',
+            value: "Beginner",
         }, {
-            value: 'Intermmediate',
+            value: "Intermmediate",
         }, {
-            value: 'Expert',
+            value: "Expert",
         }];
         return (
             <KeyboardAvoidingView style={{ flex: 1 }} behavior = "padding" enabled>
@@ -414,9 +414,9 @@ class Settings extends React.Component {
                         </View>
 
                         <View style = {{height: 20}}/>
-                        <Button color = '#ff8c00' title = 'Update Profile' onPress = {this.updateProfile}/>
+                        <Button color = "#ff8c00" title = "Update Profile" onPress = {this.updateProfile}/>
                         <View style = {{height: 10}}/>
-                        <Button color = 'grey' title = 'Sign Out' onPress = {this.signOut}/>
+                        <Button color = "grey" title = "Sign Out" onPress = {this.signOut}/>
                     </ScrollView>
                 </SafeAreaView >
             </KeyboardAvoidingView>
@@ -431,46 +431,46 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: 30,
-        justifyContent: 'center',
+        justifyContent: "center",
         paddingLeft: 40,
         paddingRight: 40,
     },
     form: {
-        alignSelf: 'stretch',
+        alignSelf: "stretch",
     },
     header: {
         fontSize: 24,
         paddingBottom: 10,
-        borderBottomColor: '#ff8c00',
+        borderBottomColor: "#ff8c00",
         borderBottomWidth: 3,
     },
     textinput: {
-        alignSelf: 'stretch',
+        alignSelf: "stretch",
         height: 40,
         marginTop: 5,
         marginBottom: 20,
-        borderColor: '#ff8c00',
+        borderColor: "#ff8c00",
         borderWidth: 1,
         borderRadius: 5,
         padding: 10,
     },
     textinputdescription: {
-        alignSelf: 'stretch',
+        alignSelf: "stretch",
         height: 100,
         marginTop: 5,
         marginBottom: 20,
-        borderColor: '#ff8c00',
+        borderColor: "#ff8c00",
         borderWidth: 1,
         borderRadius: 5,
         padding: 10,
     },
     sportname: {
-        textAlign: 'center',
-        fontWeight: 'bold',
+        textAlign: "center",
+        fontWeight: "bold",
     },
     sportCard: {
         margin: 5,
-        borderColor: '#ff8c00',
+        borderColor: "#ff8c00",
         borderWidth: 1,
         borderRadius: 5,
         padding: 10,

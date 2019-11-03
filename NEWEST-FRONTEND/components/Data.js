@@ -1,11 +1,11 @@
 export default Data = [
     {
         id:1,
-        name: 'Rune Højlund',
+        name: "Rune Højlund",
         age: 20,
-        gender: 'Male',
+        gender: "Male",
         height: "6'2",
-        currentTeams: 'SportBook',
+        currentTeams: "SportBook",
         volleyball: [1, 3],
         basketball: [0, 1],
         football: [1, 1],

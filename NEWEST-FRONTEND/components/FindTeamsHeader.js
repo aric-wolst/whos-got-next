@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import React, { Component } from "react";
+import { StyleSheet, View, Text, Image } from "react-native";
 
 export default class FindTeamsHeader extends Component {
     render() {
@@ -13,14 +13,14 @@ export default class FindTeamsHeader extends Component {
 
 const styles = StyleSheet.create({
     FindTeamsHeaderBackground: {
-        backgroundColor: 'white',
-        alignItems: 'center'
+        backgroundColor: "white",
+        alignItems: "center"
     },
     FindTeams: {
         marginTop: 30,
         marginBottom: 20,
         fontSize: 32,
-        fontWeight: 'bold',
-        color: '#ff8c00',
+        fontWeight: "bold",
+        color: "#ff8c00",
     },
 });

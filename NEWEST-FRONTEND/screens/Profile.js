@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { RefreshControl, Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text } from 'react-native';
-import ProfileHeader from '../components/ProfileHeader';
-import ProfileBio from '../components/ProfileBio';
-import Legend from '../components/Legend';
-import Data from '../components/Data';
-import Constants, { UserInterfaceIdiom } from 'expo-constants';
-import SportCell from '../components/SportCell'
-import config from '../config';
+import React, { Component } from "react";
+import { RefreshControl, Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text } from "react-native";
+import ProfileHeader from "../components/ProfileHeader";
+import ProfileBio from "../components/ProfileBio";
+import Legend from "../components/Legend";
+import Data from "../components/Data";
+import Constants, { UserInterfaceIdiom } from "expo-constants";
+import SportCell from "../components/SportCell"
+import config from "../config";
 import backendRequest from "../utils/RequestManager";
 
 class Profile extends Component {
@@ -15,34 +15,34 @@ class Profile extends Component {
         this.initData = Data;
         this.state = {
             refreshing: true,
-            id: 'default',
-            firstName: '',
-            lastName: '',
-            email: '',
-            birthday: '',
-            description: '',
+            id: "default",
+            firstName: "",
+            lastName: "",
+            email: "",
+            birthday: "",
+            description: "",
             sports: [],
-            gender: '',
+            gender: "",
         };
         this.GetData();
     }
 
     onRefresh() {
       this.setState({
-        id: 'default',
-            firstName: '',
-            lastName: '',
-            email: '',
-            birthday: '',
-            description: '',
+        id: "default",
+            firstName: "",
+            lastName: "",
+            email: "",
+            birthday: "",
+            description: "",
             sports: [],
-            gender: '',
+            gender: "",
       });
       this.GetData();
     }
 
     GetData = () => {
-      backendRequest('/users/' + this.props.id)
+      backendRequest("/users/" + this.props.id)
       .then (user => {
         this.setState({
           refreshing: false,
@@ -94,17 +94,17 @@ export default Profile;
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
+      backgroundColor: "#fff",
+      alignItems: "center",
+      justifyContent: "center",
     },
     sportTab: {
-      flexDirection: 'row',
+      flexDirection: "row",
       marginVertical: 2,
       marginHorizontal: 10,
       flex: 1,
       borderWidth: 0,
-      borderColor: 'rgba(0,0,0,0.4)',
+      borderColor: "rgba(0,0,0,0.4)",
       borderRadius: 10
     },
     sportIcon: {
@@ -117,16 +117,16 @@ const styles = StyleSheet.create({
     },
     level: {
       fontSize: 12,
-      fontStyle: 'italic'
+      fontStyle: "italic"
     },
     logo: {
       flex: 1,
-      flexDirection: 'row'
+      flexDirection: "row"
     },
     label: {
       flex: 8,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center'
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center"
     }
   });

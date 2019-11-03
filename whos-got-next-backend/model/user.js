@@ -1,19 +1,19 @@
-const mongoose = require('mongoose');
-const Auth = require('../model/auth.js');
-const pointSchema = require('../model/point.js');
+const mongoose = require("mongoose");
+const Auth = require("../model/auth.js");
+const pointSchema = require("../model/point.js");
 
 const userSchema = new mongoose.Schema({
     authentication: {
         type: Auth,
-        required: [true, 'Email or Facebook Id is required for authentication']
+        required: [true, "Email or Facebook Id is required for authentication"]
     },
     firstName: {
         type: String,
-        required: [true, 'First Name is required']
+        required: [true, "First Name is required"]
     },
     lastName: {
         type: String,
-        required: [true, 'Last Name is required']
+        required: [true, "Last Name is required"]
     },
     emailVerified: {
         type: Boolean,
@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        enum: ['male', 'female', 'other'],
+        enum: ["male", "female", "other"],
         required: [false]
     },
     description: {
@@ -36,8 +36,8 @@ const userSchema = new mongoose.Schema({
         type: [{
             sport : {
                 type: String,
-                enum : ['Badminton', 'Baseball', 'Basketball', 'Cricket', 'Football', 'Handball',
-                    'Hockey', 'Rugby', 'Soccer', 'Street Fighting', 'Squash', 'Tennis', 'Volleyball'],
+                enum : ["Badminton", "Baseball", "Basketball", "Cricket", "Football", "Handball",
+                    "Hockey", "Rugby", "Soccer", "Street Fighting", "Squash", "Tennis", "Volleyball"],
                 required: true
             },
             level : {
