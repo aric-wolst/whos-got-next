@@ -1,5 +1,6 @@
-import React, { Component } from "react";
-import { AppRegistry, StyleSheet, Text, View, Image } from "react-native";
+import React, { Component } from 'react';
+import { AppRegistry, StyleSheet, Text, View, Image } from 'react-native';
+import GLOBALS from '../utils/Colors';
 
 export default class ProfileHeader extends Component {
     render() {
@@ -19,12 +20,11 @@ export default class ProfileHeader extends Component {
             </View>
         );
     }
-
 }
 
 const styles = StyleSheet.create({
     headerBackground: {
-        backgroundColor: "#ff8c00",
+        backgroundColor: GLOBALS.COLOR.MAINCOLOR,
         paddingBottom: 10
     },
     header: {
