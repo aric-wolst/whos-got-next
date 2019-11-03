@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Text, View, Image } from 'react-native';
-import GLOBALS from '../utils/Colors';
+import React, { Component } from "react";
+import { AppRegistry, StyleSheet, Text, View, Image } from "react-native";
+import GLOBALS from "../utils/Colors";
 
 export default class ProfileHeader extends Component {
     render() {
