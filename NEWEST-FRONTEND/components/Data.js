@@ -1,4 +1,4 @@
-export default Data = [
+let data = [
     {
         id:1,
         name: "Rune Højlund",
@@ -13,3 +13,4 @@ export default Data = [
         tennis: [1, 1]
     }
 ]
+export default data

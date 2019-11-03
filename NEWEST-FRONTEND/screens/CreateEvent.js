@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { AsyncStorage, Alert, Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from "react-native";
+import { AsyncStorage, Alert, SafeAreaView, StyleSheet, Button, View, Text, TextInput, KeyboardAvoidingView } from "react-native";
 import { Dropdown } from "react-native-material-dropdown";
 import backendRequest from "../utils/RequestManager";
 import config from "../config";
@@ -73,7 +73,7 @@ export default class CreateEvent extends Component {
 
     render() {
 
-        let timeIntervals = [{  
+        let timeIntervals = [{
             value: "1 hour",
         }, {
             value: "2 hours",
@@ -112,30 +112,30 @@ export default class CreateEvent extends Component {
             <KeyboardAvoidingView style={{ flex: 1 }} behavior = "padding" enabled>
                 <SafeAreaView style={styles.container}>
                     <Text style = {styles.header}>Create New Event</Text>
-                    <Dropdown 
-                        data = {timeIntervals} 
+                    <Dropdown
+                        data = {timeIntervals}
                         label = "Duration"
                         onChangeText = {(duration) => this.setState({duration})}
                     />
-                    <Dropdown 
-                        data = {sportsData} 
+                    <Dropdown
+                        data = {sportsData}
                         label = "Sport"
                         onChangeText = {(sport) => this.setState({sport})}
                     />
                     <View style = {{height: 20}}></View>
                     <Text>Event Name</Text>
                     <TextInput
-                        style = {styles.textinput} 
+                        style = {styles.textinput}
                         placeholder = "Your event name"
                         onChangeText = {(eventName) => this.setState({eventName})}
                         maxLength = {28}
                         value = {this.state.eventName}
                      />
                     <Text>Event Description</Text>
-                    <TextInput 
-                        style = {styles.textinputdescription} 
-                        placeholder = "Your event description" 
-                        multiline = {true} 
+                    <TextInput
+                        style = {styles.textinputdescription}
+                        placeholder = "Your event description"
+                        multiline = {true}
                         numberOfLines = {3}
                         onChangeText = {(eventDescription) => this.setState({eventDescription})}
                         value = {this.state.eventDescription}
@@ -146,7 +146,7 @@ export default class CreateEvent extends Component {
         );
     }
 
-    
+
 }
 
 const styles = StyleSheet.create({

@@ -14,6 +14,7 @@ import registerForPushNotificationsAsync from "./utils/PushNotificationsManager"
 import config from "./config";
 import backendRequest from "./utils/RequestManager";
 import CreateEvent from "./screens/CreateEvent";
+import logo from "./img/logo.png"
 
 class AuthLoadingScreen extends React.Component {
   componentDidMount() {
@@ -44,10 +45,7 @@ class SignInScreen extends React.Component {
     try {
       const {
         type,
-        token,
-        expires,
-        permissions,
-        declinedPermissions,
+        token
       } = await Facebook.logInWithReadPermissionsAsync("407364903529255", {
         permissions: ["public_profile", "email"],
       });
@@ -105,9 +103,9 @@ class SignInScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style = {styles.whosgotnext}>Who's Got Next?</Text>
+        <Text style = {styles.whosgotnext}>Who&apos;s Got Next?</Text>
 
-        <Image style = {styles.logo} source={require("./img/logo.png")} />
+        <Image style = {styles.logo} source={logo} />
 
         <TouchableOpacity onPress = {() => this.logIn()}>
           <View style = {{width: "70%", borderRadius: 10, padding: 24, backgroundColor: "#ff8c00", borderColor: "#ff8c00", borderWidth: 5}}>

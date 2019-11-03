@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-import { TextInput, KeyboardAvoidingView, Alert, AsyncStorage, Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text } from "react-native";
+import { TextInput, KeyboardAvoidingView, Alert, AsyncStorage, SafeAreaView, StyleSheet, ScrollView, Button, View, Text } from "react-native";
 import { Dropdown } from "react-native-material-dropdown";
 import backendRequest from "../utils/RequestManager";
 import config from "../config";
 
-
-
-class Settings extends React.Component {
+class Settings extends Component {
 
     constructor(props) {
         super(props);
@@ -149,14 +147,14 @@ class Settings extends React.Component {
             obj = {sport: "volleyball", level: level};
             sports.push(obj);
         }
-        
+
         AsyncStorage.getItem(config.userIdKey)
         .then((id) => {
             backendRequest("/users/" + id, {}, "PUT", {
                 "firstName": this.state.firstName,
                 "gender": this.state.gender,
                 "description": this.state.description,
-                "sports": sports,    
+                "sports": sports,
             }).then ( () => {
                 Alert.alert("Success", "Your profile has been updated!");
                 this.setState({
@@ -231,7 +229,7 @@ class Settings extends React.Component {
     }
 
     render() {
-        let levels = [{  
+        let levels = [{
             value: "Beginner",
         }, {
             value: "Intermmediate",
@@ -246,23 +244,23 @@ class Settings extends React.Component {
                         <View style = {{height: 20}}/>
                         <Text>Name</Text>
                         <TextInput
-                            style = {styles.textinput} 
+                            style = {styles.textinput}
                             placeholder = "Your full name"
                             onChangeText = {(firstName) => this.setState({firstName})}
                             value = {this.state.firstName}
                         />
                         <Text>Gender</Text>
                         <TextInput
-                            style = {styles.textinput} 
+                            style = {styles.textinput}
                             placeholder = "What do you identify as?"
                             onChangeText = {(gender) => this.setState({gender})}
                             value = {this.state.gender}
                         />
                         <Text>Bio</Text>
-                        <TextInput 
-                            style = {styles.textinputdescription} 
-                            placeholder = "A bit about yourself" 
-                            multiline = {true} 
+                        <TextInput
+                            style = {styles.textinputdescription}
+                            placeholder = "A bit about yourself"
+                            multiline = {true}
                             numberOfLines = {3}
                             onChangeText = {(description) => this.setState({description})}
                             value = {this.state.description}
@@ -271,144 +269,144 @@ class Settings extends React.Component {
                         <Text>Sports</Text>
                         <View style = {styles.sportCard}>
                             <Text style = {styles.sportname}>BADMINTON</Text>
-                            <Dropdown 
+                            <Dropdown
                                 data = {levels}
                                 label = "Level"
                                 onChangeText = {(level) => this.setState({
                                     badminton: [this.state.badminton[0],level]
                                 })}
                             />
-                            <Button 
-                                disabled = {this.state.badminton[0]} 
-                                title = "Add" 
+                            <Button
+                                disabled = {this.state.badminton[0]}
+                                title = "Add"
                                 onPress = {this.addBadminton}
                             />
                         </View>
 
                         <View style = {styles.sportCard}>
                             <Text style = {styles.sportname}>BASEBALL</Text>
-                            <Dropdown 
+                            <Dropdown
                                 data = {levels}
                                 label = "Level"
                                 onChangeText = {(level) => this.setState({
                                     baseball: [this.state.baseball[0],level]
                                 })}
                             />
-                            <Button 
-                                disabled = {this.state.baseball[0]} 
-                                title = "Add" 
+                            <Button
+                                disabled = {this.state.baseball[0]}
+                                title = "Add"
                                 onPress = {this.addBaseball}
                             />
                         </View>
 
                         <View style = {styles.sportCard}>
                             <Text style = {styles.sportname}>BASKETBALL</Text>
-                            <Dropdown 
+                            <Dropdown
                                 data = {levels}
                                 label = "Level"
                                 onChangeText = {(level) => this.setState({
                                     basketball: [this.state.basketball[0],level]
                                 })}
                             />
-                            <Button 
-                                disabled = {this.state.basketball[0]} 
-                                title = "Add" 
+                            <Button
+                                disabled = {this.state.basketball[0]}
+                                title = "Add"
                                 onPress = {this.addBasketball}
                             />
                         </View>
 
                         <View style = {styles.sportCard}>
                             <Text style = {styles.sportname}>FOOTBALL</Text>
-                            <Dropdown 
+                            <Dropdown
                                 data = {levels}
                                 label = "Level"
                                 onChangeText = {(level) => this.setState({
                                     football: [this.state.football[0],level]
                                 })}
                             />
-                            <Button 
-                                disabled = {this.state.football[0]} 
-                                title = "Add" 
+                            <Button
+                                disabled = {this.state.football[0]}
+                                title = "Add"
                                 onPress = {this.addFootball}
                             />
                         </View>
 
                         <View style = {styles.sportCard}>
                             <Text style = {styles.sportname}>HOCKEY</Text>
-                            <Dropdown 
+                            <Dropdown
                                 data = {levels}
                                 label = "Level"
                                 onChangeText = {(level) => this.setState({
                                     hockey: [this.state.hockey[0],level]
                                 })}
                             />
-                            <Button 
-                                disabled = {this.state.hockey[0]} 
-                                title = "Add" 
+                            <Button
+                                disabled = {this.state.hockey[0]}
+                                title = "Add"
                                 onPress = {this.addHockey}
                             />
                         </View>
 
                         <View style = {styles.sportCard}>
                             <Text style = {styles.sportname}>SOCCER</Text>
-                            <Dropdown 
+                            <Dropdown
                                 data = {levels}
                                 label = "Level"
                                 onChangeText = {(level) => this.setState({
                                     soccer: [this.state.soccer[0],level]
                                 })}
                             />
-                            <Button 
-                                disabled = {this.state.soccer[0]} 
-                                title = "Add" 
+                            <Button
+                                disabled = {this.state.soccer[0]}
+                                title = "Add"
                                 onPress = {this.addSoccer}
                             />
                         </View>
 
                         <View style = {styles.sportCard}>
                             <Text style = {styles.sportname}>STREET FIGHTING</Text>
-                            <Dropdown 
+                            <Dropdown
                                 data = {levels}
                                 label = "Level"
                                 onChangeText = {(level) => this.setState({
                                     streetfighting: [this.state.streetfighting[0],level]
                                 })}
                             />
-                            <Button 
-                                disabled = {this.state.streetfighting[0]} 
-                                title = "Add" 
+                            <Button
+                                disabled = {this.state.streetfighting[0]}
+                                title = "Add"
                                 onPress = {this.addStreetFighting}
                             />
                         </View>
 
                         <View style = {styles.sportCard}>
                             <Text style = {styles.sportname}>TENNIS</Text>
-                            <Dropdown 
+                            <Dropdown
                                 data = {levels}
                                 label = "Level"
                                 onChangeText = {(level) => this.setState({
                                     tennis: [this.state.tennis[0],level]
                                 })}
                             />
-                            <Button 
-                                disabled = {this.state.tennis[0]} 
-                                title = "Add" 
+                            <Button
+                                disabled = {this.state.tennis[0]}
+                                title = "Add"
                                 onPress = {this.addTennis}
                             />
                         </View>
-                        
+
                         <View style = {styles.sportCard}>
                             <Text style = {styles.sportname}>VOLLEYBALL</Text>
-                            <Dropdown 
+                            <Dropdown
                                 data = {levels}
                                 label = "Level"
                                 onChangeText = {(level) => this.setState({
                                     volleyball: [this.state.volleyball[0],level]
                                 })}
                             />
-                            <Button 
-                                disabled = {this.state.volleyball[0]} 
-                                title = "Add" 
+                            <Button
+                                disabled = {this.state.volleyball[0]}
+                                title = "Add"
                                 onPress = {this.addVolleyball}
                             />
                         </View>
