@@ -10,6 +10,10 @@ var router = express.Router();
 var authenticateWithFB = require("../utils/auth.js");
 var axios = require("axios");
 
+// Logging
+const bunyan = require("bunyan");
+const log = bunyan.createLogger({name: "whosgotnext-backend"});
+
 // MongoDB mDBConnector
 const MongoDBConnector = require("../utils/mongoDBConnector");
 const mDBConnector = MongoDBConnector.sharedInstance();
@@ -35,20 +39,20 @@ function getSelf(req,res) {
 function getExists(req,res) {
     User.findOne({"authentication.type": req.query.type, "authentication.identifier": req.query.identifier}, (err, user) => {
         if (err) { res.status(400).send(err); return; }
-        if (!user) {console.log("no user exists");}
+        if (!user) {log.info("no user exists");}
         res.status(200).send(user);
     });
 }
 
 router.use(function(req, res, next) {
-    console.log("You are in the userManager module");
+    log.info("You are in the userManager module");
     next();
 });
 
 router.post("/", (req, res) => {
 	const user = new User(req.body);
     User.findOne({"authentication.type": user.authentication.type, "authentication.identifier": user.authentication.identifier}, (err,existingUser) => {
-        if (err) { res.status(400).send(err); console.log("errror"); return; }
+        if (err) { res.status(400).send(err); log.info("errror"); return; }
 
         if (existingUser) {
             res.status(401).send("User with auth: " + existingUser.authentication + " is already in the database");
@@ -67,7 +71,7 @@ router.post("/", (req, res) => {
                     const fbUrl = "https://graph.facebook.com/" + userId + "?fields=name&access_token=" + user.authentication.token;
                     axios.get(fbUrl).then( (response) => {
                         const name = response.data.name;
-                        console.log("Successfully authenticated " + name);
+                        log.info("Successfully authenticated " + name);
                     });
                 }).catch( (err) => {
                     res.status(402).send(err);
