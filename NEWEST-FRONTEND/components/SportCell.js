@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text } from 'react-native';
-import GLOBALS from '../utils/Colors';
+import React, { Component } from "react";
+import { Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text } from "react-native";
+import GLOBALS from "../utils/Colors";
 
 class SportCell extends Component {
     
@@ -33,13 +33,13 @@ class SportCell extends Component {
         let level = "";
         if(this.props.level === 1) {
             color = GLOBALS.COLOR.BEGINNER;
-            level = 'Beginner';
+            level = "Beginner";
         } else if (this.props.level === 2) {
             color = GLOBALS.COLOR.INTERMEDIATE;
-            level = 'Intermediate';
+            level = "Intermediate";
         } else if (this.props.level === 3) {
             color = GLOBALS.COLOR.ELITE;
-            level = 'Elite';
+            level = "Elite";
         } else {
             color = GLOBALS.COLOR.ELITE;
         }
