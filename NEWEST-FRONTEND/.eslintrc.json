@@ -23,6 +23,7 @@
         "react"
     ],
     "rules": {
-        "quotes": ["error", "double"]
+        "quotes": ["error", "double"],
+        "semi": "error"
     }
 }
