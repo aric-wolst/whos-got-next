@@ -1,4 +1,6 @@
 import config from "../config";
+import { Alert } from "react-native";
+
 
 async function parseAPIResponse(response) {
   if (!response.ok) {
@@ -19,19 +21,17 @@ export default async function backendRequest(endpoint,params,method,body) {
   if (params && Object.entries(params).length > 0) {
     url += "?" + Object.entries(params).map((keyvalue) => keyvalue.map(encodeURIComponent).join("=")).join("&");
   }
-  console.log("url: " + url);
-  return new Promise((resolve,reject) => {
+  return new Promise((resolve) => {
     if (method === "GET") {
       fetch(url).then((response) => {return parseAPIResponse(response);}).then((data) => resolve(data))
-      .catch((err) => {console.error(err); reject(err);});
+      .catch((err) => Alert.alert("Request Manager Promise Error", err.message));
     } else {
       fetch(url, {
         method,
         headers: { Accept: "application/json","Content-Type": "application/json"},
         body: JSON.stringify(body)
       }).then((response) => {return parseAPIResponse(response);}).then((data) => resolve(data))
-      .catch((err) => {console.error(err); reject(err);});
+      .catch((err) => Alert.alert("Request Manager Promise Error",err.message));
     }
   });
 }
-

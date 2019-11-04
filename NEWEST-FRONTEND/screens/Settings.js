@@ -87,7 +87,6 @@ class Settings extends Component {
     }
 
     updateProfile = async () => {
-        //console.log(this.state);
         var sports = new Array();
         var obj;
         var level;
@@ -222,9 +221,9 @@ class Settings extends Component {
                 });
                 this.props.navigation.navigate("MyProfile");
             })
-            .catch( (err) => console.log(err));
+            .catch( (err) => Alert.alert("User Info Error", err.message));
         })
-        .catch ( (err) => console.log(err));
+        .catch ( (err) => Alert.alert("User ID Error", err.message));
 
     }
 
