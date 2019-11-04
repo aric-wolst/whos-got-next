@@ -8,6 +8,7 @@ import SportCell from "../components/SportCell";
 import backendRequest from "../utils/RequestManager";
 
 class Profile extends Component {
+  
     constructor(props) {
         super(props);
         this.initData = data;
