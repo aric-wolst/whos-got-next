@@ -15,6 +15,7 @@
     "rules": {
         "semi": "error",
         "new-cap": "error",
+        "quotes": ["error", "double"],
         "no-console": "error"
     }
 }

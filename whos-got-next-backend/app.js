@@ -7,8 +7,8 @@ const localconfig = require("./localconfig");
 const passphrase = localconfig.sslPassphrase;
 
 // Logging
-const bunyan = require('bunyan');
-const log = bunyan.createLogger({name: 'whosgotnext-backend'});
+const bunyan = require("bunyan");
+const log = bunyan.createLogger({name: "whosgotnext-backend"});
 
 // Module definitions.
 const userManager = require("./routes/userManager.js");

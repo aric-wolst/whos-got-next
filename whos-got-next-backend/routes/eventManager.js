@@ -13,8 +13,8 @@ const axios = require("axios");
 const sendNotifications = require("../utils/pushNotificationManager");
 
 // Logging
-const bunyan = require('bunyan');
-const log = bunyan.createLogger({name: 'whosgotnext-backend'});
+const bunyan = require("bunyan");
+const log = bunyan.createLogger({name: "whosgotnext-backend"});
 
 // MongoDB mDBConnector
 const MongoDBConnector = require("../utils/mongoDBConnector");

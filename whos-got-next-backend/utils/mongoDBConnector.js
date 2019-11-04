@@ -3,8 +3,8 @@ const localconfig = require("../localconfig");
 const mongoURI = "mongodb+srv://" + localconfig.mongoDBUser + ":" + localconfig.mongoDBPass + "@whosgotnextcluster-m3xes.mongodb.net/whosgotnext?retryWrites=true&w=majority";
 
 // Logging
-const bunyan = require('bunyan');
-const log = bunyan.createLogger({name: 'whosgotnext-backend'});
+const bunyan = require("bunyan");
+const log = bunyan.createLogger({name: "whosgotnext-backend"});
 
 // MongoDB Modules.
 const mongoose = require("mongoose");

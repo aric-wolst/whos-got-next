@@ -9,8 +9,8 @@
 const { Expo } = require("expo-server-sdk");
 
 // Logging
-const bunyan = require('bunyan');
-const log = bunyan.createLogger({name: 'whosgotnext-backend'});
+const bunyan = require("bunyan");
+const log = bunyan.createLogger({name: "whosgotnext-backend"});
 
 /*
  * Description. Send Push Notification to a list of users.
