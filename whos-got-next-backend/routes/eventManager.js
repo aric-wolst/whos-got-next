@@ -6,11 +6,11 @@
  */
 
 const express = require("express");
-const router = express.Router();
+const router = new express.Router();
 const defineRegion = require("../utils/region.js");
 const axios = require("axios");
 
-const sendNotifications = require("../utils/pushNotificationManager")
+const sendNotifications = require("../utils/pushNotificationManager");
 
 // MongoDB mDBConnector
 const MongoDBConnector = require("../utils/mongoDBConnector");
@@ -20,8 +20,8 @@ const mDBConnector = MongoDBConnector.sharedInstance();
 const mongoose = require("mongoose");
 const eventSchema = require("../model/event.js");
 const Event = mongoose.model("event", eventSchema, "event");
-const userSchema = require("../model/user.js")
-const User = mongoose.model("user", userSchema, "user")
+const userSchema = require("../model/user.js");
+const User = mongoose.model("user", userSchema, "user");
 
 router.use(express.json());
 
@@ -61,33 +61,33 @@ router.get("/:eventId", (req, res) => {
     Event.findById(req.params.eventId, (err,event) => {
         if (err) {
             res.status(400).send(err);
-            return
+            return;
         }
         res.status(200).send(event);
-    })
+    });
 });
 
 router.put("/:eventId", (req, res) => {
     Event.findByIdAndUpdate(req.params.eventId, req.body, {returnOriginal: false}, (err,event) => {
         if (err) {
             res.status(400).send(err);
-            return
+            return;
         }
 
         res.status(200).send(event);
-    })
+    });
 });
 
 router.delete("/:eventId", (req, res) => {
     Event.findByIdAndDelete(req.params.eventId, req.body, (err,event) => {
         if (err) {
             res.status(400).send(err);
-            return
+            return;
         }
 
         res.status(200).send("Event deleted");
-    })
-})
+    });
+});
 
 async function getAddress(url) {
     let res = await axios.get(url).catch(err => {
@@ -134,7 +134,7 @@ function getNearbyEvents(req,res) {
     const {n, e, s, w} = defineRegion(req.query.longitude, req.query.latitude, distance);
 
     // Fetch events in this region.
-    const filter = {"location.coordinates.0" : { $gt : w, $lt : e }, "location.coordinates.1" : { $gt : s, $lt : n }}
+    const filter = {"location.coordinates.0" : { $gt : w, $lt : e }, "location.coordinates.1" : { $gt : s, $lt : n }};
     Event.find(filter).limit(30).exec((err, events) => {
         if (err) {
             res.status(400).send(err);
@@ -153,12 +153,12 @@ function sendPushNotificationToUsersNear(notification, location, distance) {
         "location.coordinates.0" : { $gt : w, $lt : e },
         "location.coordinates.1" : { $gt : s, $lt : n },
         "expoPushToken": {$exists: true}
-    }
+    };
 
     User.find(filter, (err, users) => {
         if (err) { console.error(err); return; }
         const tokens = users.map(user => user.expoPushToken);
-        sendNotifications(tokens,notification.title, notification.body)
+        sendNotifications(tokens,notification.title, notification.body);
     });
 }
 
@@ -189,7 +189,7 @@ router.put("/:eventId/requests/:userId/request-to-join", (req,res) => {
             });
         });
 
-    })
+    });
 });
 
 router.put("/:eventId/requests/:userId/accept", (req,res) => {
@@ -207,9 +207,9 @@ router.put("/:eventId/requests/:userId/accept", (req,res) => {
 
         const i = event.pendingPlayerRequests.indexOf(userId);
         if (i > -1) {
-            event.pendingPlayerRequests.splice(i, 1)
+            event.pendingPlayerRequests.splice(i, 1);
         } else {
-            res.status(401).send("No user matching user id " + userId + "in the pendingRequests")
+            res.status(401).send("No user matching user id " + userId + "in the pendingRequests");
             return;
         }
 
@@ -232,9 +232,9 @@ router.put("/:eventId/requests/:userId/decline", (req,res) => {
 
         const i = event.pendingPlayerRequests.indexOf(userId);
         if (i > -1) {
-            event.pendingPlayerRequests.splice(i, 1)
+            event.pendingPlayerRequests.splice(i, 1);
         } else {
-            res.status(401).send("No user matching user id " + userId + "in the pendingRequests")
+            res.status(401).send("No user matching user id " + userId + "in the pendingRequests");
             return;
         }
 

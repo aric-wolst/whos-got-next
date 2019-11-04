@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const authSchema = new mongoose.Schema({
   type: {
@@ -16,4 +16,4 @@ const authSchema = new mongoose.Schema({
   }
 });
 
-module.exports = authSchema
+module.exports = authSchema;

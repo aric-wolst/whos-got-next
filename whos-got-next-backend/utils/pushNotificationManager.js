@@ -34,7 +34,7 @@ function sendNotifications(pushTokens, pushTitle, pushBody) {
         sound: "default",
         body: pushBody,
         title: pushTitle
-      })
+      });
     }
 
     // The Expo push notification service accepts batches of notifications so
@@ -118,4 +118,4 @@ function sendNotifications(pushTokens, pushTitle, pushBody) {
     })();
 }
 
-module.exports = sendNotifications
+module.exports = sendNotifications;

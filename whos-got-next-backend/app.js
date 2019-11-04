@@ -23,7 +23,7 @@ function startApp() {
 	app.use("/events", eventManager);
 
 	app.get("/", (req, res) => {
-		res.status(200).send("You successfully established an API connection!")
+		res.status(200).send("You successfully established an API connection!");
 	});
 
 	//Create the https server

@@ -1,5 +1,5 @@
-const mongoose = require("mongoose")
-const pointSchema = require("../model/point.js")
+const mongoose = require("mongoose");
+const pointSchema = require("../model/point.js");
 
 const eventSchema = new mongoose.Schema({
     name: {
@@ -46,6 +46,6 @@ const eventSchema = new mongoose.Schema({
         type : String,
         required: [false]
     }
-})
+});
 
-module.exports = eventSchema
+module.exports = eventSchema;
