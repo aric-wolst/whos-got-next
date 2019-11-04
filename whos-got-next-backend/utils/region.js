@@ -23,17 +23,17 @@ function toDegrees(num) {
 }
 
 // Calculate the latitude of a point given a starting latitude, distance, and bearing.
-function calcLat(s_lat, dist, bearing) {
-    let ans = toDegrees(Math.asin(Math.sin(s_lat)*Math.cos(dist/radiusOfEarth)
-        + Math.cos(s_lat)*Math.sin(dist/radiusOfEarth)*Math.cos(bearing)));
+function calcLat(sLat, dist, bearing) {
+    let ans = toDegrees(Math.asin(Math.sin(sLat)*Math.cos(dist/radiusOfEarth)
+        + Math.cos(sLat)*Math.sin(dist/radiusOfEarth)*Math.cos(bearing)));
 
     return ans;
 }
 
 // Calculate the longitude of a point given a starting point, distance, bearing, and point latitude.
-function calcLon(s_lon, s_lat, dist, bearing, p_lat) {
-    let ans = toDegrees(s_lon + Math.atan2(Math.sin(bearing)*Math.sin(dist/radiusOfEarth)*Math.cos(s_lat),
-        Math.cos(dist/radiusOfEarth)-Math.sin(s_lat)*Math.sin(toRadians(p_lat))));
+function calcLon(sLon, sLat, dist, bearing, pLat) {
+    let ans = toDegrees(sLon + Math.atan2(Math.sin(bearing)*Math.sin(dist/radiusOfEarth)*Math.cos(sLat),
+        Math.cos(dist/radiusOfEarth)-Math.sin(sLat)*Math.sin(toRadians(pLat))));
 
     return ans;
 }
@@ -55,20 +55,20 @@ function defineRegion(longitude, latitude, distance) {
     let lat = toRadians(latitude);
 
     // Calculate the north boundary point.
-    let north_lat = calcLat(lat, distance, northBearing);
+    let northLat = calcLat(lat, distance, northBearing);
 
     // Calculate the east boundary point.
-    let east_lat = calcLat(lat, distance, eastBearing);
-    let east_lon = calcLon(lon, lat, distance, eastBearing, east_lat);
+    let eastLat = calcLat(lat, distance, eastBearing);
+    let eastLon = calcLon(lon, lat, distance, eastBearing, eastLat);
 
     // Calculate the south boundary point.
-    let south_lat = calcLat(lat, distance, southBearing);
+    let southLat = calcLat(lat, distance, southBearing);
 
     // Calculate the west boundary point.
-    let west_lat = calcLat(lat, distance, westBearing);
-    let west_lon = calcLon(lon, lat, distance, westBearing, west_lat);
+    let westLat = calcLat(lat, distance, westBearing);
+    let westLon = calcLon(lon, lat, distance, westBearing, westLat);
 
-    let region = { n : north_lat, e : east_lon, s : south_lat, w : west_lon };
+    let region = { n : northLat, e : eastLon, s : southLat, w : westLon };
 
     return region;
 }

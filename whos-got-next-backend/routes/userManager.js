@@ -44,9 +44,9 @@ router.post("/", (req, res) => {
                     });
 
                     //Get user name
-                    const user_id = user.authentication.identifier;
-                    const fb_url = "https://graph.facebook.com/" + user_id + "?fields=name&access_token=" + user.authentication.token;
-                    axios.get(fb_url).then(response => {
+                    const userId = user.authentication.identifier;
+                    const fbUrl = "https://graph.facebook.com/" + userId + "?fields=name&access_token=" + user.authentication.token;
+                    axios.get(fbUrl).then(response => {
                         const name = response.data.name;
                         console.log("Successfully authenticated " + name);
                     });
