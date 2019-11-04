@@ -1,10 +1,10 @@
-var winston = require('winston');
+var winston = require("winston");
 
 // define the custom settings for each transport (file, console)
 var options = {
   file: {
-    level: 'info',
-    filename: `../logs/app.log`,
+    level: "info",
+    filename: "../logs/app.log",
     handleExceptions: true,
     json: true,
     maxsize: 5242880, // 5MB
@@ -12,7 +12,7 @@ var options = {
     colorize: false,
   },
   console: {
-    level: 'debug',
+    level: "debug",
     handleExceptions: true,
     json: false,
     colorize: true,
