@@ -72,7 +72,6 @@ export default class CreateEvent extends Component {
     postEvent = async () => {
         if(this.state.sport === "" ||
            this.state.eventName === "" ||
-           this.state.eventDescription === "" ||
            this.state.duration === "") {
                Alert.alert("Invalid Entry", "Please make sure to fill in all fields.");
         } else {
@@ -80,8 +79,7 @@ export default class CreateEvent extends Component {
             const { navigation } = this.props;
             var latitude = navigation.getParam("latitude", 0);
             var longitude = navigation.getParam("longitude", 0);
-            var date = new Date();
-            var utcDate = new Date(date.toUTCString());
+            var utcDate = new Date((new Date()).toUTCString());
             utcDate.setHours(utcDate.getHours()-7);
             var today = new Date(utcDate);
             var userArray = new Array();
