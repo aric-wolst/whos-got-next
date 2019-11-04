@@ -6,6 +6,9 @@ const fs = require("fs");
 const localconfig = require("./localconfig");
 const passphrase = localconfig.sslPassphrase;
 
+// Logging
+const bunyan = require('bunyan');
+const log = bunyan.createLogger({name: 'whosgotnext-backend'});
 
 // Module definitions.
 const userManager = require("./routes/userManager.js");
@@ -24,18 +27,17 @@ function startApp() {
 	});
 
 	//Create the https server
-	var server = https.createServer({
+	https.createServer({
 		key: fs.readFileSync("./key.pem"),
 		cert: fs.readFileSync("./cert.pem"),
 		passphrase
 	}, app).listen(8081, () => {
 		//var host = server.address().address;
 		//var port = server.address().port;
-		console.log("server app listening at https://:8081");
+		log.info("server app listening at https://:8081");
 	});
 }
 
 
 const mDBConnector = MongoDBConnector.sharedInstance();
-mDBConnector.connect().then(startApp).catch((err) => {console.error(err);});
-
+mDBConnector.connect().then(startApp).catch((err) => {log.error(err);});
