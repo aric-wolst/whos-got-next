@@ -197,8 +197,9 @@ router.put("/:eventId/requests/:userId/request-to-join", (req,res) => {
 
 router.put("/:eventId/requests/:userId/accept", (req,res) => {
     const userId = req.params.userId;
+    const eventId = req.params.eventId;
 
-    Event.findById(req.params.eventId, (err,event) => {
+    Event.findById(eventId, (err,event) => {
         if (err) { res.status(400).send(err); return; }
 
         if (!event) { res.status(402).send("No event matching id: " + eventId); return; }
