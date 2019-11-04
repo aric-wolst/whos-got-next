@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { RefreshControl, SafeAreaView, ScrollView, FlatList, View } from "react-native";
+import { RefreshControl, SafeAreaView, ScrollView, FlatList, View, Alert} from "react-native";
 import ProfileHeader from "../components/ProfileHeader";
 import ProfileBio from "../components/ProfileBio";
 import Legend from "../components/Legend";
@@ -56,7 +56,7 @@ class Profile extends Component {
         });
       })
       .catch ( (error)  => {
-        console.log(error);
+        Alert.alert("Get data profile errro",error.message);
       });
 
     }

@@ -24,6 +24,9 @@
     ],
     "rules": {
         "quotes": ["error", "double"],
-        "semi": "error"
+        "semi": "error",
+        "eqeqeq": "error",
+        "no-console": "error",
+        "react/prop-types": 0
     }
 }

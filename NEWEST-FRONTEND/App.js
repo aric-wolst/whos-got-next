@@ -68,11 +68,9 @@ class SignInScreen extends React.Component {
         await AsyncStorage.setItem("userToken", token);
         const response = await fetch(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,birthday`);
         const json = await response.json();
-        console.log(json);
 
         backendRequest("/users/exists", {type: "facebookId", identifier: json.id}, "GET").then( (user) => {
             if (user) {
-              console.log("user: " + JSON.stringify(user));
               AsyncStorage.setItem(config.userIdKey, user._id).then(() => {
                 Alert.alert("Logged in!", `Hi ${json.name}!`);
                 this.presentApp();

@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import { AsyncStorage, Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text, ActivityIndicator, TouchableOpacity, ListView, RefreshControl } from "react-native";
-import FindTeamsHeader from "../components/FindTeamsHeader";
-import { createStackNavigator } from "react-navigation-stack";
-import Constants from "expo-constants";
+import { AsyncStorage, StyleSheet, ScrollView, Alert, FlatList, View, Text, ActivityIndicator, TouchableOpacity, RefreshControl } from "react-native";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import backendRequest from "../utils/RequestManager";
@@ -121,7 +118,7 @@ class Teams extends Component {
                 "location": userLocation,
             });
         })
-        .catch((error) => console.log(error));
+        .catch((error) => Alert.alert("Get Event Data Error",error.message));
         });
     }
 
@@ -152,7 +149,6 @@ class Teams extends Component {
         this.setState({
             location
         });
-        console.log(location);
     };
     
     /* Styling line separator between events */
