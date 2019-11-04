@@ -70,7 +70,7 @@ class SignInScreen extends React.Component {
         const json = await response.json();
         console.log(json);
 
-        backendRequest("/users/exists", {type: "facebookId", identifier: json.id}, "GET").then(user => {
+        backendRequest("/users/exists", {type: "facebookId", identifier: json.id}, "GET").then( (user) => {
             if (user) {
               console.log("user: " + JSON.stringify(user));
               AsyncStorage.setItem(config.userIdKey, user._id).then(() => {
@@ -90,7 +90,7 @@ class SignInScreen extends React.Component {
                 "birthday": json.birthday,
                 "description": "Go to Settings to change your bio.",
                 "sports": []
-              }).then( user => {
+              }).then( (user) => {
                 AsyncStorage.setItem(config.userIdKey, user._id).then(() => {
                   Alert.alert("Logged in!", `Hi ${json.name}!`);
                   this.presentApp();
@@ -110,7 +110,7 @@ class SignInScreen extends React.Component {
 
   presentApp() {
       this.props.navigation.navigate("App");
-      AsyncStorage.getItem(config.userIdKey).then(userId => {
+      AsyncStorage.getItem(config.userIdKey).then( (userId) => {
         registerForPushNotificationsAsync(userId);
       });
   }

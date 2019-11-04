@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         color: "#ff8c00",
     },
   });
-  
+
 /* Displays the page with all events within 5km and the create event button */
 class Teams extends Component {
     constructor(props) {
@@ -106,7 +106,7 @@ class Teams extends Component {
             method: "GET",
         })
         /* Store returned events into datasource and stop refreshing */
-        .then(response => response.json())
+        .then((response) => response.json())
         .then((responseJson)=> {
           this.setState({
            refreshing: false,
@@ -121,7 +121,7 @@ class Teams extends Component {
                 "location": userLocation,
             });
         })
-        .catch(error=>console.log(error));
+        .catch((error)=>console.log(error));
         });
     }
 
@@ -250,7 +250,7 @@ class Teams extends Component {
                             /* Creates each event */
                             data = {this.state.dataSource}
                             ItemSeparatorComponent = {this.FlatListItemSeparator}
-                            renderItem= {item=> this.renderItem(item)}
+                            renderItem= {(item) => this.renderItem(item)}
                             keyExtractor={(item) => item._id}
                         /> }
                     </View>

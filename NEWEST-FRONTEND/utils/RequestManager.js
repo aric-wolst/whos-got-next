@@ -3,7 +3,7 @@ import config from "../config";
 async function parseAPIResponse(response) {
   if (!response.ok) {
     return new Promise((resolve,reject) => {
-      response.text().then(text => {
+      response.text().then((text) => {
         reject("Backend Request Error: (" + response.status + ") " + text);
     }).catch(() => { reject("Backend Request Error: (" + response.status + ")"); });
     });
@@ -17,20 +17,20 @@ async function parseAPIResponse(response) {
 export default async function backendRequest(endpoint,params,method,body) {
   var url = config.apiUrl + endpoint;
   if (params && Object.entries(params).length > 0) {
-    url += "?" + Object.entries(params).map(keyvalue => keyvalue.map(encodeURIComponent).join("=")).join("&");
+    url += "?" + Object.entries(params).map((keyvalue) => keyvalue.map(encodeURIComponent).join("=")).join("&");
   }
   console.log("url: " + url);
   return new Promise((resolve,reject) => {
     if (method === "GET") {
-      fetch(url).then(response => {return parseAPIResponse(response);}).then(data => resolve(data))
-      .catch(err => {console.error(err); reject(err);});
+      fetch(url).then((response) => {return parseAPIResponse(response);}).then((data) => resolve(data))
+      .catch((err) => {console.error(err); reject(err);});
     } else {
       fetch(url, {
         method: method,
         headers: { Accept: "application/json","Content-Type": "application/json"},
         body: JSON.stringify(body)
-      }).then(response => {return parseAPIResponse(response);}).then(data => resolve(data))
-      .catch(err => {console.error(err); reject(err);});
+      }).then((response) => {return parseAPIResponse(response);}).then((data) => resolve(data))
+      .catch((err) => {console.error(err); reject(err);});
     }
   });
 }
