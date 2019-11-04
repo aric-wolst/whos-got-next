@@ -87,7 +87,7 @@ class Settings extends Component {
     }
 
     updateProfile = async () => {
-        var sports = new Array();
+        var sportsList = new Array();
         var obj;
         var level;
 
@@ -100,7 +100,7 @@ class Settings extends Component {
                 level = 3;
             }
             obj = {sport: "badminton", level};
-            sports.push(obj);
+            sportsList.push(obj);
         }
 
         if(this.state.baseball[0] === true) {
@@ -112,7 +112,7 @@ class Settings extends Component {
                 level = 3;
             }
             obj = {sport: "baseball", level};
-            sports.push(obj);
+            sportsList.push(obj);
         }
 
         if(this.state.basketball[0] === true) {
@@ -124,7 +124,7 @@ class Settings extends Component {
                 level = 3;
             }
             obj = {sport: "basketball", level};
-            sports.push(obj);
+            sportsList.push(obj);
         }
 
         if(this.state.football[0] === true) {
@@ -136,7 +136,7 @@ class Settings extends Component {
                 level = 3;
             }
             obj = {sport: "football", level};
-            sports.push(obj);
+            sportsList.push(obj);
         }
 
         if(this.state.hockey[0] === true) {
@@ -148,7 +148,7 @@ class Settings extends Component {
                 level = 3;
             }
             obj = {sport: "hockey", level};
-            sports.push(obj);
+            sportsList.push(obj);
         }
 
         if(this.state.soccer[0] === true) {
@@ -160,7 +160,7 @@ class Settings extends Component {
                 level = 3;
             }
             obj = {sport: "soccer", level};
-            sports.push(obj);
+            sportsList.push(obj);
         }
 
         if(this.state.streetfighting[0] === true) {
@@ -172,7 +172,7 @@ class Settings extends Component {
                 level = 3;
             }
             obj = {sport: "streetfighting", level};
-            sports.push(obj);
+            sportsList.push(obj);
         }
 
         if(this.state.tennis[0] === true) {
@@ -184,7 +184,7 @@ class Settings extends Component {
                 level = 3;
             }
             obj = {sport: "tennis", level};
-            sports.push(obj);
+            sportsList.push(obj);
         }
 
         if(this.state.volleyball[0] === true) {
@@ -196,7 +196,7 @@ class Settings extends Component {
                 level = 3;
             }
             obj = {sport: "volleyball", level};
-            sports.push(obj);
+            sportsList.push(obj);
         }
 
         AsyncStorage.getItem(config.userIdKey)
@@ -205,7 +205,7 @@ class Settings extends Component {
                 "firstName": this.state.firstName,
                 "gender": this.state.gender,
                 "description": this.state.description,
-                "sports": sports,
+                "sports": sportsList,
             }).then ( () => {
                 Alert.alert("Success", "Your profile has been updated!");
                 this.setState({
