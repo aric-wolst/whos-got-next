@@ -86,7 +86,7 @@ class SportCell extends Component {
 
         return (
             <View style = {styles.sportList}>
-            {this.props.sport == "volleyball" ? 
+            {this.props.sport === "volleyball" ? 
             <View style = {[styles.sportTab, {backgroundColor: color}]} >
               <View style = {styles.logo}>
                 <Image style = {styles.sportIcon} source={require("../img/volleyball.png")} />
@@ -96,7 +96,7 @@ class SportCell extends Component {
               </View>
             </View>
             : null }
-            {this.props.sport == "basketball" ? 
+            {this.props.sport === "basketball" ? 
             <View style = {[styles.sportTab, {backgroundColor: color}]} >
               <View style = {styles.logo}>
                 <Image style = {styles.sportIcon} source={require("../img/basketball.png")} />
@@ -106,7 +106,7 @@ class SportCell extends Component {
               </View>
             </View>
             : null }
-            {this.props.sport == "football" ? 
+            {this.props.sport === "football" ? 
             <View style = {[styles.sportTab, {backgroundColor: color}]} >
               <View style = {styles.logo}>
                 <Image style = {styles.sportIcon} source={require("../img/rugby.png")} />
@@ -116,7 +116,7 @@ class SportCell extends Component {
               </View>
             </View>
             : null }
-            {this.props.sport == "soccer" ? 
+            {this.props.sport === "soccer" ? 
             <View style = {[styles.sportTab, {backgroundColor: color}]} >
               <View style = {styles.logo}>
                 <Image style = {styles.sportIcon} source={require("../img/football.png")} />
@@ -126,7 +126,7 @@ class SportCell extends Component {
               </View>
             </View>
             : null }
-            {this.props.sport == "tennis" ? 
+            {this.props.sport === "tennis" ? 
             <View style = {[styles.sportTab, {backgroundColor: color}]} >
               <View style = {styles.logo}>
                 <Image style = {styles.sportIcon} source={require("../img/tennis.png")} />
@@ -136,7 +136,7 @@ class SportCell extends Component {
               </View>
             </View>
             : null }
-            {this.props.sport == "streetfighting" ? 
+            {this.props.sport === "streetfighting" ? 
             <View style = {[styles.sportTab, {backgroundColor: color}]} >
               <View style = {styles.logo}>
                 <Image style = {styles.sportIcon} source={require("../img/brass-knuckles.png")} />
@@ -147,7 +147,7 @@ class SportCell extends Component {
             </View>
             : null 
             }
-            {this.props.sport == "baseball" ? 
+            {this.props.sport === "baseball" ? 
             <View style = {[styles.sportTab, {backgroundColor: color}]} >
               <View style = {styles.logo}>
                 <Image style = {styles.sportIcon} source={require("../img/baseball.png")} />
@@ -157,7 +157,7 @@ class SportCell extends Component {
               </View>
             </View>
             : null }
-            {this.props.sport == "hockey" ? 
+            {this.props.sport === "hockey" ? 
             <View style = {[styles.sportTab, {backgroundColor: color}]} >
               <View style = {styles.logo}>
                 <Image style = {styles.sportIcon} source={require("../img/puck.png")} />
@@ -167,7 +167,7 @@ class SportCell extends Component {
               </View>
             </View>
             : null }
-            {this.props.sport == "badminton" ? 
+            {this.props.sport === "badminton" ? 
             <View style = {[styles.sportTab, {backgroundColor: color}]} >
               <View style = {styles.logo}>
                 <Image style = {styles.sportIcon} source={require("../img/shuttlecock.png")} />

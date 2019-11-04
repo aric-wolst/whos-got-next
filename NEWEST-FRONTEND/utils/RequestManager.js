@@ -8,7 +8,7 @@ async function parseAPIResponse(response) {
     }).catch(() => { reject("Backend Request Error: (" + response.status + ")"); });
     });
   }
-  if (response.headers.get("content-length") == 0) {
+  if (response.headers.get("content-length") === 0) {
     return new Promise((resolve) => resolve(0));
   }
   return response.json();

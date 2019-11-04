@@ -105,7 +105,7 @@ class TeamProfile extends Component {
         if(hour > 12 && hour <= 23){
             hour = hour % 12;
             ampm = "PM";
-        } else if(hour == 24){
+        } else if(hour === 24){
             hour = 12;
         }
 
