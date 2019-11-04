@@ -126,7 +126,7 @@ router.post("/", (req, res) => {
 });
 
 router.get("/:eventId", (req, res) => {
-    if (req.params.eventId == "nearby") {
+    if (req.params.eventId === "nearby") {
         getNearbyEvents(req,res);
         return;
     }
@@ -164,7 +164,8 @@ router.delete("/:eventId", (req, res) => {
 
 
 router.put("/:eventId/requests/:userId/request-to-join", (req,res) => {
-    Event.findById(req.params.eventId, (err,event) => {
+    const eventId = req.params.eventId;
+    Event.findById(eventId, (err,event) => {
         if (err) { res.status(400).send(err); return; }
         const userId = req.params.userId;
 
@@ -225,8 +226,8 @@ router.put("/:eventId/requests/:userId/accept", (req,res) => {
 
 router.put("/:eventId/requests/:userId/decline", (req,res) => {
     const userId = req.params.userId;
-
-    Event.findById(req.params.eventId, (err,event) => {
+    const eventId = req.params.eventId;
+    Event.findById(eventId, (err,event) => {
         if (err) { res.status(400).send(err); return; }
 
         if (!event) { res.status(402).send("No event matching id: " + eventId); return; }

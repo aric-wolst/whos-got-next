@@ -79,12 +79,12 @@ router.post("/", (req, res) => {
 
 router.get("/:userId", (req, res) => {
     const userId = req.params.userId;
-    if (userId == "self") {
+    if (userId === "self") {
         getSelf(req,res);
         return;
     }
 
-    if (req.params.userId == "exists") {
+    if (req.params.userId === "exists") {
         getExists(req,res);
         return;
     }
