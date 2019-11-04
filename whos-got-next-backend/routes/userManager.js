@@ -37,7 +37,7 @@ router.post("/", (req, res) => {
             const token = user.authentication.token;
             if (token) {
                 authenticateWithFB(token).then(() => {
-                    mDBConnector.create(user).then(savedUser => {
+                    mDBConnector.create(user).then( (savedUser) => {
                         res.status(200).send(savedUser);
                     }).catch((err) => {
                         res.status(400).send(err);
@@ -46,11 +46,11 @@ router.post("/", (req, res) => {
                     //Get user name
                     const userId = user.authentication.identifier;
                     const fbUrl = "https://graph.facebook.com/" + userId + "?fields=name&access_token=" + user.authentication.token;
-                    axios.get(fbUrl).then(response => {
+                    axios.get(fbUrl).then( (response) => {
                         const name = response.data.name;
                         console.log("Successfully authenticated " + name);
                     });
-                }).catch(err => {
+                }).catch( (err) => {
                     res.status(402).send(err);
                 });
             }

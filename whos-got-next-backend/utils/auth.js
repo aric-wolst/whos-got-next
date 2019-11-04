@@ -13,7 +13,7 @@ const accessTokenUrl = "https://graph.facebook.com/oauth/access_token?client_id=
 
 async function authenticateWithFB(inputToken) {
     return new Promise((resolve,reject) => {
-        axios.get(accessTokenUrl).then(response=>{
+        axios.get(accessTokenUrl).then((response) => {
             const appToken = response.data.access_token;
             const authUrl = "https://graph.facebook.com/debug_token?input_token="
                             + inputToken + "&access_token=" + appToken;
@@ -21,8 +21,8 @@ async function authenticateWithFB(inputToken) {
             //Authenticate the given user token
             axios.get(authUrl).then(
                 resolve()
-            ).catch(err => reject(err));
-        }).catch(err => reject(err));
+            ).catch((err) => reject(err));
+        }).catch((err) => reject(err));
     });
 }
 

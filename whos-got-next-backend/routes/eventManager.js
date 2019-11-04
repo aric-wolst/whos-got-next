@@ -38,16 +38,16 @@ router.post("/", (req, res) => {
 
     //Endpoint to get address from coordinates
     const url = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + latitude + "&lon=" + longitude;
-    getAddress(url).then(response => {
+    getAddress(url).then( (response) => {
         event.address = response;
-        mDBConnector.create(event).then(savedEvent => {
+        mDBConnector.create(event).then( (savedEvent) => {
             res.status(200).send(savedEvent);
             const notification = {title: "New Event: " + savedEvent.name, body: "There is a new event near you."};
             sendPushNotificationToUsersNear(notification, savedEvent.location, 5);
         }).catch((err) => {
             res.status(400).send(err);
         });
-    }).catch(err => {
+    }).catch( (err) => {
         console.error(err);
     });
 });
@@ -90,7 +90,7 @@ router.delete("/:eventId", (req, res) => {
 });
 
 async function getAddress(url) {
-    let res = await axios.get(url).catch(err => {
+    let res = await axios.get(url).catch ( (err) => {
         console.error("Could not retrieve address");
     });
 
@@ -157,7 +157,7 @@ function sendPushNotificationToUsersNear(notification, location, distance) {
 
     User.find(filter, (err, users) => {
         if (err) { console.error(err); return; }
-        const tokens = users.map(user => user.expoPushToken);
+        const tokens = users.map( (user) => user.expoPushToken);
         sendNotifications(tokens,notification.title, notification.body);
     });
 }
