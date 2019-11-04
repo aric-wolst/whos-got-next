@@ -97,7 +97,7 @@ class Teams extends Component {
         },
     };
 
-    GetData = () =>{
+    GetData = () => {
         /* Get user's current location */
         this._getLocationAsync().then(() => {
         
@@ -107,7 +107,7 @@ class Teams extends Component {
         })
         /* Store returned events into datasource and stop refreshing */
         .then((response) => response.json())
-        .then((responseJson)=> {
+        .then((responseJson) => {
           this.setState({
            refreshing: false,
            dataSource: responseJson
@@ -121,7 +121,7 @@ class Teams extends Component {
                 "location": userLocation,
             });
         })
-        .catch((error)=>console.log(error));
+        .catch((error) => console.log(error));
         });
     }
 
@@ -186,7 +186,7 @@ class Teams extends Component {
         if(hour > 12 && hour <= 23){
             hour = hour % 12;
             ampm = "PM";
-        } else if(hour == 24){
+        } else if(hour === 24){
             hour = 12;
         }
 
@@ -199,7 +199,7 @@ class Teams extends Component {
     }
     
     /* Renders each individual event, that redirects to e new page when the event is pressed */
-    renderItem=(data)=>
+    renderItem = (data) =>
     <View style = {{flexDirection: "row"}}>
         <TouchableOpacity onPress={() => {this.props.navigation.navigate("TeamProfile", {
             eventName: data.item.name,

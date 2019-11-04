@@ -153,9 +153,9 @@ const AppTabs = createBottomTabNavigator(
           iconName = "ios-information-circle${focused ? '' : '-outline'}";
         } else if (routeName === "MyProfile") {
           iconName = "ios-contact";
-        } else if (routeName == "Events") {
+        } else if (routeName === "Events") {
           iconName = "ios-people";
-        } else if (routeName == "Settings") {
+        } else if (routeName === "Settings") {
           iconName = "ios-settings";
         } else {
           iconName = "ios-settings";
