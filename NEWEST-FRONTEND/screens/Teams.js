@@ -76,7 +76,7 @@ class Teams extends Component {
           dataSource: null,
           location: null,
          };
-        this.GetData();
+        this.getData();
     }
 
     /* Page header */
@@ -97,7 +97,7 @@ class Teams extends Component {
         },
     };
 
-    GetData = () => {
+    getData = () => {
         /* Get user's current location */
         this._getLocationAsync().then(() => {
         
@@ -125,10 +125,10 @@ class Teams extends Component {
         });
     }
 
-    /* When the page is pulled down, it refreshes, sets the datasource to empty and calls GetData */
+    /* When the page is pulled down, it refreshes, sets the datasource to empty and calls getData */
     onRefresh() {
         this.setState({ dataSource: [] });
-        this.GetData();
+        this.getData();
     }
 
     /* Gets user's current location */
