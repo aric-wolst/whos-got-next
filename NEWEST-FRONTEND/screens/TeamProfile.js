@@ -88,9 +88,6 @@ class TeamProfile extends Component {
 
         var hour = date.getUTCHours();
         var min = date.getUTCMinutes();
-        var day = date.getUTCDate();
-        var month = date.getUTCMonth() + 1;
-        var year = date.getFullYear();
         
         if(hour > 12 && hour <= 23){
             hour = hour % 12;
@@ -103,7 +100,7 @@ class TeamProfile extends Component {
             min = "0" + min;
         }
         
-        return hour + ":" + min + " " + ampm + " " + month + "/" + day + "/" + year;
+        return hour + ":" + min + " " + ampm + " " + (date.getUTCMonth() + 1) + "/" + date.getUTCDate() + "/" + date.getFullYear();
     }
 
     /* Displays the information about the event, given the parameters passed to the page */
