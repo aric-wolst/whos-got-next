@@ -31,9 +31,9 @@ function startApp() {
 		key: fs.readFileSync("./key.pem"),
 		cert: fs.readFileSync("./cert.pem"),
 		passphrase: passphrase
-	}, app.listen(8081, () => {
-		var host = server.address().address;
-		var port = server.address().port;
-		console.log("server app listening at https://:%s",port);
-	}));
+	}, app).listen(8081, () => {
+		//var host = server.address().address;
+		//var port = server.address().port;
+		console.log("server app listening at https://:8081");
+	});
 }
