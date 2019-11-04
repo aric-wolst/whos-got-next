@@ -145,7 +145,7 @@ const AppTabs = createBottomTabNavigator(
   },
   {
     defaultNavigationOptions: ({navigation}) => ({
-      tabBarIcon: ({ focused, horizontal, tintColor }) => {
+      tabBarIcon: ({ tintColor }) => {
         const {routeName} = navigation.state;
         let IconComponent = Ionicons;
         let iconName;
@@ -155,8 +155,6 @@ const AppTabs = createBottomTabNavigator(
           iconName = "ios-contact";
         } else if (routeName === "Events") {
           iconName = "ios-people";
-        } else if (routeName === "Settings") {
-          iconName = "ios-settings";
         } else {
           iconName = "ios-settings";
         }
