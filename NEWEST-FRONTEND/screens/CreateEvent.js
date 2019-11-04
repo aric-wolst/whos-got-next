@@ -4,6 +4,45 @@ import { Dropdown } from "react-native-material-dropdown";
 import backendRequest from "../utils/RequestManager";
 import config from "../config";
 
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        paddingLeft: 60,
+        paddingRight: 60,
+    },
+    form: {
+        alignSelf: "stretch",
+    },
+    header: {
+        fontSize: 24,
+        paddingBottom: 10,
+        borderBottomColor: "#ff8c00",
+        borderBottomWidth: 3,
+    },
+    textinput: {
+        alignSelf: "stretch",
+        height: 40,
+        marginTop: 5,
+        marginBottom: 20,
+        borderColor: "#ff8c00",
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+    },
+    textinputdescription: {
+        alignSelf: "stretch",
+        height: 100,
+        marginTop: 5,
+        marginBottom: 20,
+        borderColor: "#ff8c00",
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+    }
+});
+
 export default class CreateEvent extends Component {
     static navigationOptions = {
         headerTintColor: "white",
@@ -149,40 +188,3 @@ export default class CreateEvent extends Component {
 
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        paddingLeft: 60,
-        paddingRight: 60,
-    },
-    form: {
-        alignSelf: "stretch",
-    },
-    header: {
-        fontSize: 24,
-        paddingBottom: 10,
-        borderBottomColor: "#ff8c00",
-        borderBottomWidth: 3,
-    },
-    textinput: {
-        alignSelf: "stretch",
-        height: 40,
-        marginTop: 5,
-        marginBottom: 20,
-        borderColor: "#ff8c00",
-        borderWidth: 1,
-        borderRadius: 5,
-        padding: 10,
-    },
-    textinputdescription: {
-        alignSelf: "stretch",
-        height: 100,
-        marginTop: 5,
-        marginBottom: 20,
-        borderColor: "#ff8c00",
-        borderWidth: 1,
-        borderRadius: 5,
-        padding: 10,
-    }
-});

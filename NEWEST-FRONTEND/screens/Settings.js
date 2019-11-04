@@ -4,6 +4,58 @@ import { Dropdown } from "react-native-material-dropdown";
 import backendRequest from "../utils/RequestManager";
 import config from "../config";
 
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        marginTop: 30,
+        justifyContent: "center",
+        paddingLeft: 40,
+        paddingRight: 40,
+    },
+    form: {
+        alignSelf: "stretch",
+    },
+    header: {
+        fontSize: 24,
+        paddingBottom: 10,
+        borderBottomColor: "#ff8c00",
+        borderBottomWidth: 3,
+    },
+    textinput: {
+        alignSelf: "stretch",
+        height: 40,
+        marginTop: 5,
+        marginBottom: 20,
+        borderColor: "#ff8c00",
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+    },
+    textinputdescription: {
+        alignSelf: "stretch",
+        height: 100,
+        marginTop: 5,
+        marginBottom: 20,
+        borderColor: "#ff8c00",
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+    },
+    sportname: {
+        textAlign: "center",
+        fontWeight: "bold",
+    },
+    sportCard: {
+        margin: 5,
+        borderColor: "#ff8c00",
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+    }
+});
+
+
 class Settings extends Component {
 
     constructor(props) {
@@ -423,54 +475,3 @@ class Settings extends Component {
 }
 
 export default Settings;
-
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        marginTop: 30,
-        justifyContent: "center",
-        paddingLeft: 40,
-        paddingRight: 40,
-    },
-    form: {
-        alignSelf: "stretch",
-    },
-    header: {
-        fontSize: 24,
-        paddingBottom: 10,
-        borderBottomColor: "#ff8c00",
-        borderBottomWidth: 3,
-    },
-    textinput: {
-        alignSelf: "stretch",
-        height: 40,
-        marginTop: 5,
-        marginBottom: 20,
-        borderColor: "#ff8c00",
-        borderWidth: 1,
-        borderRadius: 5,
-        padding: 10,
-    },
-    textinputdescription: {
-        alignSelf: "stretch",
-        height: 100,
-        marginTop: 5,
-        marginBottom: 20,
-        borderColor: "#ff8c00",
-        borderWidth: 1,
-        borderRadius: 5,
-        padding: 10,
-    },
-    sportname: {
-        textAlign: "center",
-        fontWeight: "bold",
-    },
-    sportCard: {
-        margin: 5,
-        borderColor: "#ff8c00",
-        borderWidth: 1,
-        borderRadius: 5,
-        padding: 10,
-    }
-});

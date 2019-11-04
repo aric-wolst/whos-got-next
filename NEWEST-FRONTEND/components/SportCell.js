@@ -2,6 +2,46 @@ import React, { Component } from "react";
 import { Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text } from "react-native";
 import GLOBALS from "../utils/Colors";
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  sportTab: {
+    flexDirection: "row",
+    marginVertical: 2,
+    marginHorizontal: 10,
+    flex: 1,
+    borderWidth: 0,
+    borderColor: "rgba(0,0,0,0.4)",
+    borderRadius: 10
+  },
+  sportIcon: {
+    height: 60,
+    width: 60,
+    margin: 5
+  },
+  position: {
+    fontSize: 36,
+  },
+  level: {
+    fontSize: 12,
+    fontStyle: "italic"
+  },
+  logo: {
+    flex: 1,
+    flexDirection: "row"
+  },
+  label: {
+    flex: 8,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
+  }
+});
+
 class SportCell extends Component {
     
 
@@ -145,43 +185,3 @@ class SportCell extends Component {
 
 
 export default SportCell;
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: "#fff",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    sportTab: {
-      flexDirection: "row",
-      marginVertical: 2,
-      marginHorizontal: 10,
-      flex: 1,
-      borderWidth: 0,
-      borderColor: "rgba(0,0,0,0.4)",
-      borderRadius: 10
-    },
-    sportIcon: {
-      height: 60,
-      width: 60,
-      margin: 5
-    },
-    position: {
-      fontSize: 36,
-    },
-    level: {
-      fontSize: 12,
-      fontStyle: "italic"
-    },
-    logo: {
-      flex: 1,
-      flexDirection: "row"
-    },
-    label: {
-      flex: 8,
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center"
-    }
-  });

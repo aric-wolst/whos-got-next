@@ -8,7 +8,7 @@ import SportCell from "../components/SportCell";
 import backendRequest from "../utils/RequestManager";
 
 class Profile extends Component {
-  
+
     constructor(props) {
         super(props);
         this.initData = data;
@@ -42,7 +42,7 @@ class Profile extends Component {
 
     getData = () => {
       backendRequest("/users/" + this.props.id)
-      .then (user => {
+      .then ( (user) => {
         this.setState({
           refreshing: false,
           id: this.props.id,

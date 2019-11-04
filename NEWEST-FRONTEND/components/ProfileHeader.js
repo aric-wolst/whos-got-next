@@ -2,26 +2,6 @@ import React, { Component } from "react";
 import { AppRegistry, StyleSheet, Text, View, Image } from "react-native";
 import GLOBALS from "../utils/Colors";
 
-export default class ProfileHeader extends Component {
-    render() {
-        return(
-            <View style = {styles.headerBackground}>
-                <View style = {styles.header}>
-                    <View style = {styles.profilepicWrap}>
-                        <Image style = {styles.profilepic} source={require("../img/profilepic.jpg")} />
-                    </View>
-
-                    <View style = {styles.personalInfo}>
-                        <Text style = {styles.name}>{this.props.firstName}</Text>
-                        <Text style = {styles.age}>{this.props.birthday}</Text>
-                        <Text style = {styles.genderAndHeight}>{this.props.gender}</Text>
-                    </View>
-                </View>
-            </View>
-        );
-    }
-}
-
 const styles = StyleSheet.create({
     headerBackground: {
         backgroundColor: GLOBALS.COLOR.MAINCOLOR,
@@ -79,3 +59,24 @@ const styles = StyleSheet.create({
         textAlign: "right"
     }
 });
+
+export default class ProfileHeader extends Component {
+    render() {
+        return(
+            <View style = {styles.headerBackground}>
+                <View style = {styles.header}>
+                    <View style = {styles.profilepicWrap}>
+                        <Image style = {styles.profilepic} source={require("../img/profilepic.jpg")} />
+                    </View>
+
+                    <View style = {styles.personalInfo}>
+                        <Text style = {styles.name}>{this.props.firstName}</Text>
+                        <Text style = {styles.age}>{this.props.birthday}</Text>
+                        <Text style = {styles.genderAndHeight}>{this.props.gender}</Text>
+                    </View>
+                </View>
+            </View>
+        );
+    }
+}
+

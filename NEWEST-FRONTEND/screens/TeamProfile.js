@@ -2,6 +2,73 @@ import React, { Component } from "react";
 import { Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text, ActivityIndicator, TouchableOpacity, ListView } from "react-native";
 import { createStackNavigator } from "react-navigation-stack";
 
+/* Style sheet for rendered items */
+const styles = StyleSheet.create({
+    header: {
+        backgroundColor: "#ff8c00",
+        alignContent: "center",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    header: {
+        backgroundColor: "#ff8c00",
+        alignContent: "center",
+        justifyContent: "center",
+        alignItems: "center"
+      },
+    headerText: {
+        marginTop: 20,
+        marginBottom: 20,
+        fontSize: 35,
+        marginLeft: 5,
+        marginRight: 5,
+        fontWeight: "bold",
+        color: "white",
+        alignSelf: "center",
+        textAlign: "center",
+    },
+    sportText: {
+        marginTop: 5,
+        marginBottom: 5,
+        marginLeft: 5,
+        marginRight: 5,
+        fontSize: 35,
+        fontWeight: "bold",
+        color: "#ff8c00",
+        alignSelf: "center",
+        textAlign: "center",
+    },
+    location: {
+        marginTop: 5,
+        marginBottom: 5,
+        fontSize: 20,
+        marginLeft: 5,
+        marginRight: 5,
+        fontWeight: "bold",
+        color: "black",
+        alignSelf: "center",
+        textAlign: "center",
+    },
+    dateText: {
+        marginTop: 5,
+        marginBottom: 5,
+        marginLeft: 5,
+        marginRight: 5,
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "black",
+        alignSelf: "center",
+        textAlign: "center",
+    },
+    bio: {
+        color: "black",
+        alignSelf: "center",
+        textAlign: "center",
+        fontSize: 18,
+        margin: 5,
+    }
+});
+
 /* Displays information about an event */
 class TeamProfile extends Component {
     
@@ -79,72 +146,5 @@ class TeamProfile extends Component {
         );
     }
 }
-
-/* Style sheet for rendered items */
-const styles = StyleSheet.create({
-    header: {
-        backgroundColor: "#ff8c00",
-        alignContent: "center",
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    header: {
-        backgroundColor: "#ff8c00",
-        alignContent: "center",
-        justifyContent: "center",
-        alignItems: "center"
-      },
-    headerText: {
-        marginTop: 20,
-        marginBottom: 20,
-        fontSize: 35,
-        marginLeft: 5,
-        marginRight: 5,
-        fontWeight: "bold",
-        color: "white",
-        alignSelf: "center",
-        textAlign: "center",
-    },
-    sportText: {
-        marginTop: 5,
-        marginBottom: 5,
-        marginLeft: 5,
-        marginRight: 5,
-        fontSize: 35,
-        fontWeight: "bold",
-        color: "#ff8c00",
-        alignSelf: "center",
-        textAlign: "center",
-    },
-    location: {
-        marginTop: 5,
-        marginBottom: 5,
-        fontSize: 20,
-        marginLeft: 5,
-        marginRight: 5,
-        fontWeight: "bold",
-        color: "black",
-        alignSelf: "center",
-        textAlign: "center",
-    },
-    dateText: {
-        marginTop: 5,
-        marginBottom: 5,
-        marginLeft: 5,
-        marginRight: 5,
-        fontSize: 20,
-        fontWeight: "bold",
-        color: "black",
-        alignSelf: "center",
-        textAlign: "center",
-    },
-    bio: {
-        color: "black",
-        alignSelf: "center",
-        textAlign: "center",
-        fontSize: 18,
-        margin: 5,
-    }
-});
 
 export default TeamProfile;

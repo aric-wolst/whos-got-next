@@ -16,6 +16,20 @@ import backendRequest from "./utils/RequestManager";
 import CreateEvent from "./screens/CreateEvent";
 import logo from "./img/logo.png";
 
+const styles = StyleSheet.create({
+  logo: {
+    width: 375,
+    height: 150,
+    resizeMode: "stretch",
+    marginBottom: 100,
+  },
+   whosgotnext: {
+    fontWeight: "bold",
+    fontSize: 45,
+    color: "black",
+  },
+});
+
 class AuthLoadingScreen extends React.Component {
   componentDidMount() {
     this._bootstrapAsync();
@@ -174,17 +188,3 @@ export default createAppContainer(
     }
   )
 );
-
-const styles = StyleSheet.create({
-  logo: {
-    width: 375,
-    height: 150,
-    resizeMode: "stretch",
-    marginBottom: 100,
-  },
-   whosgotnext: {
-    fontWeight: "bold",
-    fontSize: 45,
-    color: "black",
-  },
-});

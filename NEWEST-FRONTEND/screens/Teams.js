@@ -8,6 +8,65 @@ import * as Permissions from "expo-permissions";
 import backendRequest from "../utils/RequestManager";
 import config from "../config";
 
+/* Style sheet for rendered items */
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "#fff"
+     },
+    loader:{
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "#fff"
+     },
+    list:{
+      paddingVertical: 4,
+      margin: 5,
+      backgroundColor: "#fff"
+     },
+    date:{
+        fontSize: 17,
+        marginTop: 3,
+        marginLeft: 8
+    },
+    location:{
+        fontSize: 15,
+        marginBottom: 8,
+        marginTop: 3,
+        marginLeft: 8
+    },
+    sport:{
+        fontWeight: "bold",
+        fontSize: 25,
+        marginTop: 8,
+        marginLeft: 8,
+        color: "#ff8c00"
+    },
+    titleName:{
+        fontWeight: "bold",
+        fontSize: 22,
+        marginTop: 3,
+        marginLeft: 8,
+        color: "black"
+    },
+    info:{
+        width: 60, 
+        height: 60, 
+        borderRadius: 60/2, 
+        backgroundColor: "#ff8c00", 
+        padding: 8, 
+        alignItems: "center", 
+        justifyContent: "center"
+    },
+    createEventText: {
+        fontSize: 30,
+        textAlign: "center",
+        fontWeight: "bold",
+        color: "#ff8c00",
+    },
+  });
+  
 /* Displays the page with all events within 5km and the create event button */
 class Teams extends Component {
     constructor(props) {
@@ -202,62 +261,3 @@ class Teams extends Component {
 }
 
 export default Teams;
-
-/* Style sheet for rendered items */
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: "#fff"
-     },
-    loader:{
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "#fff"
-     },
-    list:{
-      paddingVertical: 4,
-      margin: 5,
-      backgroundColor: "#fff"
-     },
-    date:{
-        fontSize: 17,
-        marginTop: 3,
-        marginLeft: 8
-    },
-    location:{
-        fontSize: 15,
-        marginBottom: 8,
-        marginTop: 3,
-        marginLeft: 8
-    },
-    sport:{
-        fontWeight: "bold",
-        fontSize: 25,
-        marginTop: 8,
-        marginLeft: 8,
-        color: "#ff8c00"
-    },
-    titleName:{
-        fontWeight: "bold",
-        fontSize: 22,
-        marginTop: 3,
-        marginLeft: 8,
-        color: "black"
-    },
-    info:{
-        width: 60, 
-        height: 60, 
-        borderRadius: 60/2, 
-        backgroundColor: "#ff8c00", 
-        padding: 8, 
-        alignItems: "center", 
-        justifyContent: "center"
-    },
-    createEventText: {
-        fontSize: 30,
-        textAlign: "center",
-        fontWeight: "bold",
-        color: "#ff8c00",
-    },
-  });

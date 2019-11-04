@@ -1,15 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
 
-export default class FindTeamsHeader extends Component {
-    render() {
-        return(
-            <View style = {styles.FindTeamsHeaderBackground}>
-                <Text style = {styles.FindTeams}>Find Live Events</Text>
-            </View>
-        );
-    }
-}
 
 const styles = StyleSheet.create({
     FindTeamsHeaderBackground: {
@@ -24,3 +15,13 @@ const styles = StyleSheet.create({
         color: "#ff8c00",
     },
 });
+
+export default class FindTeamsHeader extends Component {
+    render() {
+        return(
+            <View style = {styles.FindTeamsHeaderBackground}>
+                <Text style = {styles.FindTeams}>Find Live Events</Text>
+            </View>
+        );
+    }
+}
