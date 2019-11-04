@@ -21,6 +21,25 @@ const User = mongoose.model("user", userSchema, "user");
 
 router.use(express.json());
 
+function getSelf(req,res) {
+    User.findOne({}, (err,user) => {
+        if (err) {
+            res.status(400).send(err);
+            return;
+        }
+
+        res.status(200).send(user);
+    });
+}
+
+function getExists(req,res) {
+    User.findOne({"authentication.type": req.query.type, "authentication.identifier": req.query.identifier}, (err, user) => {
+        if (err) { res.status(400).send(err); return; }
+        if (!user) {console.log("no user exists");}
+        res.status(200).send(user);
+    });
+}
+
 router.use(function(req, res, next) {
     console.log("You are in the userManager module");
     next();
@@ -110,23 +129,5 @@ router.delete("/:userId", (req, res) => {
     });
 });
 
-function getSelf(req,res) {
-    User.findOne({}, (err,user) => {
-        if (err) {
-            res.status(400).send(err);
-            return;
-        }
-
-        res.status(200).send(user);
-    });
-}
-
-function getExists(req,res) {
-    User.findOne({"authentication.type": req.query.type, "authentication.identifier": req.query.identifier}, (err, user) => {
-        if (err) { res.status(400).send(err); return; }
-        if (!user) {console.log("no user exists");}
-        res.status(200).send(user);
-    });
-}
 
 module.exports = router;

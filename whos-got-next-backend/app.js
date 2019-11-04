@@ -11,9 +11,6 @@ const passphrase = localconfig.sslPassphrase;
 const userManager = require("./routes/userManager.js");
 const eventManager = require("./routes/eventManager.js");
 
-const mDBConnector = MongoDBConnector.sharedInstance();
-mDBConnector.connect().then(startApp).catch((err) => {console.error(err);});
-
 function startApp() {
 	// Set up the express app.
 	const app = express();
@@ -37,3 +34,8 @@ function startApp() {
 		console.log("server app listening at https://:8081");
 	});
 }
+
+
+const mDBConnector = MongoDBConnector.sharedInstance();
+mDBConnector.connect().then(startApp).catch((err) => {console.error(err);});
+

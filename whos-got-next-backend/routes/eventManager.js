@@ -30,6 +30,79 @@ router.use(function(req, res, next) {
     next();
 });
 
+async function getAddress(url) {
+    let res = await axios.get(url).catch ( (err) => {
+        console.error("Could not retrieve address");
+    });
+
+
+    return await stitchAddress(res.data.address);
+}
+
+function getNearbyEvents(req,res) {
+    // Define a region of a given distance in km around the location.
+    const distance = 5;
+    const {n, e, s, w} = defineRegion(req.query.longitude, req.query.latitude, distance);
+
+    // Fetch events in this region.
+    const filter = {"location.coordinates.0" : { $gt : w, $lt : e }, "location.coordinates.1" : { $gt : s, $lt : n }};
+    Event.find(filter).limit(30).exec((err, events) => {
+        if (err) {
+            res.status(400).send(err);
+            return;
+        }
+        res.status(200).send(events);
+    });
+}
+
+async function stitchAddress(address) {
+    let addr = "";
+    let hood = address.neighbourhood;
+    let number = address.house_number;
+    let road = address.road;
+    let city = address.city;
+    let state = address.state;
+
+    if (hood) {
+        addr = addr + hood + ",";
+    }
+
+    if (number) {
+        addr = addr + " " + number;
+    }
+
+    if (road) {
+        addr = addr + " " + road;
+    }
+
+    if (city) {
+        addr = addr + ", " + city;
+    }
+
+    if (state) {
+        addr = addr + ", " + state;
+    }
+    return addr;
+}
+
+function sendPushNotificationToUsersNear(notification, location, distance) {
+    // Define a region of a given distance in km around the location.
+    const {n, e, s, w} = defineRegion(location.coordinates[0], location.coordinates[1], distance);
+
+    // Fetch events in this region.
+    const filter = {
+        "location.coordinates.0" : { $gt : w, $lt : e },
+        "location.coordinates.1" : { $gt : s, $lt : n },
+        "expoPushToken": {$exists: true}
+    };
+
+    User.find(filter, (err, users) => {
+        if (err) { console.error(err); return; }
+        const tokens = users.map( (user) => user.expoPushToken);
+        sendNotifications(tokens,notification.title, notification.body);
+    });
+}
+
 router.post("/", (req, res) => {
     const event = new Event(req.body);
 
@@ -89,78 +162,6 @@ router.delete("/:eventId", (req, res) => {
     });
 });
 
-async function getAddress(url) {
-    let res = await axios.get(url).catch ( (err) => {
-        console.error("Could not retrieve address");
-    });
-
-
-    return await stitchAddress(res.data.address);
-}
-
-async function stitchAddress(address) {
-    let addr = "";
-    let hood = address.neighbourhood;
-    let number = address.house_number;
-    let road = address.road;
-    let city = address.city;
-    let state = address.state;
-
-    if (hood) {
-        addr = addr + hood + ",";
-    }
-
-    if (number) {
-        addr = addr + " " + number;
-    }
-
-    if (road) {
-        addr = addr + " " + road;
-    }
-
-    if (city) {
-        addr = addr + ", " + city;
-    }
-
-    if (state) {
-        addr = addr + ", " + state;
-    }
-    return addr;
-}
-
-function getNearbyEvents(req,res) {
-    // Define a region of a given distance in km around the location.
-    const distance = 5;
-    const {n, e, s, w} = defineRegion(req.query.longitude, req.query.latitude, distance);
-
-    // Fetch events in this region.
-    const filter = {"location.coordinates.0" : { $gt : w, $lt : e }, "location.coordinates.1" : { $gt : s, $lt : n }};
-    Event.find(filter).limit(30).exec((err, events) => {
-        if (err) {
-            res.status(400).send(err);
-            return;
-        }
-        res.status(200).send(events);
-    });
-}
-
-function sendPushNotificationToUsersNear(notification, location, distance) {
-    // Define a region of a given distance in km around the location.
-    const {n, e, s, w} = defineRegion(location.coordinates[0], location.coordinates[1], distance);
-
-    // Fetch events in this region.
-    const filter = {
-        "location.coordinates.0" : { $gt : w, $lt : e },
-        "location.coordinates.1" : { $gt : s, $lt : n },
-        "expoPushToken": {$exists: true}
-    };
-
-    User.find(filter, (err, users) => {
-        if (err) { console.error(err); return; }
-        const tokens = users.map( (user) => user.expoPushToken);
-        sendNotifications(tokens,notification.title, notification.body);
-    });
-}
 
 router.put("/:eventId/requests/:userId/request-to-join", (req,res) => {
     Event.findById(req.params.eventId, (err,event) => {
