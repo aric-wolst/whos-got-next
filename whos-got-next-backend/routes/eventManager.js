@@ -12,6 +12,10 @@ const axios = require("axios");
 
 const sendNotifications = require("../utils/pushNotificationManager");
 
+// Logging
+const bunyan = require('bunyan');
+const log = bunyan.createLogger({name: 'whosgotnext-backend'});
+
 // MongoDB mDBConnector
 const MongoDBConnector = require("../utils/mongoDBConnector");
 const mDBConnector = MongoDBConnector.sharedInstance();
@@ -26,7 +30,7 @@ const User = mongoose.model("user", userSchema, "user");
 router.use(express.json());
 
 router.use(function(req, res, next) {
-    console.log("You are in the eventManager module");
+    log.info("You are in the eventManager module");
     next();
 });
 
@@ -62,7 +66,7 @@ async function stitchAddress(address) {
 
 async function getAddress(url) {
     let res = await axios.get(url).catch ( (err) => {
-        console.error("Could not retrieve address");
+        log.error("Could not retrieve address. Gave error: " + err);
     });
 
 
@@ -98,7 +102,7 @@ function sendPushNotificationToUsersNear(notification, location, distance) {
     };
 
     User.find(filter, (err, users) => {
-        if (err) { console.error(err); return; }
+        if (err) { log.error(err); return; }
         const tokens = users.map( (user) => user.expoPushToken);
         sendNotifications(tokens,notification.title, notification.body);
     });
@@ -122,7 +126,7 @@ router.post("/", (req, res) => {
             res.status(400).send(err);
         });
     }).catch( (err) => {
-        console.error(err);
+        log.error(err);
     });
 });
 
@@ -153,7 +157,7 @@ router.put("/:eventId", (req, res) => {
 });
 
 router.delete("/:eventId", (req, res) => {
-    Event.findByIdAndDelete(req.params.eventId, req.body, (err,event) => {
+    Event.findByIdAndDelete(req.params.eventId, req.body, (err) => {
         if (err) {
             res.status(400).send(err);
             return;
@@ -186,7 +190,7 @@ router.put("/:eventId/requests/:userId/request-to-join", (req,res) => {
                 return;
             }
             event.pendingPlayerRequests.push(userId);
-            event.save((err,events) => {
+            event.save((err,event) => {
                 if (err) { res.status(400).send(err); return; }
                 res.status(200).send(event);
             });
@@ -219,7 +223,7 @@ router.put("/:eventId/requests/:userId/accept", (req,res) => {
 
         event.players.push(userId);
 
-        event.save((err,events) => {
+        event.save((err,event) => {
             if (err) { res.status(400).send(err); return; }
             res.status(200).send(event);
         });
@@ -242,7 +246,7 @@ router.put("/:eventId/requests/:userId/decline", (req,res) => {
             return;
         }
 
-        event.save((err,events) => {
+        event.save((err,event) => {
             if (err) { res.status(400).send(err); return; }
             res.status(200).send(event);
         });

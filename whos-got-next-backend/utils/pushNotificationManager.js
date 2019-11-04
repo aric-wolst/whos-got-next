@@ -8,6 +8,10 @@
 
 const { Expo } = require("expo-server-sdk");
 
+// Logging
+const bunyan = require('bunyan');
+const log = bunyan.createLogger({name: 'whosgotnext-backend'});
+
 /*
  * Description. Send Push Notification to a list of users.
  * @param {Array}   pushTokens   List of pushTokens (each token represents a user who has opted in).
@@ -24,7 +28,7 @@ function sendNotifications(pushTokens, pushTitle, pushBody) {
       // Each push token looks like ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]
       // Check that all our push tokens appear to be valid Expo push tokens.
       if (!Expo.isExpoPushToken(pushToken)) {
-        console.error(`Push token ${pushToken} is not a valid Expo push token`);
+        log.error(`Push token ${pushToken} is not a valid Expo push token`);
         continue;
       }
 
@@ -51,14 +55,14 @@ function sendNotifications(pushTokens, pushTitle, pushBody) {
       for (let chunk of chunks) {
         try {
           let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-          console.log(ticketChunk);
+          log.info(ticketChunk);
           tickets.push(...ticketChunk);
           // NOTE: If a ticket contains an error code in ticket.details.error, you
           // must handle it appropriately. The error codes are listed in the Expo
           // documentation:
           // https://docs.expo.io/versions/latest/guides/push-notifications#response-format
         } catch (error) {
-          console.error(error);
+          log.error(error);
         }
       }
     })();
@@ -94,7 +98,7 @@ function sendNotifications(pushTokens, pushTitle, pushBody) {
       for (let chunk of receiptIdChunks) {
         try {
           let receipts = await expo.getPushNotificationReceiptsAsync(chunk);
-          console.log(receipts);
+          log.info(receipts);
 
           // The receipts specify whether Apple or Google successfully received the
           // notification and information about an error, if one occurred.
@@ -102,17 +106,17 @@ function sendNotifications(pushTokens, pushTitle, pushBody) {
             if (receipt.status === "ok") {
               continue;
             } else if (receipt.status === "error") {
-              console.error(`There was an error sending a notification: ${receipt.message}`);
+              log.error(`There was an error sending a notification: ${receipt.message}`);
               if (receipt.details && receipt.details.error) {
                 // The error codes are listed in the Expo documentation:
                 // https://docs.expo.io/versions/latest/guides/push-notifications#response-format
                 // We must handle the errors appropriately.
-                console.error(`The error code is ${receipt.details.error}`);
+                log.error(`The error code is ${receipt.details.error}`);
               }
             }
           }
         } catch (error) {
-          console.error(error);
+          log.error(error);
         }
       }
     })();
