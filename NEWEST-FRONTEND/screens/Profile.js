@@ -4,7 +4,7 @@ import ProfileHeader from "../components/ProfileHeader";
 import ProfileBio from "../components/ProfileBio";
 import Legend from "../components/Legend";
 import data from "../components/Data";
-import SportCell from "../components/SportCell"
+import SportCell from "../components/SportCell";
 import backendRequest from "../utils/RequestManager";
 
 class Profile extends Component {

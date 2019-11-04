@@ -21,7 +21,7 @@ class Settings extends Component {
             streetfighting: [false,"Beginner"],
             tennis: [false,"Beginner"],
             volleyball: [false,"Beginner"],
-        }
+        };
         this.updateProfile=this.updateProfile.bind(this);
         this.addBadminton=this.addBadminton.bind(this);
         this.addBaseball=this.addBaseball.bind(this);
@@ -185,47 +185,47 @@ class Settings extends Component {
     addBadminton() {
         this.setState({
             badminton: [true,this.state.badminton[1]],
-        })
+        });
     }
     addBaseball() {
         this.setState({
             baseball: [true,this.state.baseball[1]],
-        })
+        });
     }
     addBasketball() {
         this.setState({
             basketball: [true,this.state.basketball[1]],
-        })
+        });
     }
     addFootball() {
         this.setState({
             football: [true,this.state.football[1]],
-        })
+        });
     }
     addHockey() {
         this.setState({
             hockey: [true,this.state.hockey[1]],
-        })
+        });
     }
     addSoccer() {
         this.setState({
             soccer: [true,this.state.soccer[1]],
-        })
+        });
     }
     addStreetFighting() {
         this.setState({
             streetfighting: [true,this.state.streetfighting[1]],
-        })
+        });
     }
     addTennis() {
         this.setState({
             tennis: [true,this.state.tennis[1]],
-        })
+        });
     }
     addVolleyball() {
         this.setState({
             volleyball: [true,this.state.volleyball[1]],
-        })
+        });
     }
 
     render() {

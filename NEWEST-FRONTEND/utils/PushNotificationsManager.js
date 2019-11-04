@@ -25,5 +25,5 @@ export default async function registerForPushNotificationsAsync(userId) {
   let token = await Notifications.getExpoPushTokenAsync();
 
   // POST the token to the backend server from where we can retrieve it to send push notifications.
-  backendRequest("/users/" + userId + "/save-expo-push-token/" + encodeURIComponent(token),{},"PUT").then(user => {console.log("saved user: " + user)})
+  backendRequest("/users/" + userId + "/save-expo-push-token/" + encodeURIComponent(token),{},"PUT").then(user => {console.log("saved user: " + user);});
 }

@@ -14,7 +14,7 @@ import registerForPushNotificationsAsync from "./utils/PushNotificationsManager"
 import config from "./config";
 import backendRequest from "./utils/RequestManager";
 import CreateEvent from "./screens/CreateEvent";
-import logo from "./img/logo.png"
+import logo from "./img/logo.png";
 
 class AuthLoadingScreen extends React.Component {
   componentDidMount() {
@@ -32,7 +32,7 @@ class AuthLoadingScreen extends React.Component {
         <ActivityIndicator />
         <StatusBar barStyle = "default"/>
       </View>
-    )
+    );
   }
 }
 
@@ -81,10 +81,10 @@ class SignInScreen extends React.Component {
                   Alert.alert("Logged in!", `Hi ${json.name}!`);
                   this.presentApp();
                 });
-              })
+              });
             }
           }
-        )
+        );
       } else {
         // type === "cancel"
         Alert.alert("Did not work", "Sorry");
@@ -97,7 +97,7 @@ class SignInScreen extends React.Component {
   presentApp() {
       this.props.navigation.navigate("App");
       AsyncStorage.getItem(config.userIdKey).then(userId => {
-        registerForPushNotificationsAsync(userId)
+        registerForPushNotificationsAsync(userId);
       });
   }
   render() {
@@ -147,7 +147,7 @@ const AppTabs = createBottomTabNavigator(
           iconName = "ios-settings";
         }
 
-        return <IconComponent name = {iconName} size = {25} color = {tintColor}/>
+        return <IconComponent name = {iconName} size = {25} color = {tintColor}/>;
       },
     }),
     tabBarOptions: {
@@ -159,7 +159,7 @@ const AppTabs = createBottomTabNavigator(
 
 const AuthStack = createStackNavigator({
   SignIn: SignInScreen,
-})
+});
 
 
 export default createAppContainer(

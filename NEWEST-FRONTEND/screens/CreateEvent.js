@@ -26,7 +26,7 @@ export default class CreateEvent extends Component {
             eventName: "",
             eventDescription: "",
             duration: "",
-        }
+        };
         this.postEvent=this.postEvent.bind(this);
     }
 

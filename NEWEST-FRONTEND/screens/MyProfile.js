@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { ActivityIndicator, AsyncStorage } from 'react-native';
-import Profile from './Profile';
-import config from '../config';
+import React, { Component } from "react";
+import { ActivityIndicator, AsyncStorage } from "react-native";
+import Profile from "./Profile";
+import config from "../config";
 
 class MyProfile extends Component {
 
@@ -9,7 +9,7 @@ class MyProfile extends Component {
         super(props);
         this.state = {
             isLoading: true,
-            id: '',
+            id: "",
         };
     }
 
@@ -26,9 +26,9 @@ class MyProfile extends Component {
 
     render() {
         if(this.state.isLoading) {
-            return <ActivityIndicator />
+            return <ActivityIndicator />;
         } else {
-            return <Profile id = {this.state.id}/>
+            return <Profile id = {this.state.id}/>;
         }
     }
 

@@ -37,7 +37,7 @@ class TeamProfile extends Component {
         
         if(hour > 12 && hour <= 23){
             hour = hour % 12;
-            ampm = "PM"
+            ampm = "PM";
         } else if(hour == 24){
             hour = 12;
         }
@@ -76,7 +76,7 @@ class TeamProfile extends Component {
                     {navigation.getParam("eventBio", " ")}
                 </Text>
             </ScrollView>
-        )
+        );
     }
 }
 

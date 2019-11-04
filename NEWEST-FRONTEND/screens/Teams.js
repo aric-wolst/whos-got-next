@@ -52,7 +52,7 @@ class Teams extends Component {
           this.setState({
            refreshing: false,
            dataSource: responseJson
-          })
+          });
         })
         /* Store user ID into async storage and send user coordinates to the backend */
         .then(() => AsyncStorage.getItem(config.userIdKey))
@@ -60,10 +60,10 @@ class Teams extends Component {
             var userLocation = {coordinates: [this.state.location.coords.longitude, this.state.location.coords.latitude], type: "Point",};
             backendRequest("/users/" + userId, {}, "PUT", {
                 "location": userLocation,
-            })
+            });
         })
-        .catch(error=>console.log(error))
-        })
+        .catch(error=>console.log(error));
+        });
     }
 
     /* When the page is pulled down, it refreshes, sets the datasource to empty and calls GetData */
@@ -86,7 +86,7 @@ class Teams extends Component {
         /* Sets location to the highest possible accuracy */
         const locationSettings = {
             accuracy: Location.Accuracy.Highest,
-        }
+        };
     
         /* Sets the location state to the current location */
         let location = await Location.getCurrentPositionAsync(locationSettings,{});
@@ -126,7 +126,7 @@ class Teams extends Component {
         
         if(hour > 12 && hour <= 23){
             hour = hour % 12;
-            ampm = "PM"
+            ampm = "PM";
         } else if(hour == 24){
             hour = 12;
         }
@@ -148,7 +148,7 @@ class Teams extends Component {
             eventBio: data.item.description,
             date: data.item.date,
             location: data.item.address
-        })}}>
+        });}}>
             <View style = {{height: 150, width: "100%"}}>
                 <Text style={styles.sport}>{data.item.sport}</Text>
                 <Text style={styles.titleName}>{data.item.name}</Text>
@@ -165,7 +165,7 @@ class Teams extends Component {
               <View style={styles.loader}> 
                 <ActivityIndicator size="large" color="black"/>
               </View>
-        )}
+        );}
         
         /* Renders the page with the create event button and nearby events */
         return(

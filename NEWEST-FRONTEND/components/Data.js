@@ -12,5 +12,5 @@ let data = [
         soccer: [1, 2],
         tennis: [1, 1]
     }
-]
-export default data
+];
+export default data;
