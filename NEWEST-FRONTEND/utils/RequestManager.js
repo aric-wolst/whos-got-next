@@ -26,7 +26,7 @@ export default async function backendRequest(endpoint,params,method,body) {
       .catch((err) => {console.error(err); reject(err);});
     } else {
       fetch(url, {
-        method: method,
+        method,
         headers: { Accept: "application/json","Content-Type": "application/json"},
         body: JSON.stringify(body)
       }).then((response) => {return parseAPIResponse(response);}).then((data) => resolve(data))

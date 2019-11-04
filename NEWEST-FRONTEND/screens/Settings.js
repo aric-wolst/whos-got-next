@@ -100,7 +100,7 @@ class Settings extends Component {
             } else {
                 level = 3;
             }
-            obj = {sport: "badminton", level: level};
+            obj = {sport: "badminton", level};
             sports.push(obj);
         }
 
@@ -112,7 +112,7 @@ class Settings extends Component {
             } else {
                 level = 3;
             }
-            obj = {sport: "baseball", level: level};
+            obj = {sport: "baseball", level};
             sports.push(obj);
         }
 
@@ -124,7 +124,7 @@ class Settings extends Component {
             } else {
                 level = 3;
             }
-            obj = {sport: "basketball", level: level};
+            obj = {sport: "basketball", level};
             sports.push(obj);
         }
 
@@ -136,7 +136,7 @@ class Settings extends Component {
             } else {
                 level = 3;
             }
-            obj = {sport: "football", level: level};
+            obj = {sport: "football", level};
             sports.push(obj);
         }
 
@@ -148,7 +148,7 @@ class Settings extends Component {
             } else {
                 level = 3;
             }
-            obj = {sport: "hockey", level: level};
+            obj = {sport: "hockey", level};
             sports.push(obj);
         }
 
@@ -160,7 +160,7 @@ class Settings extends Component {
             } else {
                 level = 3;
             }
-            obj = {sport: "soccer", level: level};
+            obj = {sport: "soccer", level};
             sports.push(obj);
         }
 
@@ -172,7 +172,7 @@ class Settings extends Component {
             } else {
                 level = 3;
             }
-            obj = {sport: "streetfighting", level: level};
+            obj = {sport: "streetfighting", level};
             sports.push(obj);
         }
 
@@ -184,7 +184,7 @@ class Settings extends Component {
             } else {
                 level = 3;
             }
-            obj = {sport: "tennis", level: level};
+            obj = {sport: "tennis", level};
             sports.push(obj);
         }
 
@@ -196,7 +196,7 @@ class Settings extends Component {
             } else {
                 level = 3;
             }
-            obj = {sport: "volleyball", level: level};
+            obj = {sport: "volleyball", level};
             sports.push(obj);
         }
 

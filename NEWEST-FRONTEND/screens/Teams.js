@@ -150,7 +150,7 @@ class Teams extends Component {
         /* Sets the location state to the current location */
         let location = await Location.getCurrentPositionAsync(locationSettings,{});
         this.setState({
-            location: location 
+            location
         });
         console.log(location);
     };
