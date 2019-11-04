@@ -6,7 +6,7 @@
  */
 
 var express = require("express");
-var router = express.Router();
+var router = new express.Router();
 var authenticateWithFB = require("../utils/auth.js");
 var axios = require("axios");
 
