@@ -96,8 +96,7 @@ export default class CreateEvent extends Component {
                 "date": today,
                 "pendingPlayerRequests": [],
                 "sport": this.state.sport,
-            }).then( (response) => {
-                //console.log(response);
+            }).then( () => {
                 Alert.alert("Success", "You have created a new event!");
                 this.setState({
                     sport: "",

@@ -10,12 +10,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center"
     },
-    header: {
-        backgroundColor: "#ff8c00",
-        alignContent: "center",
-        justifyContent: "center",
-        alignItems: "center"
-      },
     headerText: {
         marginTop: 20,
         marginBottom: 20,
