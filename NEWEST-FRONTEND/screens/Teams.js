@@ -170,18 +170,14 @@ class Teams extends Component {
 
     /* Takes the date and formats it to a readable state */
     formatDate(data) {
-        var hour = new Date(data);
-        var min = new Date(data);
-        var day = new Date(data);
-        var month = new Date(data);
+        var date = new Date(data);
         var ampm = "AM";
-        var year = new Date(data);
 
-        hour = hour.getUTCHours();
-        min = min.getUTCMinutes();
-        day = day.getUTCDate();
-        month = month.getUTCMonth() + 1;
-        year = year.getFullYear();
+        var hour = date.getUTCHours();
+        var min = date.getUTCMinutes();
+        var day = date.getUTCDate();
+        var month = date.getUTCMonth() + 1;
+        var year = date.getFullYear();
         
         if(hour > 12 && hour <= 23){
             hour = hour % 12;
@@ -194,8 +190,7 @@ class Teams extends Component {
             min = "0" + min;
         }
         
-        var date = hour + ":" + min + " " + ampm + " " + month + "/" + day + "/" + year;
-        return date;
+        return hour + ":" + min + " " + ampm + " " + month + "/" + day + "/" + year;
     }
     
     /* Renders each individual event, that redirects to e new page when the event is pressed */
