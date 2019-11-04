@@ -1,5 +1,19 @@
 import config from "../config";
 
+async function parseAPIResponse(response) {
+  if (!response.ok) {
+    return new Promise((resolve,reject) => {
+      response.text().then(text => {
+        reject("Backend Request Error: (" + response.status + ") " + text);
+    }).catch(() => { reject("Backend Request Error: (" + response.status + ")"); });
+    });
+  }
+  if (response.headers.get("content-length") == 0) {
+    return new Promise((resolve) => resolve(0));
+  }
+  return response.json();
+}
+
 export default async function backendRequest(endpoint,params,method,body) {
   var url = config.apiUrl + endpoint;
   if (params && Object.entries(params).length > 0) {
@@ -21,16 +35,3 @@ export default async function backendRequest(endpoint,params,method,body) {
   });
 }
 
-async function parseAPIResponse(response) {
-  if (!response.ok) {
-    return new Promise((resolve,reject) => {
-      response.text().then(text => {
-        reject("Backend Request Error: (" + response.status + ") " + text);
-    }).catch(() => { reject("Backend Request Error: (" + response.status + ")"); });
-    });
-  }
-  if (response.headers.get("content-length") == 0) {
-    return new Promise((resolve) => resolve(0));
-  }
-  return response.json();
-}
