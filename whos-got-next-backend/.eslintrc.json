@@ -4,7 +4,10 @@
         "es6": true,
         "node": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended",
+        "plugin:security/recommended"
+    ],
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
@@ -12,10 +15,35 @@
     "parserOptions": {
         "ecmaVersion": 2018
     },
+    "plugins": [
+        "security"
+    ],
     "rules": {
+        "eqeqeq": "error",
+        "curly": "error",
+        "guard-for-in": "error",
+        "object-shorthand": "error",
+        "camelcase": "error",
+        "generator-star-spacing": "error",
         "semi": "error",
-        "new-cap": "error",
+        "no-extend-native": "error",
+        "no-loop-func": "error",
+        "no-iterator": "error",
+        "no-multi-str": "error",
+        "no-script-url": "error",
+        "no-undefined": "error",
+        "no-caller": "error",
+        "no-console": "error",
+        "no-eval": "error",
+        "no-negated-in-lhs": "error",
+        "no-new": "error",
+        "block-scoped-var": "error",
+        "no-use-before-define": "error",
+        "complexity": ["error", 4],
         "quotes": ["error", "double"],
-        "no-console": "error"
+        "new-cap": "error",
+        "wrap-iife": ["error", "outside"],
+        "arrow-parens": ["error", "always"],
+        "arrow-spacing": "error"
     }
 }
