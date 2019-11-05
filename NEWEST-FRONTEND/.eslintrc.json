@@ -6,7 +6,8 @@
     },
     "extends": [
         "eslint:recommended",
-        "plugin:react/recommended"
+        "plugin:react/recommended",
+        "plugin:security/recommended"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -20,13 +21,36 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+        "security"
     ],
     "rules": {
-        "quotes": ["error", "double"],
-        "semi": "error",
+        "react/prop-types": 0,
         "eqeqeq": "error",
+        "curly": "error",
+        "guard-for-in": "error",
+        "object-shorthand": "error",
+        "camelcase": "error",
+        "generator-star-spacing": "error",
+        "semi": "error",
+        "no-extend-native": "error",
+        "no-loop-func": "error",
+        "no-iterator": "error",
+        "no-multi-str": "error",
+        "no-script-url": "error",
+        "no-undefined": "error",
+        "no-caller": "error",
         "no-console": "error",
-        "react/prop-types": 0
+        "no-eval": "error",
+        "no-negated-in-lhs": "error",
+        "no-new": "error",
+        "block-scoped-var": "error",
+        "no-use-before-define": "error",
+        "complexity": ["error", 4],
+        "quotes": ["error", "double"],
+        "new-cap": "error",
+        "wrap-iife": ["error", "outside"],
+        "arrow-parens": ["error", "always"],
+        "arrow-spacing": "error"
     }
 }
