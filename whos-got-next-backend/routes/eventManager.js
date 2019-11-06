@@ -47,7 +47,9 @@ async function getAddress(url) {
         log.error("Could not retrieve address. Gave error: " + err);
     });
 
-
+    if (res.data.error) {
+        return new Promise((resolve,reject) => { reject(res.data.error);});
+    }
     return await stitchAddress(res.data.address);
 }
 
@@ -105,6 +107,7 @@ router.post("/", (req, res) => {
         });
     }).catch( (err) => {
         log.error(err);
+        res.status(401).send(err);
     });
 });
 

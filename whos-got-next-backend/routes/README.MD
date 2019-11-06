@@ -76,8 +76,9 @@ curl -X POST http://34.220.132.159/events/ \
 -d '{"name": "Pickup Basketball", "organizers": ["5da6fec2307334139262c2bd"], "players": ["5da6fec2307334139262c2bd"], "description": "Join us for some basketball tomorrow...", "location": {"type": "Point", "coordinates": [-123.252343, 49.262452]}, "date": "2019-11-30T12:00:00", "pendingPlayerRequests": [], "sport": "basketball"}'
 ```
 **Success Responses** `200 OK` Returns created Event object.
-**Error Responses** `400 BAD REQUEST` Event object isn't valid.
-
+**Error Responses**
+`400 BAD REQUEST` Event object isn't valid.
+`401 BAD REQUEST` Event location can't be geocoded into an address.
 
 `GET /events/:eventId`
 Get info for event with `:eventId`.
