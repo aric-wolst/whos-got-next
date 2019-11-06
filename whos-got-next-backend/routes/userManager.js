@@ -123,7 +123,7 @@ router.put("/:userId/save-expo-push-token/:expoPushToken", (req, res) => {
 });
 
 router.delete("/:userId", (req, res) => {
-    User.findByIdAndDelete(req.params.userId, req.body, (err,user) => {
+    User.findByIdAndDelete(req.params.userId, req.body, (err) => {
         if (err) {
             res.status(400).send(err);
             return;
