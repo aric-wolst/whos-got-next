@@ -35,32 +35,10 @@ router.use(function(req, res, next) {
 });
 
 async function stitchAddress(address) {
-    let addr = "";
-    let hood = address.neighbourhood;
-    let number = address.house_number;
-    let road = address.road;
-    let city = address.city;
-    let state = address.state;
-
-    if (hood) {
-        addr = addr + hood + ",";
-    }
-
-    if (number) {
-        addr = addr + " " + number;
-    }
-
-    if (road) {
-        addr = addr + " " + road;
-    }
-
-    if (city) {
-        addr = addr + ", " + city;
-    }
-
-    if (state) {
-        addr = addr + ", " + state;
-    }
+    const {neighbourhood: hood, house_number: number, road, city, state} = address;
+    const roadField = (number ? number + (road ? " " + road : "") : road);
+    const fields = [hood, roadField, city, state].filter((item) => item);
+    const addr = fields.join(", ");
     return addr;
 }
 
