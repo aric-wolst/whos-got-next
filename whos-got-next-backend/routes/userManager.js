@@ -9,6 +9,7 @@ var express = require("express");
 var router = new express.Router();
 var authenticateWithFB = require("../utils/auth.js");
 var axios = require("axios");
+const {guardErrors, guardDefaultError} = require("../utils/guardErrors.js");
 
 // Logging
 const bunyan = require("bunyan");
@@ -27,10 +28,7 @@ router.use(express.json());
 
 function getSelf(req,res) {
     User.findOne({}, (err,user) => {
-        if (err) {
-            res.status(400).send(err);
-            return;
-        }
+        if (guardDefaultError(err,res)) {return;}
 
         res.status(200).send(user);
     });
@@ -38,7 +36,7 @@ function getSelf(req,res) {
 
 function getExists(req,res) {
     User.findOne({"authentication.type": req.query.type, "authentication.identifier": req.query.identifier}, (err, user) => {
-        if (err) { res.status(400).send(err); return; }
+        if (guardDefaultError(err,res)) {return;}
         if (!user) {log.info("no user exists");}
         res.status(200).send(user);
     });
@@ -52,31 +50,30 @@ router.use(function(req, res, next) {
 router.post("/", (req, res) => {
 	const user = new User(req.body);
     User.findOne({"authentication.type": user.authentication.type, "authentication.identifier": user.authentication.identifier}, (err,existingUser) => {
-        if (err) { res.status(400).send(err); log.info("errror"); return; }
+        if (guardErrors([
+            {condition: (err), status: 400, message: err},
+            {condition: (existingUser), status: 401, message: "User with auth: " + existingUser.authentication + " is already in the database"},
+        ], res)) { return; }
 
-        if (existingUser) {
-            res.status(401).send("User with auth: " + existingUser.authentication + " is already in the database");
-        } else {
-            const token = user.authentication.token;
-            if (token) {
-                authenticateWithFB(token).then(() => {
-                    mDBConnector.create(user).then( (savedUser) => {
-                        res.status(200).send(savedUser);
-                    }).catch((err) => {
-                        res.status(400).send(err);
-                    });
-
-                    //Get user name
-                    const userId = user.authentication.identifier;
-                    const fbUrl = "https://graph.facebook.com/" + userId + "?fields=name&access_token=" + user.authentication.token;
-                    axios.get(fbUrl).then( (response) => {
-                        const name = response.data.name;
-                        log.info("Successfully authenticated " + name);
-                    });
-                }).catch( (err) => {
-                    res.status(402).send(err);
+        const token = user.authentication.token;
+        if (token) {
+            authenticateWithFB(token).then(() => {
+                mDBConnector.create(user).then( (savedUser) => {
+                    res.status(200).send(savedUser);
+                }).catch((err) => {
+                    if (guardDefaultError(err,res)) {return;}
                 });
-            }
+
+                // Get user name.
+                const userId = user.authentication.identifier;
+                const fbUrl = "https://graph.facebook.com/" + userId + "?fields=name&access_token=" + user.authentication.token;
+                axios.get(fbUrl).then( (response) => {
+                    const name = response.data.name;
+                    log.info("Successfully authenticated " + name);
+                });
+            }).catch( (err) => {
+                guardErrors([{condition: true, status: 402, message: err}], res);
+            });
         }
     });
 });
@@ -94,18 +91,18 @@ router.get("/:userId", (req, res) => {
     }
 
     User.findById(userId, (err,user) => {
-        if (err) { res.status(400).send(err); return; }
-        if (!user) { res.status(401).send("No user found with id: " + userId);}
+        if (guardErrors([
+            {condition: (err), status: 400, message: err},
+            {condition: (!user), status: 401, message: "No user found with id: " + userId},
+        ], res)) {return;}
+
         res.status(200).send(user);
     });
 });
 
 router.put("/:userId", (req, res) => {
     User.findByIdAndUpdate(req.params.userId, req.body, {returnOriginal: false}, (err,user) => {
-        if (err) {
-            res.status(400).send(err);
-            return;
-        }
+        if (guardDefaultError(err,res)) {return;}
 
         res.status(200).send(user);
     });
@@ -113,10 +110,7 @@ router.put("/:userId", (req, res) => {
 
 router.put("/:userId/save-expo-push-token/:expoPushToken", (req, res) => {
     User.findByIdAndUpdate(req.params.userId, {expoPushToken: req.params.expoPushToken}, {returnOriginal: false}, (err,user) => {
-        if (err) {
-            res.status(400).send(err);
-            return;
-        }
+        if (guardDefaultError(err,res)) {return;}
 
         res.status(200).send(user);
     });
@@ -124,10 +118,7 @@ router.put("/:userId/save-expo-push-token/:expoPushToken", (req, res) => {
 
 router.delete("/:userId", (req, res) => {
     User.findByIdAndDelete(req.params.userId, req.body, (err) => {
-        if (err) {
-            res.status(400).send(err);
-            return;
-        }
+        if (guardDefaultError(err,res)) {return;}
 
         res.status(200).send("User deleted");
     });

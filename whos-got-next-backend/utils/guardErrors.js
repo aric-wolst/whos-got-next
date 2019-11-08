@@ -31,12 +31,7 @@ function guardErrors(errors, response) {
  * @param {String}  error  Description of error.
  */
 function guardDefaultError(error, response) {
-    if (error) {
-        response.status(400).send(error);
-        log.error(error);
-        return true;
-    }
-    return false;
+    return guardErrors([{condition: (error), status: 400, message: error}],response);
 }
 
 module.exports = {guardErrors, guardDefaultError};
