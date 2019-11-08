@@ -39,7 +39,7 @@
         "no-new": "error",
         "block-scoped-var": "error",
         "no-use-before-define": "error",
-        "complexity": ["error", 4],
+        "complexity": ["error", 5],
         "quotes": ["error", "double"],
         "new-cap": "error",
         "wrap-iife": ["error", "outside"],
