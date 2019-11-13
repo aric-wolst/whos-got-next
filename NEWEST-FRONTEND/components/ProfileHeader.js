@@ -1,12 +1,12 @@
 /* global require */
 
 import React, { Component } from "react";
-import GLOBALS from "../utils/Colors";
 import {StyleSheet, Text, View, Image } from "react-native";
+import layout from "../utils/Layout";
 
 const styles = StyleSheet.create({
     headerBackground: {
-        backgroundColor: GLOBALS.COLOR.MAINCOLOR,
+        backgroundColor: layout.color.mainColor,
         paddingBottom: 10
     },
     header: {
@@ -68,7 +68,7 @@ export default class ProfileHeader extends Component {
             <View style = {styles.headerBackground}>
                 <View style = {styles.header}>
                     <View style = {styles.profilepicWrap}>
-                        <Image style = {styles.profilepic} source={require("../img/profilepic.jpg")} />
+                        <Image style = {styles.profilepic} source={require("../assets/img/profilepic.jpg")} />
                     </View>
 
                     <View style = {styles.personalInfo}>
@@ -81,4 +81,3 @@ export default class ProfileHeader extends Component {
         );
     }
 }
-

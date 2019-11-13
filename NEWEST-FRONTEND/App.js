@@ -13,7 +13,7 @@ import registerForPushNotificationsAsync from "./utils/PushNotificationsManager"
 import config from "./config";
 import backendRequest from "./utils/RequestManager";
 import CreateEvent from "./screens/CreateEvent";
-import logo from "./img/logo.png";
+import logo from "./assets/img/logo.png";
 
 const styles = StyleSheet.create({
   logo: {
