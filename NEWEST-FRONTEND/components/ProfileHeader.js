@@ -1,6 +1,8 @@
+/* global require */
+
 import React, { Component } from "react";
-import { AppRegistry, StyleSheet, Text, View, Image } from "react-native";
 import GLOBALS from "../utils/Colors";
+import {StyleSheet, Text, View, Image } from "react-native";
 
 const styles = StyleSheet.create({
     headerBackground: {

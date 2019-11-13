@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { AsyncStorage, ActivityIndicator, StatusBar, StyleSheet, Text, View, Button, TouchableOpacity, Alert, Image } from "react-native";
+import { AsyncStorage, ActivityIndicator, StatusBar, StyleSheet, Text, View, TouchableOpacity, Alert, Image } from "react-native";
 import MyProfile from "./screens/MyProfile";
-import Profile from "./screens/Profile";
 import Settings from "./screens/Settings";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
@@ -30,7 +29,7 @@ const styles = StyleSheet.create({
   },
 });
 
-class AuthLoadingScreen extends React.Component {
+class AuthLoadingScreen extends Component {
   componentDidMount() {
     this._bootstrapAsync();
   }
