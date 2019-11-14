@@ -32,7 +32,7 @@ class MyProfile extends Component {
             });
         }
 
-        const willFocusSubscription = this.props.navigation.addListener('willFocus', ((payload) => {
+        this.props.navigation.addListener("willFocus", (() => {
             this.getData();
         }));
     }
