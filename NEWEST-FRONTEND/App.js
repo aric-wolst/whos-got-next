@@ -71,7 +71,7 @@ class SignInScreen extends React.Component {
         backendRequest("/users/exists", {type: "facebookId", identifier: json.id}, "GET").then( (user) => {
             if (user) {
               AsyncStorage.setItem(config.userIdKey, user._id).then(() => {
-                Alert.alert("Logged in!", `Hi ${json.name}!`);
+                Alert.alert("Logged in!", `Hi ${user.firstName}!`);
                 this.presentApp();
               });
             } else {
@@ -89,7 +89,7 @@ class SignInScreen extends React.Component {
                 "sports": []
               }).then( (user) => {
                 AsyncStorage.setItem(config.userIdKey, user._id).then(() => {
-                  Alert.alert("Logged in!", `Hi ${json.name}!`);
+                  Alert.alert("Logged in!", `Hi ${user.firstName}!`);
                   this.presentApp();
                 });
               });
@@ -136,9 +136,9 @@ const TeamsStack = createStackNavigator({
 
 const AppTabs = createBottomTabNavigator(
   {
-  MyProfile,
-  Events: TeamsStack,
-  Settings,
+      MyProfile,
+      Events: TeamsStack,
+      Settings,
   },
   {
     defaultNavigationOptions: ({navigation}) => ({
