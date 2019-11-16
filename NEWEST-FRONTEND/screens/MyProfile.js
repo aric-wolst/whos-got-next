@@ -32,9 +32,13 @@ class MyProfile extends Component {
             });
         }
 
-        this.props.navigation.addListener("willFocus", (() => {
+        this.focusSubscription = this.props.navigation.addListener("willFocus", (() => {
             this.getData();
         }));
+    }
+
+    componentWillUnmount() {
+        this.focusSubscription.remove();
     }
 
     render() {
