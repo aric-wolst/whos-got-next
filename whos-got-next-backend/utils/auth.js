@@ -1,6 +1,10 @@
 //Use axios to make http requests to the Facebook Graph API
 const axios = require("axios");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
+
+// Logging
+const bunyan = require("bunyan");
+const log = bunyan.createLogger({name: "whosgotnext-authentication"});
 
 //Get facebook app config strings
 const localconfig = require("../localconfig");
@@ -29,25 +33,26 @@ async function authenticateWithFB(inputToken) {
 }
 
 async function authenticateRequest(req) {
-    console.log("Authenticating request");
-    console.log(JSON.stringify(req.headers));
+    log.info("Authenticating request");
     return new Promise((resolve,reject) => {
-        //Retrieve requestToken from header
+        // Retrieve requestToken from header.
         const requestToken = req.headers.requesttoken;
 
-        //No token was found
+        // No token was found.
         if (!requestToken) {
             reject("Access Denied.");
+            log.error("Access denied");
+            return;
         }
-
+        
         try {
             jwt.verify(requestToken, key);
-        } catch (err) {
-            reject("Invalid token.");
+            resolve();
+        } catch(error) {
+            reject("Invalid token");
+            log.error("Invalid token");
         }
-        resolve();
-    })
-
+    });
 }
 
 module.exports.authenticateWithFB = authenticateWithFB;

@@ -35,7 +35,7 @@ router.use(function(req, res, next) {
 
     // Authenticate the request.
     auth.authenticateRequest(req)
-        .then(next).catch((error) => {
+        .then(() => { next(); }).catch((error) => {
         res.status(400).send(error);
     });
 });
