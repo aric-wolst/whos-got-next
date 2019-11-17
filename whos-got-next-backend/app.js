@@ -1,10 +1,6 @@
 const express = require("express");
 const MongoDBConnector = require("./utils/mongoDBConnector");
-
-//const https = require("https");
-//const fs = require("fs");
-const localconfig = require("./localconfig");
-//const passphrase = localconfig.sslPassphrase;
+const auth = require("./utils/auth.js");
 
 // Logging
 const bunyan = require("bunyan");
@@ -23,24 +19,15 @@ function startApp() {
 	app.use("/events", eventManager);
 
 	app.get("/", (req, res) => {
-		res.status(200).send("You successfully established an API connection!");
+		auth.authenticateRequest(req).then(() => {
+			res.status(200).send("You successfully established an API connection!");
+		}).catch((error) => {
+			res.status(400).send(error);
+		});
 	});
 
-	//Create the https server
-	// https.createServer({
-	// 	key: fs.readFileSync("./key.pem"),
-	// 	cert: fs.readFileSync("./cert.pem"),
-	// 	passphrase
-	// }, app).listen(8081, () => {
-	// 	//var host = server.address().address;
-	// 	//var port = server.address().port;
-	// 	log.info("server app listening at https://:8081");
-	// });
-
-	var server = app.listen(8081, () => {
-		var host = server.address().address
-		var port = server.address().port
-		console.log("server app listening at http://:%s",port);
+	app.listen(8081, () => {
+		console.log("server app listening at http://localhost:8081/");
 	});
 }
 

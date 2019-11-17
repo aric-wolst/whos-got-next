@@ -7,8 +7,9 @@
 
 var express = require("express");
 var router = new express.Router();
-var authenticateWithFB = require("../utils/auth.js");
+var auth = require("../utils/auth.js");
 var axios = require("axios");
+const jwt = require('jsonwebtoken');
 const {guardErrors, guardDefaultError} = require("../utils/guardErrors.js");
 
 // Logging
@@ -37,8 +38,13 @@ function getSelf(req,res) {
 function getExists(req,res) {
     User.findOne({"authentication.type": req.query.type, "authentication.identifier": req.query.identifier}, (err, user) => {
         if (guardDefaultError(err,res)) {return;}
-        if (!user) {log.info("no user exists");}
-        res.status(200).send(user);
+        if (!user || user === null) {
+            log.info("no user exists");
+            res.status(200).send(user);
+            return;
+        }
+        const reqToken = user.generateAuthToken();
+        res.header("requestToken", reqToken).status(200).send(user);
     });
 }
 
@@ -57,9 +63,10 @@ router.post("/", (req, res) => {
 
         const token = user.authentication.token;
         if (token) {
-            authenticateWithFB(token).then(() => {
+            auth.authenticateWithFB(token).then(() => {
                 mDBConnector.create(user).then( (savedUser) => {
-                    res.status(200).send(savedUser);
+                    const reqToken = user.generateAuthToken();
+                    res.header("requestToken", reqToken).status(200).send(savedUser);
                 }).catch((err) => {
                     if (guardDefaultError(err,res)) {return;}
                 });
