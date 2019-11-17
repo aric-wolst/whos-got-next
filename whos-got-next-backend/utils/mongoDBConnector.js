@@ -1,6 +1,10 @@
 // MongoDB Connection Config.
 const localconfig = require("../localconfig");
-const mongoURI = "mongodb+srv://" + localconfig.mongoDBUser + ":" + localconfig.mongoDBPass + "@whosgotnextcluster-m3xes.mongodb.net/whosgotnext?retryWrites=true&w=majority";
+let mongoURI = "mongodb+srv://" + localconfig.mongoDBUser + ":" + localconfig.mongoDBPass + "@whosgotnextcluster-m3xes.mongodb.net/whosgotnext?retryWrites=true&w=majority";
+if (process.env.NODE_ENV === "test") {
+    // Get the URL for the in-memory mongoDB Test Database.
+    mongoURI = process.env.MONGO_URL;
+}
 
 // Logging
 const bunyan = require("bunyan");

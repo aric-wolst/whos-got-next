@@ -25,12 +25,16 @@ function startApp() {
 			res.status(400).send(error);
 		});
 	});
-
-	app.listen(8081, () => {
-		console.log("server app listening at http://localhost:8081/");
-	});
+	
+    return app;
 }
 
-
 const mDBConnector = MongoDBConnector.sharedInstance();
-mDBConnector.connect().then(startApp).catch((err) => {log.error(err);});
+mDBConnector.connect().then(() => {
+	const app = startApp();
+	app.listen(8081, () => {
+		log.info("server app listening at http://localhost:8081/");
+	});
+}).catch((err) => { log.error(err); });
+
+module.exports = startApp();
