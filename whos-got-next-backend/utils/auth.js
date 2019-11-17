@@ -1,10 +1,12 @@
 //Use axios to make http requests to the Facebook Graph API
 const axios = require("axios");
+const jwt = require('jsonwebtoken');
 
 //Get facebook app config strings
 const localconfig = require("../localconfig");
 const appID = localconfig.fbAppID;
 const appSecret =localconfig.fbAppSecret;
+const key = localconfig.privateKey;
 
 //Get access_token to pass to pass to authentication request
 const accessTokenUrl = "https://graph.facebook.com/oauth/access_token?client_id="
@@ -26,4 +28,27 @@ async function authenticateWithFB(inputToken) {
     });
 }
 
-module.exports = authenticateWithFB;
+async function authenticateRequest(req) {
+    console.log("Authenticating request");
+    console.log(JSON.stringify(req.headers));
+    return new Promise((resolve,reject) => {
+        //Retrieve requestToken from header
+        const requestToken = req.headers.requesttoken;
+
+        //No token was found
+        if (!requestToken) {
+            reject("Access Denied.");
+        }
+
+        try {
+            jwt.verify(requestToken, key);
+        } catch (err) {
+            reject("Invalid token.");
+        }
+        resolve();
+    })
+
+}
+
+module.exports.authenticateWithFB = authenticateWithFB;
+module.exports.authenticateRequest = authenticateRequest;

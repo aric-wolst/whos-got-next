@@ -1,5 +1,5 @@
-# Public ip Address
-http://34.220.132.159/
+# Domain
+https://whosgotnext.ca/
 
 # Who's Got Next - Backend
 

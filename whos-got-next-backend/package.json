@@ -27,6 +27,7 @@
     "mongoose": "^5.7.5",
     "passport-auth-token": "^1.0.1",
     "passport-facebook": "^3.0.0"
+    "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
     "babel-preset-env": "^1.7.0",

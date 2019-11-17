@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const Auth = require("../model/auth.js");
 const pointSchema = require("../model/point.js");
+const localconfig = require("../localconfig");
+const key = localconfig.privateKey;
+const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
     authentication: {
@@ -57,5 +60,11 @@ const userSchema = new mongoose.Schema({
         required: [false]
     }
 });
+
+//Generate Authentication Token
+userSchema.methods.generateAuthToken = function() {
+    const token = jwt.sign({fbToken: this.authentication.token}, key);
+    return token;
+};
 
 module.exports = userSchema;
