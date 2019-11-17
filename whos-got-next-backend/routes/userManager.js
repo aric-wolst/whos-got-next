@@ -55,10 +55,12 @@ router.use(function(req, res, next) {
 
 router.post("/", (req, res) => {
 	const user = new User(req.body);
+    if (guardErrors([ {condition: (!user), status: 400, message: "No user info provided."} ], res)) { return; }
     User.findOne({"authentication.type": user.authentication.type, "authentication.identifier": user.authentication.identifier}, (err,existingUser) => {
+
         if (guardErrors([
             {condition: (err), status: 400, message: err},
-            {condition: (existingUser), status: 401, message: "User with auth: " + existingUser.authentication + " is already in the database"},
+            {condition: (existingUser), status: 401, message: "User with auth: " + user.authentication + " is already in the database"},
         ], res)) { return; }
 
         const token = user.authentication.token;

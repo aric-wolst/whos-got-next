@@ -73,7 +73,7 @@ class Teams extends Component {
           dataSource: null,
           location: null,
          };
-        this.getData();
+        this._getData();
     }
 
     /* Page header */
@@ -94,38 +94,29 @@ class Teams extends Component {
         },
     };
 
-    getData = () => {
+    _getData = async () => {
         /* Get user's current location */
-        this._getLocationAsync().then(() => {
-        
-        /* Give the backend the users current location to retrieve events within 5km */
-        fetch("http://34.220.132.159/events/nearby?longitude=" + this.state.location.coords.longitude + "&latitude=" + this.state.location.coords.latitude, {
-            method: "GET",
-        })
-        /* Store returned events into datasource and stop refreshing */
-        .then((response) => response.json())
-        .then((responseJson) => {
-          this.setState({
-           refreshing: false,
-           dataSource: responseJson
-          });
-        })
-        /* Store user ID into async storage and send user coordinates to the backend */
-        .then(() => AsyncStorage.getItem(config.userIdKey))
-        .then((userId) => {
-            var userLocation = {coordinates: [this.state.location.coords.longitude, this.state.location.coords.latitude], type: "Point",};
+        await this._getLocationAsync();
+        try {
+            const events = await backendRequest("/events/nearby", {longitude: this.state.location.coords.longitude, latitude: this.state.location.coords.latitude}, "GET");
+            this.setState({
+             refreshing: false,
+             dataSource: events
+            });
+            const userId = await AsyncStorage.getItem(config.userIdKey);
+            const userLocation = {coordinates: [this.state.location.coords.longitude, this.state.location.coords.latitude], type: "Point",};
             backendRequest("/users/" + userId, {}, "PUT", {
                 "location": userLocation,
             });
-        })
-        .catch((error) => Alert.alert("Get Event Data Error",error.message));
-        });
+        } catch(error) {
+            Alert.alert("Get Event Data Error",error.message);
+        }
     }
 
-    /* When the page is pulled down, it refreshes, sets the datasource to empty and calls getData */
+    /* When the page is pulled down, it refreshes, sets the datasource to empty and calls _getData */
     onRefresh() {
         this.setState({ dataSource: [] });
-        this.getData();
+        this._getData();
     }
 
     /* Gets user's current location */

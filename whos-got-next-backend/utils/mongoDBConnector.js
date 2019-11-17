@@ -9,10 +9,6 @@ const log = bunyan.createLogger({name: "whosgotnext-backend"});
 // MongoDB Modules.
 const mongoose = require("mongoose");
 
-// Data Models.
-const userSchema = require("../model/user.js");
-const User = mongoose.model("user", userSchema, "user");
-
 class MongoDBConnector {
 
     constructor() {

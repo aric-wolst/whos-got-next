@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { AsyncStorage, ActivityIndicator, StatusBar, StyleSheet, Text, View, Button, TouchableOpacity, Alert, Image } from "react-native";
+import { AsyncStorage, ActivityIndicator, StatusBar, StyleSheet, Text, View, TouchableOpacity, Alert, Image } from "react-native";
 import MyProfile from "./screens/MyProfile";
-import Profile from "./screens/Profile";
 import Settings from "./screens/Settings";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
@@ -14,7 +13,7 @@ import registerForPushNotificationsAsync from "./utils/PushNotificationsManager"
 import config from "./config";
 import backendRequest from "./utils/RequestManager";
 import CreateEvent from "./screens/CreateEvent";
-import logo from "./img/logo.png";
+import logo from "./assets/img/logo.png";
 
 const styles = StyleSheet.create({
   logo: {
@@ -30,7 +29,7 @@ const styles = StyleSheet.create({
   },
 });
 
-class AuthLoadingScreen extends React.Component {
+class AuthLoadingScreen extends Component {
   componentDidMount() {
     this._bootstrapAsync();
   }
@@ -72,7 +71,7 @@ class SignInScreen extends React.Component {
         backendRequest("/users/exists", {type: "facebookId", identifier: json.id}, "GET").then( (user) => {
             if (user) {
               AsyncStorage.setItem(config.userIdKey, user._id).then(() => {
-                Alert.alert("Logged in!", `Hi ${json.name}!`);
+                Alert.alert("Logged in!", `Hi ${user.firstName}!`);
                 this.presentApp();
               });
             } else {
@@ -90,7 +89,7 @@ class SignInScreen extends React.Component {
                 "sports": []
               }).then( (user) => {
                 AsyncStorage.setItem(config.userIdKey, user._id).then(() => {
-                  Alert.alert("Logged in!", `Hi ${json.name}!`);
+                  Alert.alert("Logged in!", `Hi ${user.firstName}!`);
                   this.presentApp();
                 });
               });
@@ -137,9 +136,9 @@ const TeamsStack = createStackNavigator({
 
 const AppTabs = createBottomTabNavigator(
   {
-  MyProfile,
-  Events: TeamsStack,
-  Settings,
+      MyProfile,
+      Events: TeamsStack,
+      Settings,
   },
   {
     defaultNavigationOptions: ({navigation}) => ({
