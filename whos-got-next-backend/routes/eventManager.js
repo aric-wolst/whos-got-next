@@ -32,7 +32,12 @@ router.use(express.json());
 
 router.use(function(req, res, next) {
     log.info("You are in the eventManager module");
-    next();
+
+    // Authenticate the request.
+    auth.authenticateRequest(req)
+        .then(next).catch((error) => {
+        res.status(400).send(error);
+    });
 });
 
 async function stitchAddress(address) {
@@ -88,31 +93,24 @@ function sendPushNotificationToUsersNear(notification, location, distance) {
 }
 
 router.post("/", (req, res) => {
-    console.log("Creating new event");
-    //Authenticate the request
-    auth.authenticateRequest(req)
-        .then(() => {
-        const event = new Event(req.body);
+    const event = new Event(req.body);
 
-        const latitude = req.body.location.coordinates[1];
-        const longitude = req.body.location.coordinates[0];
+    const latitude = req.body.location.coordinates[1];
+    const longitude = req.body.location.coordinates[0];
 
-        //Endpoint to get address from coordinates
-        const url = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + latitude + "&lon=" + longitude;
-        getAddress(url).then( (response) => {
-            event.address = response;
-            mDBConnector.create(event).then( (savedEvent) => {
-                res.status(200).send(savedEvent);
-                const notification = {title: "New Event: " + savedEvent.name, body: "There is a new event near you."};
-                sendPushNotificationToUsersNear(notification, savedEvent.location, 5);
-            }).catch((err) => {
-                guardDefaultError(err);
-            });
-        }).catch( (err) => {
-            guardErrors([{condition: true, status: 401, message: err}]);
+    //Endpoint to get address from coordinates
+    const url = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + latitude + "&lon=" + longitude;
+    getAddress(url).then( (response) => {
+        event.address = response;
+        mDBConnector.create(event).then( (savedEvent) => {
+            res.status(200).send(savedEvent);
+            const notification = {title: "New Event: " + savedEvent.name, body: "There is a new event near you."};
+            sendPushNotificationToUsersNear(notification, savedEvent.location, 5);
+        }).catch((err) => {
+            guardDefaultError(err);
         });
-    }).catch((error) => {
-        res.status(400).send(error);
+    }).catch( (err) => {
+        guardErrors([{condition: true, status: 401, message: err}]);
     });
 });
 
