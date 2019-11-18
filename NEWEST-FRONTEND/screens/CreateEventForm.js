@@ -44,12 +44,6 @@ const styles = StyleSheet.create({
     }
 });
 
-class InvalidEntryAlert extends Component {
-    render(){
-        return Alert.alert("Invalid Entry", "Please make sure to fill in all fields.");
-    }
-}
-
 class CreateEventForm extends Component {
 
     static navigationOptions = {
@@ -73,6 +67,7 @@ class CreateEventForm extends Component {
             eventName: "",
             eventDescription: "",
             duration: "",
+            disablePost: false, 
         };
         this.postEvent=this.postEvent.bind(this);
     }
@@ -81,7 +76,8 @@ class CreateEventForm extends Component {
         if(this.state.sport === "" ||
            this.state.eventName === "" ||
            this.state.duration === "") {
-            Alert.alert("Invalid Entry", "Please make sure to fill in all fields.");
+            Alert.alert("Invalid Entry", "Please make sure to fill in all fields.")
+
         } else {
             const userId = await AsyncStorage.getItem(config.userIdKey);
             const { navigation } = this.props;
@@ -107,18 +103,31 @@ class CreateEventForm extends Component {
             }).then( () => {
                 Alert.alert("Success", "You have created a new event!");
                 this.setState({
-                    sport: "",
-                    eventName: "",
-                    eventDescription: "",
-                    duration: "",
+                    // sport: "",
+                    // eventName: "",
+                    // eventDescription: "",
+                    // duration: "",
+                    disablePost: true,
                 });
-                this.props.navigation.goBack(null);
+                //this.props.navigation.goBack(null);
             });
         }
     }
 
     render() {
-
+        const postButton = <Button 
+                                ref = {this.props.generateTestHook('PostButton')}
+                                color = "#ff8c00" 
+                                title = "Post Event" 
+                                onPress = {this.postEvent}
+                            />;
+        const disabledButton = <Button
+                                    disabled = {true}
+                                    ref = {this.props.generateTestHook('DisabledButton')}
+                                    color = "#ff8c00" 
+                                    title = "Event Posted!" 
+                                    onPress = {this.postEvent}
+                                />;
         let timeIntervals = [{
             value: "1 hour",
         }, {
@@ -190,12 +199,7 @@ class CreateEventForm extends Component {
                         value = {this.state.eventDescription}
                         ref = {this.props.generateTestHook('DescriptionInput')}
                     />
-                    <Button 
-                        ref = {this.props.generateTestHook('PostButton')}
-                        color = "#ff8c00" 
-                        title = "Post Event" 
-                        onPress = {this.postEvent}
-                    />
+                    {this.state.disablePost ? disabledButton : postButton}
                 </SafeAreaView >
             </KeyboardAvoidingView>
         );
@@ -204,5 +208,3 @@ class CreateEventForm extends Component {
 
 const TestCreateEvent = hook(CreateEventForm);
 export default TestCreateEvent;
-    
-

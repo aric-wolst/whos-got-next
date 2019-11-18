@@ -14,6 +14,7 @@ import config from "./config";
 import backendRequest from "./utils/RequestManager";
 import CreateEvent from "./screens/CreateEvent";
 import logo from "./assets/img/logo.png";
+import TestCreateEvent from "./screens/CreateEventForm";
 
 const styles = StyleSheet.create({
   logo: {
@@ -132,6 +133,7 @@ const TeamsStack = createStackNavigator({
   FindTeams: Teams,
   TeamProfile,
   CreateEvent,
+  TestCreateEvent,
 }, { headerLayoutPreset: "center" });
 
 const AppTabs = createBottomTabNavigator(
