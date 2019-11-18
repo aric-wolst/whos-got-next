@@ -1,8 +1,9 @@
 // MongoDB Connection Config.
 const localconfig = require("../localconfig");
 let mongoURI = "mongodb+srv://" + localconfig.mongoDBUser + ":" + localconfig.mongoDBPass + "@whosgotnextcluster-m3xes.mongodb.net/whosgotnext?retryWrites=true&w=majority";
+
+// Get the URL for the in-memory mongoDB Test Database.
 if (process.env.NODE_ENV === "test") {
-    // Get the URL for the in-memory mongoDB Test Database.
     mongoURI = process.env.MONGO_URL;
 }
 

@@ -54,7 +54,11 @@ router.use(function(req, res, next) {
 
 router.post("/", (req, res) => {
 	const user = new User(req.body);
-    if (guardErrors([ {condition: (!user), status: 400, message: "No user info provided."} ], res)) { return; }
+    if (guardErrors([
+        {condition: (user.validateSync()), status: 400, message: "Invalid user info."},
+        {condition: (!user), status: 400, message: "No user info provided."}
+    ], res)) { return; }
+
     User.findOne({"authentication.type": user.authentication.type, "authentication.identifier": user.authentication.identifier}, (err,existingUser) => {
 
         if (guardErrors([
