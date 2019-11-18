@@ -9,7 +9,6 @@ var express = require("express");
 var router = new express.Router();
 var auth = require("../utils/auth.js");
 var axios = require("axios");
-const jwt = require("jsonwebtoken");
 const {guardErrors, guardDefaultError} = require("../utils/guardErrors.js");
 
 // Logging
