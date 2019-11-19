@@ -8,7 +8,6 @@
 var express = require("express");
 var router = new express.Router();
 var auth = require("../utils/auth.js");
-var axios = require("axios");
 const {guardErrors, guardDefaultError} = require("../utils/guardErrors.js");
 
 // Logging
@@ -74,14 +73,6 @@ router.post("/", (req, res) => {
                     res.header("requestToken", reqToken).status(200).send(savedUser);
                 }).catch((err) => {
                     if (guardDefaultError(err,res)) {return;}
-                });
-
-                // Get user name.
-                const userId = user.authentication.identifier;
-                const fbUrl = "https://graph.facebook.com/" + userId + "?fields=name&access_token=" + user.authentication.token;
-                axios.get(fbUrl).then( (response) => {
-                    const name = response.data.name;
-                    log.info("Successfully authenticated " + name);
                 });
             }).catch( (err) => {
                 guardErrors([{condition: true, status: 402, message: err}], res);

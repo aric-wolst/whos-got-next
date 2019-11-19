@@ -1,27 +1,31 @@
-const MongoDBConnector = require("../utils/mongoDBConnector");
+// const MongoDBConnector = require("../utils/mongoDBConnector");
 const mongoose = require("mongoose");
 
 // Start Test Server Instance.
-const app = require("../app");
+const startServer = require("../server");
 const supertest = require("supertest");
-const request = supertest(app);
-
+// const axios = require("axios");
 const requesttoken = "test";
+let server;
+let request;
 
 // Setup the mongoDB Connection before running any tests.
-beforeAll(() => {
-    const mDBConnector = MongoDBConnector.sharedInstance();
-    return mDBConnector.connect();
+beforeAll(async (done) => {
+    server = await startServer();
+    request = supertest.agent(server);
+    done();
 });
 
-afterAll(async () => {
+afterAll(async (done) => {
+    await server.close();
     await mongoose.connection.close();
+    done();
 });
 
 describe("App Test", () => {
     // Root Authentication Test Fail.
     test("Get root endpoint without request token should fail", async (done) => {
-      request.get("/").expect(400).end(done);
+      request.get("/").expect(400, done);
     });
 
     // Root Authentication Test Success.
@@ -36,27 +40,23 @@ describe("User Manager Test", () => {
 
     test("Create user with invalid data should fail", async (done) => {
         request.post("/users").set({ requesttoken, Accept: "application/json","Content-Type": "application/json" })
-        .send(JSON.stringify({firstName: "John"})).expect(400).end(done);
+        .send(JSON.stringify({firstName: "John"})).expect(400, done);
     });
 
     let userID;
     test("Create user with data should succeed", async (done) => {
-        console.log("POST user");
-        request.post("/users").set({ requesttoken, Accept: "application/json","Content-Type": "application/json" })
-        .send(JSON.stringify(userData)).expect(200).then((response) => {
-            userID = response.body._id;
-            expect(userID).toBeDefined();
-            console.log("Did POST user");
-            done();
-        });
+        const response = await request.post("/users").set({ requesttoken, Accept: "application/json","Content-Type": "application/json" })
+        .send(JSON.stringify(userData)).expect(200);
+
+        userID = response.body._id;
+        expect(userID).toBeDefined();
+        done();
     });
 
     test("User should exist in mongoDB after creation", async (done) => {
-        console.log("GET exists user");
         request.get("/users/exists").set({ requesttoken})
         .query({type, identifier}).expect(200).then((response) => {
             expect(response.body._id).toBe(userID);
-            console.log("Did GET exists user");
             done();
         });
     });
@@ -67,21 +67,17 @@ describe("User Manager Test", () => {
     });
 
     test("Get user should succeed", async (done) => {
-        console.log("GET user");
         request.get("/users/" + userID).set({ requesttoken })
         .expect(200).then((response) => {
-            console.log("Did GET user");
             expect(response.body._id).toBe(userID);
             done();
         });
     });
 
     test("Put user should succeed", async (done) => {
-        console.log("PUT user");
         request.put("/users/" + userID).set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
         .send(JSON.stringify({firstName: "Jonathan"}))
         .expect(200).then((response) => {
-            console.log("Did PUT user");
             expect(response.body.firstName).toBe("Jonathan");
             done();
         });
