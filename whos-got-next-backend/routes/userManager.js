@@ -9,14 +9,11 @@ var express = require("express");
 var router = new express.Router();
 var auth = require("../utils/auth.js");
 const {guardErrors, guardDefaultError} = require("../utils/guardErrors.js");
+const { Expo } = require("expo-server-sdk");
 
 // Logging
 const bunyan = require("bunyan");
 const log = bunyan.createLogger({name: "whosgotnext-backend"});
-
-// MongoDB mDBConnector
-const MongoDBConnector = require("../utils/mongoDBConnector");
-const mDBConnector = MongoDBConnector.sharedInstance();
 
 // Data Models.
 const mongoose = require("mongoose");
@@ -54,8 +51,8 @@ router.use(function(req, res, next) {
 router.post("/", (req, res) => {
 	const user = new User(req.body);
     if (guardErrors([
-        {condition: (user.validateSync()), status: 400, message: "Invalid user info."},
-        {condition: (!user), status: 400, message: "No user info provided."}
+        {condition: (user.validateSync()), status: 400, message: "User object is not valid"},
+        {condition: (!user), status: 403, message: "No user info provided."}
     ], res)) { return; }
 
     User.findOne({"authentication.type": user.authentication.type, "authentication.identifier": user.authentication.identifier}, (err,existingUser) => {
@@ -68,7 +65,7 @@ router.post("/", (req, res) => {
         const token = user.authentication.token;
         if (token) {
             auth.authenticateWithFB(token).then(() => {
-                mDBConnector.create(user).then( (savedUser) => {
+                user.save().then( (savedUser) => {
                     const reqToken = user.generateAuthToken();
                     res.header("requestToken", reqToken).status(200).send(savedUser);
                 }).catch((err) => {
@@ -104,6 +101,7 @@ router.get("/:userId", (req, res) => {
 });
 
 router.put("/:userId", (req, res) => {
+    // Find and update user.
     User.findByIdAndUpdate(req.params.userId, req.body, {returnOriginal: false}, (err,user) => {
         if (guardDefaultError(err,res)) {return;}
 
@@ -112,16 +110,24 @@ router.put("/:userId", (req, res) => {
 });
 
 router.put("/:userId/save-expo-push-token/:expoPushToken", (req, res) => {
+    // Check that pushToken is valid Expo push token on the form ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx].
+    const pushToken = req.params.expoPushToken;
+    if (guardErrors([ {condition: (!Expo.isExpoPushToken(pushToken)), status: 401, message: "Invalid expo push token."} ], res)) {return;}
+
+    // Add Push token to user.
     User.findByIdAndUpdate(req.params.userId, {expoPushToken: req.params.expoPushToken}, {returnOriginal: false}, (err,user) => {
         if (guardDefaultError(err,res)) {return;}
-
         res.status(200).send(user);
     });
 });
 
 router.delete("/:userId", (req, res) => {
-    User.findByIdAndDelete(req.params.userId, req.body, (err) => {
-        if (guardDefaultError(err,res)) {return;}
+    const userId = req.params.userId;
+    User.findByIdAndDelete(userId, req.body, (err, deletedUser) => {
+        if (guardErrors([
+            {condition: (err), status: 400, message: err},
+            {condition: (!deletedUser), status: 410, message: "No user found with id: " + userId},
+        ], res)) {return;}
 
         res.status(200).send("User deleted");
     });

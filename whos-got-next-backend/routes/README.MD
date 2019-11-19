@@ -15,6 +15,7 @@ curl -X POST http://34.220.132.159/users/ \
 `400 BAD REQUEST` User object isn't valid.
 `401 BAD REQUEST` User object already exists.
 `402 BAD REQUEST` Facebook Authentication Failed.
+`403 BAD REQUEST` No user info provided.
 
 `GET /users/exists`
 Get user profile for user with matching authentication query parameters if it exists.
@@ -35,7 +36,7 @@ Get profile for user with `:userId`.
 **Success Responses** `200 OK` Returns User object.
 **Error Responses**
 `400 BAD REQUEST` Bad Request.
-`401 BAD REQUEST` No user is found.
+`401 BAD REQUEST` No user matching the `:userId` is found.
 
 
 `PUT /users/:userId`
@@ -49,7 +50,9 @@ Update fields for user with `:userId` (e.g. description, first name and birthday
 DELETE user with `:userId`
 **Body** userId.
 **Success Responses** `200 OK` User was deleted.
-**Error Responses** `400 BAD REQUEST` No user matching the  `:userId` was found.
+**Error Responses**
+`400 BAD REQUEST` Bad Request.
+`410 BAD REQUEST` No user matching the `:userId` was found.
 
 
 `GET /users/self`
@@ -63,7 +66,9 @@ Get profile for current user
 Set expo push token for user with `:userId`.
 **Body** None.
 **Success Responses** `200 OK` Returns updated user object.
-**Error Responses** `400 BAD REQUEST` Bad Request.
+**Error Responses**
+`400 BAD REQUEST` Bad Request.
+`401 BAD REQUEST` Invalid Expo Push Token.
 
 ## Event Endpoints
 `POST /events`
