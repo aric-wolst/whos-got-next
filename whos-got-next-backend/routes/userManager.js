@@ -54,9 +54,8 @@ router.post("/", (req, res) => {
         {condition: (user.validateSync()), status: 400, message: "User object is not valid"},
         {condition: (!user), status: 403, message: "No user info provided."}
     ], res)) { return; }
-
+    
     User.findOne({"authentication.type": user.authentication.type, "authentication.identifier": user.authentication.identifier}, (err,existingUser) => {
-
         if (guardErrors([
             {condition: (err), status: 400, message: err},
             {condition: (existingUser), status: 401, message: "User with auth: " + user.authentication + " is already in the database"},

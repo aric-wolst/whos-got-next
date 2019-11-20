@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 // Start Test Server Instance.
 const startServer = require("../server");
 const supertest = require("supertest");
-// const axios = require("axios");
 const requesttoken = "test";
 let server;
 let request;
@@ -37,29 +36,21 @@ describe("App Test", () => {
 describe("User Manager Test", () => {
     const {type, identifier, token} = {type: "facebookId", identifier: "1111111111111111", token: "AAAAAAAAAAA"};
     const userData = {authentication: {type, identifier, token}, firstName: "John", lastName: "Snow", birthday: "1993-12-24", description: "Hi there. I am from the North!", sports: [{sport: "Basketball", level: 1}, {sport: "Volleyball", level: 3}]};
-    let userID;
+    let userId;
     const expoPushToken = "ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]";
 
-    test("Create user with invalid data should fail", async (done) => {
+    test("Post user with invalid data should fail", async (done) => {
         request.post("/users").set({ requesttoken, Accept: "application/json","Content-Type": "application/json" })
         .send(JSON.stringify({firstName: "John"})).expect(400, done);
     });
 
-    test("Create user with data should succeed", async (done) => {
+    test("Post user with data should succeed", async (done) => {
         const response = await request.post("/users").set({ requesttoken, Accept: "application/json","Content-Type": "application/json" })
         .send(JSON.stringify(userData)).expect(200);
 
-        userID = response.body._id;
-        expect(userID).toBeDefined();
+        userId = response.body._id;
+        expect(userId).toBeDefined();
         done();
-    });
-
-    test("User should exist in mongoDB after creation", async (done) => {
-        request.get("/users/exists").set({ requesttoken })
-        .query({type, identifier}).expect(200).then((response) => {
-            expect(response.body._id).toBe(userID);
-            done();
-        });
     });
 
     test("Posting existing user should fail", async (done) => {
@@ -67,10 +58,18 @@ describe("User Manager Test", () => {
         .send(JSON.stringify(userData)).expect(401, done);
     });
 
+    test("User should exist in mongoDB after creation", async (done) => {
+        request.get("/users/exists").set({ requesttoken })
+        .query({type, identifier}).expect(200).then((response) => {
+            expect(response.body._id).toBe(userId);
+            done();
+        });
+    });
+
     test("Get user should succeed", async (done) => {
-        request.get("/users/" + userID).set({ requesttoken })
+        request.get("/users/" + userId).set({ requesttoken })
         .expect(200).then((response) => {
-            expect(response.body._id).toBe(userID);
+            expect(response.body._id).toBe(userId);
             done();
         });
     });
@@ -83,8 +82,14 @@ describe("User Manager Test", () => {
         });
     });
 
+    test("Put non-existing user should fail", async (done) => {
+        request.put("/users/A").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+        .send(JSON.stringify({firstName: "Jonathan"}))
+        .expect(400, done);
+    });
+
     test("Put user should succeed", async (done) => {
-        request.put("/users/" + userID).set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+        request.put("/users/" + userId).set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
         .send(JSON.stringify({firstName: "Jonathan"}))
         .expect(200).then((response) => {
             expect(response.body.firstName).toBe("Jonathan");
@@ -93,24 +98,188 @@ describe("User Manager Test", () => {
     });
 
     test("Save invalid ExpoPushToken should fail", async (done) => {
-        request.put("/users/" + userID + "/save-expo-push-token/" + "x").set({ requesttoken })
+        request.put("/users/" + userId + "/save-expo-push-token/" + "x").set({ requesttoken })
         .expect(401, done);
     });
 
     test("Save ExpoPushToken should succeed", async (done) => {
-        request.put("/users/" + userID + "/save-expo-push-token/" + expoPushToken).set({ requesttoken })
+        request.put("/users/" + userId + "/save-expo-push-token/" + expoPushToken).set({ requesttoken })
         .expect(200).then((response) => {
-            expect(response.body._id).toBe(userID);
+            expect(response.body._id).toBe(userId);
             expect(response.body.expoPushToken).toBe(expoPushToken);
             done();
         });
     });
 
-    test("Delete user should succed", async (done) => {
-        request.delete("/users/" + userID).set({ requesttoken }).expect(200).end(done);
+    test("Delete user should succeed", async (done) => {
+        request.delete("/users/" + userId).set({ requesttoken }).expect(200).end(done);
     });
 
     test("Delete non-existing user should fail", async (done) => {
-        request.delete("/users/" + userID).set({ requesttoken }).expect(410).end(done);
+        request.delete("/users/" + userId).set({ requesttoken }).expect(410).end(done);
+    });
+
+    test("User should not exist in mongoDB after deletion", async (done) => {
+        request.get("/users/exists").set({ requesttoken })
+        .query({type, identifier}).expect(200).then((response) => {
+            expect(Object.values(response.body).length).toBe(0);
+            done();
+        });
+    });
+});
+
+describe("Event Manager Test", () => {
+    // Mock event data.
+    const eventSchema = require("../model/event.js");
+    const Event = mongoose.model("event", eventSchema, "event");
+    const expoPushTokens = ["ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]", "ExponentPushToken[yyyyyyyyyyyyyyyyyyyyyy]", "ExponentPushToken[zzzzzzzzzzzzzzzzzzzzzz]"];
+    let userIds = [];
+    let eventData, eventId;
+    const fakeId = new mongoose.Types.ObjectId();
+
+    beforeAll(async (done) => {
+        // Save test users in in-memory database.
+        const userSchema = require("../model/user.js");
+        const User = mongoose.model("user", userSchema, "user");
+        const usersData = [
+            {authentication: {type: "facebookId", identifier: "1111111111111111", token: "AAAAAAAAAAA"}, firstName: "John", lastName: "Snow", expoPushToken: expoPushTokens[0], birthday: "1993-12-24", description: "Hi there. I am from the North!", sports: [{sport: "Basketball", level: 1}, {sport: "Volleyball", level: 3}]},
+            {authentication: {type: "facebookId", identifier: "2222222222222222", token: "BBBBBBBBBBB"}, firstName: "Emily", lastName: "Watson", expoPushToken: expoPushTokens[1], birthday: "1993-12-24", description: "Hello. I am from the South.", sports: [{sport: "Volleyball", level: 2}]},
+            {authentication: {type: "facebookId", identifier: "3333333333333333", token: "CCCCCCCCCCC"}, firstName: "John", lastName: "Locke", expoPushToken: expoPushTokens[3], birthday: "1993-12-24", description: "Guten tag. I am from the West.", sports: [{sport: "Hockey", level: 3}]}
+        ];
+        for (let userData of usersData) {
+            const user = new User(userData);
+            const savedUser = await user.save();
+            userIds.push(savedUser._id);
+        }
+
+        // Create test event JSON.
+        eventData = {organizers: [userIds[0]], players: [], pendingPlayerRequests: [], name: "Let's play!", description: "Right now!", location: {coordinates: [-123.24895412299878, 49.26156070119955], type:"Point"}, date: Date(), sport: "Basketball"};
+        done();
+    });
+
+    test("Post event with invalid data should fail", async (done) => {
+        request.post("/events").set({ requesttoken, Accept: "application/json","Content-Type": "application/json" })
+        .send(JSON.stringify({name: "Let's play!"})).expect(400, done);
+    });
+
+    test("Post event should succeed", async (done) => {
+        request.post("/events").set({ requesttoken, Accept: "application/json","Content-Type": "application/json" })
+        .send(JSON.stringify(eventData)).expect(200).then((response) => {
+            eventId = response.body._id;
+            expect(eventId).toBeDefined();
+            done();
+        });
+    });
+
+    test("Get event should succeed", async (done) => {
+        request.get("/events/" + eventId).set({ requesttoken })
+        .expect(200).then((response) => {
+            expect(response.body._id).toBe(eventId);
+            done();
+        });
+    });
+
+    test("Get nearby events should succeed", async (done) => {
+        request.get("/events/nearby").set({ requesttoken })
+        .query({longitude: eventData.location.coordinates[0], latitude: eventData.location.coordinates[1]}).expect(200).then((response) => {
+            expect(response.body.length).toBe(1);
+            done();
+        });
+    });
+
+    test("Put event should succeed", async (done) => {
+        request.put("/events/" + eventId).set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+        .send(JSON.stringify({name: "New Event Title", sport: "Volleyball"}))
+        .expect(200).then((response) => {
+            expect(response.body.name).toBe("New Event Title");
+            expect(response.body.sport).toBe("Volleyball");
+            done();
+        });
+    });
+
+    test("Request to join event with non-existing user should fail", async (done) => {
+        request.put("/events/" + eventId + "/requests/" + fakeId + "/request-to-join").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+        .expect(401, done);
+    });
+
+    test("Request to join non-existing event should fail", async (done) => {
+        request.put("/events/" + fakeId +"/requests/" + userIds[1] + "/request-to-join").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+        .expect(402, done);
+    });
+
+    test("Request to join event with user who is already attending should fail", async (done) => {
+        request.put("/events/" + eventId + "/requests/" + userIds[0] + "/request-to-join").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+        .expect(403, done);
+    });
+
+    test("Request to join event should succeed", async (done) => {
+        request.put("/events/" + eventId + "/requests/" + userIds[1] + "/request-to-join").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+        .expect(200).then((response) => {
+            expect(response.body._id).toBe(eventId);
+            expect(response.body.pendingPlayerRequests).toContain(userIds[1].toString());
+            done();
+        });
+    });
+
+    test("Accept event request should succeed", async (done) => {
+        const userId = userIds[1].toString();
+        request.put("/events/" + eventId + "/requests/" + userId + "/accept").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+        .expect(200).then((response) => {
+            expect(response.body._id).toBe(eventId);
+            expect(response.body.pendingPlayerRequests).not.toContain(userId);
+            expect(response.body.players).toContain(userId);
+            done();
+        });
+    });
+
+    test("Accepting non-existing request to join event should fail", async (done) => {
+        request.put("/events/" + eventId + "/requests/" + fakeId + "/accept").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+        .expect(401, done);
+    });
+
+    test("Accepting request to join non-existing event should fail", async (done) => {
+        request.put("/events/" + fakeId + "/requests/" + userIds[1] + "/accept").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+        .expect(402, done);
+    });
+
+    test("Accepting already accepted event request should fail", async (done) => {
+        const userId = userIds[1].toString();
+        request.put("/events/" + eventId + "/requests/" + userId + "/accept").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+        .expect(403, done);
+    });
+
+    test("Decline event request should succeed", async (done) => {
+        // Add the user to the pendingPlayerRequests array in the mock data.
+        const userId = userIds[2].toString();
+        const event = await Event.findById(eventId);
+        event.pendingPlayerRequests.push(userId);
+        await event.save();
+
+        // Test that declining request succeeds.
+        request.put("/events/" + eventId + "/requests/" + userId + "/decline").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+        .expect(200).then((response) => {
+            expect(response.body._id).toBe(eventId);
+            expect(response.body.pendingPlayerRequests).not.toContain(userId);
+            expect(response.body.players).not.toContain(userId);
+            done();
+        });
+    });
+
+    test("Declining non-existing request to join event should fail", async (done) => {
+        request.put("/events/" + eventId + "/requests/" + userIds[2] + "/decline").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+        .expect(401, done);
+    });
+
+    test("Declining request to join non-existing event should fail", async (done) => {
+        request.put("/events/" + fakeId + "/requests/" + userIds[1] + "/decline").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+        .expect(402, done);
+    });
+
+    test("Delete event should succeed", async (done) => {
+        request.delete("/events/" + eventId).set({ requesttoken }).expect(200).end(done);
+    });
+
+    test("Delete non-existing event should fail", async (done) => {
+        request.delete("/events/" + eventId).set({ requesttoken }).expect(410).end(done);
     });
 });
