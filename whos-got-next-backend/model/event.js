@@ -26,10 +26,6 @@ const eventSchema = new mongoose.Schema({
         type: Date,
         required: [false]
     },
-    pendingPlayerRequests: {
-        type: [String],
-        required: [true, "An event must have a (possibly empty) list of userIDs corresponding to players who wish to attend the event."]
-    },
     sport: {
         type: String,
         required: [false]

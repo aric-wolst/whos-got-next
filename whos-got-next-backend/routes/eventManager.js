@@ -160,7 +160,7 @@ router.delete("/:eventId", (req, res) => {
     });
 });
 
-router.put("/:eventId/requests/:userId/request-to-join", (req,res) => {
+router.put("/:eventId/requests/:userId/join", (req,res) => {
     const eventId = req.params.eventId;
     Event.findById(eventId, (err,event) => {
         if (guardDefaultError(err,res)) {return;}
@@ -174,67 +174,18 @@ router.put("/:eventId/requests/:userId/request-to-join", (req,res) => {
             ], res)) { return; }
 
             if (guardErrors([{
-                condition: (event.players.includes(userId) || event.organizers.includes(userId) || event.pendingPlayerRequests.includes(userId)),
+                condition: (event.players.includes(userId) || event.organizers.includes(userId)),
                 status: 403,
                 message: "Event already has added user."
             }], res)) { return; }
 
-            event.pendingPlayerRequests.push(userId);
+            event.players.push(userId);
             event.save((err,event) => {
                 if (guardDefaultError(err,res)) {return;}
                 res.status(200).send(event);
             });
         });
 
-    });
-});
-
-router.put("/:eventId/requests/:userId/accept", (req,res) => {
-    const userId = req.params.userId;
-    const eventId = req.params.eventId;
-
-    Event.findById(eventId, (err,event) => {
-        if (guardErrors([
-            {condition: (err), status: 400, message: err},
-            {condition: (!event), status: 402, message: "No event matching id: " + eventId},
-        ], res)) { return; }
-
-        const pendingPlayerIndex = event.pendingPlayerRequests.indexOf(userId);
-        if (guardErrors([
-            {condition: (event.players.includes(userId) || event.organizers.includes(userId)), status: 403, message: "Event already has accepted request from user."},
-            {condition: (pendingPlayerIndex < 0), status: 401, message: "No user matching user id " + userId + " in the pendingRequests"}
-        ], res)) {return;}
-
-        event.pendingPlayerRequests.splice(pendingPlayerIndex, 1);
-        event.players.push(userId);
-
-        event.save((err,event) => {
-            if (guardDefaultError(err,res)) {return;}
-            res.status(200).send(event);
-        });
-    });
-});
-
-router.put("/:eventId/requests/:userId/decline", (req,res) => {
-    const userId = req.params.userId;
-    const eventId = req.params.eventId;
-    Event.findById(eventId, (err,event) => {
-        if (guardErrors([
-            {condition: (err), status: 400, message: err},
-            {condition: (!event), status: 402, message: "No event matching id: " + eventId},
-        ], res)) { return; }
-
-        const pendingPlayerIndex = event.pendingPlayerRequests.indexOf(userId);
-        if (guardErrors([
-            {condition: (pendingPlayerIndex < 0), status: 401, message: "No user matching user id " + userId + " in the pendingRequests"}
-        ], res)) {return;}
-
-        event.pendingPlayerRequests.splice(pendingPlayerIndex, 1);
-
-        event.save((err,event) => {
-            if (guardDefaultError(err,res)) {return;}
-            res.status(200).send(event);
-        });
     });
 });
 
