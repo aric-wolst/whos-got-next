@@ -134,9 +134,18 @@ const TeamsStack = createStackNavigator({
   CreateEvent,
 }, { headerLayoutPreset: "center" });
 
+const MyProfileStack = createStackNavigator(
+  {
+    MyProfile
+  },
+  {
+    initialRouteName: "MyProfile",
+  }
+);
+
 const AppTabs = createBottomTabNavigator(
   {
-      MyProfile,
+      MyProfile: MyProfileStack,
       Events: TeamsStack,
       Settings,
   },

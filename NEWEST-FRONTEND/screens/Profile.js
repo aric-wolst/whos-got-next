@@ -6,7 +6,6 @@ import Legend from "../components/Legend";
 import SportCell from "../components/SportCell";
 
 class Profile extends Component {
-
     constructor(props) {
         super(props);
     }
@@ -19,9 +18,10 @@ class Profile extends Component {
 
     render() {
         const user = this.props.user;
+        const isEditingProfile = this.props.isEditingProfile;
         return (
             <View>
-                <ProfileHeader firstName = {user.firstName} birthday = {user.birthday} gender = {user.gender} />
+                <ProfileHeader firstName = {user.firstName} birthday = {user.birthday} gender = {user.gender} isEditingProfile = {isEditingProfile}/>
                 <ScrollView>
                     <ProfileBio description = {user.description} />
                     <Legend />
