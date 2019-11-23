@@ -9,7 +9,7 @@ matrix:
       before_script:
         - cd whos-got-next-backend
         - npm install
-      script: npm run test
+      script: npm test
 
     - os: osx
       language: objective-c

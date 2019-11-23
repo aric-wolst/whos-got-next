@@ -1,5 +1,6 @@
 {
     "env": {
+        "jest/globals": true,
         "commonjs": true,
         "es6": true,
         "node": true
@@ -16,7 +17,8 @@
         "ecmaVersion": 2018
     },
     "plugins": [
-        "security"
+        "security",
+        "jest"
     ],
     "rules": {
         "eqeqeq": "error",

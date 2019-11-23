@@ -2,3 +2,4 @@ node_modules/**/*
 localconfig.js
 cert.pem
 key.pem
+coverage/*
