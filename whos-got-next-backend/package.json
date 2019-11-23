@@ -24,10 +24,11 @@
     "config": "^3.2.4",
     "expo-server-sdk": "^3.3.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "moment-timezone": "^0.5.27",
     "mongoose": "^5.7.5",
     "passport-auth-token": "^1.0.1",
-    "passport-facebook": "^3.0.0",
-    "jsonwebtoken": "^8.5.1"
+    "passport-facebook": "^3.0.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.7.1",
