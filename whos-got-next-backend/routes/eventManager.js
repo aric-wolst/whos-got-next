@@ -5,13 +5,16 @@
  * Retrieval requests for a specific event are also handled here.
  */
 
+// Time zone manipulation
+const moment = require('moment');
+
 const express = require("express");
 const router = new express.Router();
 const defineRegion = require("../utils/region.js");
 const axios = require("axios");
 const {guardErrors, guardDefaultError} = require("../utils/guardErrors.js");
 const sendNotifications = require("../utils/pushNotificationManager");
-var auth = require("../utils/auth.js");
+const auth = require("../utils/auth.js");
 
 // Logging
 const bunyan = require("bunyan");
@@ -26,6 +29,7 @@ const User = mongoose.model("user", userSchema, "user");
 
 router.use(express.json());
 
+// Entry point
 router.use(function(req, res, next) {
     log.info("You are in the eventManager module");
 
@@ -36,6 +40,7 @@ router.use(function(req, res, next) {
     });
 });
 
+// Construct an address string given address fields
 async function stitchAddress(address) {
     const {neighbourhood: hood, house_number: number, road, city, state} = address;
     const roadField = (number ? number + (road ? " " + road : "") : road);
@@ -44,6 +49,7 @@ async function stitchAddress(address) {
     return addr;
 }
 
+// Retrieve an address from an external api using geolocation
 async function getAddress(url) {
     let res = await axios.get(url).catch ( (err) => {
         log.error("Could not retrieve address. Gave error: " + err);
@@ -68,7 +74,6 @@ function getNearbyEvents(req,res) {
         res.status(200).send(events);
     });
 }
-
 
 function sendPushNotificationToUsersNear(notification, location, distance) {
     // Define a region of a given distance in km around the location.
@@ -101,7 +106,9 @@ router.post("/", (req, res) => {
     // Endpoint to get address from coordinates.
     const url = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + latitude + "&lon=" + longitude;
     getAddress(url).then( (response) => {
-        event.address = response;
+        event.address = response; // Get the address of the event
+        event.date = getTime(event); // Get the current time/date in the user's local timezone
+
         event.save().then( (savedEvent) => {
             res.status(200).send(savedEvent);
             const notification = {title: "New Event: " + savedEvent.name, body: "There is a new event near you."};
@@ -113,6 +120,14 @@ router.post("/", (req, res) => {
         guardErrors([{condition: true, status: 401, message: err}]);
     });
 });
+
+// Get the local time of an event given timezone
+function getTime(req) {
+    let timezone = req.timezone;
+    let date = moment().tz(timezone).format();
+    console.log(date);
+    return date;
+}
 
 router.get("/:eventId", (req, res) => {
     if (req.params.eventId === "nearby") {
