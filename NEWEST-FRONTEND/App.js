@@ -6,9 +6,9 @@ import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { Ionicons } from "@expo/vector-icons";
 import { createStackNavigator } from "react-navigation-stack";
-import Teams from "./screens/Teams";
+import Events from "./screens/Events";
 import * as Facebook from "expo-facebook";
-import TeamProfile from "./screens/TeamProfile";
+import EventProfile from "./screens/EventProfile";
 import PublicPlayerProfile from "./screens/PublicPlayerProfile";
 import registerForPushNotificationsAsync from "./utils/PushNotificationsManager";
 import config from "./config";
@@ -129,9 +129,9 @@ class SignInScreen extends React.Component {
   }
 }
 
-const TeamsStack = createStackNavigator({
-  FindTeams: Teams,
-  TeamProfile,
+const EventsStack = createStackNavigator({
+  FindEvents: Events,
+  EventProfile,
   CreateEvent,
   PublicPlayerProfile
 }, { headerLayoutPreset: "center" });
@@ -148,7 +148,7 @@ const MyProfileStack = createStackNavigator(
 const AppTabs = createBottomTabNavigator(
   {
       MyProfile: MyProfileStack,
-      Events: TeamsStack,
+      Events: EventsStack,
   },
   {
     defaultNavigationOptions: ({navigation}) => ({

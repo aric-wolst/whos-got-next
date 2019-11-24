@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
 });
 
 /* Displays information about an event */
-class TeamProfile extends Component {
+class EventProfile extends Component {
 
     /* Page header */
     static navigationOptions = {
@@ -293,4 +293,4 @@ class TeamProfile extends Component {
     }
 }
 
-export default TeamProfile;
+export default EventProfile;

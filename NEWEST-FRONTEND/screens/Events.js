@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { AsyncStorage, StyleSheet, ScrollView, Alert, FlatList, View, Text, ActivityIndicator, TouchableOpacity, RefreshControl } from "react-native";
+import { AsyncStorage, StyleSheet, ScrollView, Alert, FlatList, View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import backendRequest from "../utils/RequestManager";
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   });
 
 /* Displays the page with all events within 5km and the create event button */
-class Teams extends Component {
+class Events extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -74,7 +74,7 @@ class Teams extends Component {
           dataSource: null,
           location: null,
          };
-        this._getData();
+        // this._getData();
     }
 
     /* Page header */
@@ -94,6 +94,16 @@ class Teams extends Component {
           textAlign: "center"
         },
     };
+
+    componentDidMount() {
+        this.focusSubscription = this.props.navigation.addListener("willFocus", (() => {
+            this._getData();
+        }));
+    }
+
+    componentWillUnmount() {
+        this.focusSubscription.remove();
+    }
 
     _getData = async () => {
         /* Get user's current location */
@@ -118,12 +128,6 @@ class Teams extends Component {
         } catch(error) {
             Alert.alert("Get Event Data Error",error.message);
         }
-    }
-
-    /* When the page is pulled down, it refreshes, sets the datasource to empty and calls _getData */
-    onRefresh() {
-        this.setState({ dataSource: [] });
-        this._getData();
     }
 
     /* Gets user's current location */
@@ -167,7 +171,7 @@ class Teams extends Component {
     /* Renders each individual event, that redirects to e new page when the event is pressed */
     renderItem = (data) =>
     <View style = {{flexDirection: "row"}}>
-        <TouchableOpacity onPress={() => {this.props.navigation.navigate("TeamProfile", {
+        <TouchableOpacity onPress={() => {this.props.navigation.navigate("EventProfile", {
             eventName: data.item.name,
             sport: data.item.sport,
             eventBio: data.item.description,
@@ -200,13 +204,7 @@ class Teams extends Component {
         /* Renders the page with the create event button and nearby events */
         return(
             <View style={{flex:1}}>
-                <ScrollView
-                refreshControl={
-                                <RefreshControl
-                                  refreshing={this.state.refreshing}
-                                  onRefresh={this.onRefresh.bind(this)}
-                                />
-                }>
+                <ScrollView>
                     <TouchableOpacity /* Create event button */
                         style={{height: 70, textAlign: "center", justifyContent:"center", alignContent: "center"}}
                         onPress = {() => this.props.navigation.navigate("CreateEvent", {
@@ -231,4 +229,4 @@ class Teams extends Component {
     }
 }
 
-export default Teams;
+export default Events;

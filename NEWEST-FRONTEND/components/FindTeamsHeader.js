@@ -3,11 +3,11 @@ import { StyleSheet, View, Text, Image } from "react-native";
 
 
 const styles = StyleSheet.create({
-    FindTeamsHeaderBackground: {
+    FindEventsHeaderBackground: {
         backgroundColor: "white",
         alignItems: "center"
     },
-    FindTeams: {
+    FindEvents: {
         marginTop: 30,
         marginBottom: 20,
         fontSize: 32,
@@ -16,11 +16,11 @@ const styles = StyleSheet.create({
     },
 });
 
-export default class FindTeamsHeader extends Component {
+export default class FindEventsHeader extends Component {
     render() {
         return(
-            <View style = {styles.FindTeamsHeaderBackground}>
-                <Text style = {styles.FindTeams}>Find Live Events</Text>
+            <View style = {styles.FindEventsHeaderBackground}>
+                <Text style = {styles.FindEvents}>Find Live Events</Text>
             </View>
         );
     }
