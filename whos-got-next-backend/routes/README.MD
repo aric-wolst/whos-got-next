@@ -86,7 +86,7 @@ curl -X POST http://whosgotnext.ca/events/ \
 `401 BAD REQUEST` Event location can't be geocoded into an address.
 
 `GET /events/:eventId`
-Get info for event with `:eventId`.
+Get info for event with `:eventId`. The response object looks like an event object, but with players and organizers implemented as subdocuments.
 **Body** eventId.
 **Example**
 ```bash

@@ -182,6 +182,7 @@ describe("Event Manager Test", () => {
     test("Get event should succeed", async (done) => {
         request.get("/events/" + eventId).set({ requesttoken })
         .expect(200).then((response) => {
+            expect(response.body.organizers[0]._id).toBe(userIds[0].toString());
             expect(response.body._id).toBe(eventId);
             done();
         });
@@ -228,6 +229,16 @@ describe("Event Manager Test", () => {
         .expect(200).then((response) => {
             expect(response.body._id).toBe(eventId);
             expect(response.body.players).toContain(userIds[1].toString());
+            done();
+        });
+    });
+
+    // Test get event.
+    test("Get event after user joined succeed", async (done) => {
+        request.get("/events/" + eventId).set({ requesttoken })
+        .expect(200).then((response) => {
+            expect(response.body.players[0]._id).toBe(userIds[1].toString());
+            expect(response.body._id).toBe(eventId);
             done();
         });
     });
