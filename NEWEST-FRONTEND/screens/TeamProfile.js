@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {StyleSheet, ScrollView, View, Text, ActivityIndicator, TouchableOpacity, RefreshControl, Alert, AsyncStorage, FlatList } from "react-native";
+import {StyleSheet, ScrollView, View, Text, ActivityIndicator, TouchableOpacity, Alert, AsyncStorage } from "react-native";
 import backendRequest from "../utils/RequestManager";
 import config from "../config";
 
@@ -112,74 +112,47 @@ const styles = StyleSheet.create({
         marginTop: 5,
         alignSelf: "center"
     },
-    joinButton: {
-        width: "40%", 
-        borderRadius: 10, 
-        padding: 12, 
-        backgroundColor: "#ff8c00", 
-        borderColor: "#ff8c00", 
-        borderWidth: 3,
-        marginLeft: "30%",
-        marginRight: "30%",
-        marginBottom: "2%",
-        marginTop: "2%"
-    },
     joinText: {
-        color: "black", 
-        fontWeight: "bold", 
+        color: "black",
+        fontWeight: "bold",
         fontSize: 17,
         alignSelf: "center"
+    },
+    joinOrLeaveButton: {
+        width: "40%",
+        borderRadius: 10,
+        padding: 12,
+        borderWidth: 3,
+        marginHorizontal: "30%",
+        marginVertical: "2%",
+        alignSelf: "center",
+        borderColor: "#ff8c00"
+    },
+    joinButton: {
+        backgroundColor: "white"
     },
     leaveButton: {
-        width: "40%", 
-        borderRadius: 10, 
-        padding: 12, 
-        backgroundColor: "white", 
-        borderColor: "#ff8c00", 
-        borderWidth: 3,
-        marginRight: "30%",
-        marginLeft: "30%",
-        marginBottom: "2%",
-        marginTop: "2%"
-    },
-    leaveText: {
-        color: "black", 
-        fontWeight: "bold", 
-        fontSize: 17,
-        alignSelf: "center"
-    },
+        backgroundColor: "#ff8c00"
+    }
 });
 
 /* Displays information about an event */
 class TeamProfile extends Component {
-    
+
     /* Page header */
     static navigationOptions = {
         headerTintColor: "white",
-        headerStyle: {
-          backgroundColor: "#ff8c00",
-        },
-        headerBackTitleStyle: {
-            color: "white",
-            fontWeight: "bold"
-        },
-        headerBackImageStyle: {
-            tintColor: "white",
-        }
+        headerStyle: { backgroundColor: "#ff8c00" },
+        headerBackTitleStyle: { color: "white", fontWeight: "bold" },
+        headerBackImageStyle: { tintColor: "white" }
     };
 
     constructor(props) {
         super(props);
         this.state = {
-          refreshing: true,
-          dataSource: null,
-          joinedEvent: false,
-         };
-        this._getData();
-    }
-
-    onRefresh() {
-        this.setState({ dataSource: []});
+          isLoading: true,
+          hasJoinedEvent: false,
+        };
         this._getData();
     }
 
@@ -190,7 +163,7 @@ class TeamProfile extends Component {
 
         var hour = date.getUTCHours();
         var min = date.getUTCMinutes();
-        
+
         if(hour > 12 && hour <= 23){
             hour = hour % 12;
             ampm = "PM";
@@ -201,137 +174,86 @@ class TeamProfile extends Component {
         if(min < 10){
             min = "0" + min;
         }
-        
+
         return hour + ":" + min + " " + ampm + " " + (date.getUTCMonth() + 1) + "/" + date.getUTCDate() + "/" + date.getFullYear();
     }
 
     _getData = async () => {
         const { navigation } = this.props;
 
-        try {
-            const eventInfo = await backendRequest("/events/" + navigation.getParam("id", "invalid_id"),{},"GET");
+        backendRequest("/events/" + navigation.getParam("id"),{},"GET").then((event) => {
+            console.log(JSON.stringify(event));
             this.setState({
-             refreshing: false,
-             dataSource: eventInfo,
+             isLoading: false,
+             event
             });
-            this.joinStatus();
-
-        } catch(error) {
-            Alert.alert("Get Event Info Error",error.message);
-        }
+            this.getJoinedStatus();
+        }).catch((error) => { Alert.alert("Get Event Info Error", error.message); });
     }
 
-    joinStatus = async () => {
+    getJoinedStatus = async () => {
         const userId = await AsyncStorage.getItem(config.userIdKey);
-        var playerIds = this.state.dataSource.players.map((player) => {player._id;});
-        const organizerIds = this.state.dataSource.organizers.map((organizer) => {organizer._id;});
-        console.log(this.state.dataSource.players);
-        var joined = (playerIds.includes(userId.toString()) || organizerIds.includes(userId.toString()));
+        const playerIds = this.state.event.players.map((player) => player._id);
+        const organizerIds = this.state.event.organizers.map((organizer) => organizer._id);
+        const hasJoinedEvent = (playerIds.includes(userId.toString()) || organizerIds.includes(userId.toString()));
+        this.setState({ hasJoinedEvent });
+    }
 
-        this.setState({
-            joinedEvent: joined
+    _joinOrLeaveEvent = async () => {
+        const userId = await AsyncStorage.getItem(config.userIdKey);
+        const eventId = this.state.event._id;
+        const leaveOrJoin = (this.state.hasJoinedEvent) ?  "/leave" : "/join";
+        backendRequest("/events/" + eventId + "/requests/" + userId + leaveOrJoin, {}, "PUT", {}).then((event) => {
+            this.setState({
+                hasJoinedEvent: !this.state.hasJoinedEvent,
+                event
+            });
+        }).catch((error) => {
+            Alert.alert("Cannot join event", error.message);
         });
-    }
-
-    join = async () => {
-        const userId = await AsyncStorage.getItem(config.userIdKey);
-        const eventId = this.state.dataSource._id;
-        try{
-            if(this.state.joinedEvent){
-                await backendRequest("/events/" + eventId + "/requests/" + userId + "/leave", {}, "PUT", {});
-                this.setState({
-                    joinedEvent: false
-                });
-            } else {
-                await backendRequest("/events/" + eventId + "/requests/" + userId + "/join", {}, "PUT", {});
-                this.setState({
-                    joinedEvent: true
-                });
-            }
-            this.onRefresh();
-        } catch(error){
-            Alert.alert("Cannot join event",error.message);
-        }
-    }
-
-    buttonStyle(){
-        if(this.state.joinedEvent){
-            return {
-                width: "40%", 
-                borderRadius: 10, 
-                padding: 12, 
-                backgroundColor: "white", 
-                borderColor: "#ff8c00", 
-                borderWidth: 3,
-                marginRight: "30%",
-                marginLeft: "30%",
-                marginBottom: "2%",
-                marginTop: "2%",
-                alignSelf: "center"
-            };
-        } else {
-            return {
-                width: "40%", 
-                borderRadius: 10, 
-                padding: 12, 
-                backgroundColor: "#ff8c00", 
-                borderColor: "#ff8c00", 
-                borderWidth: 3,
-                marginLeft: "30%",
-                marginRight: "30%",
-                marginBottom: "2%",
-                marginTop: "2%",
-                alignSelf: "center"
-            };
-        }
     }
 
     /* Displays the information about the event, given the parameters passed to the page */
     render(){
-        /* Renders a spinning wheel if we are refreshing */
-        if(this.state.refreshing){
-            return( 
-                <View style={styles.loader}> 
+        // Renders a spinning wheel if we are refreshing.
+        if(this.state.isLoading){
+            return(
+                <View style={styles.loader}>
                     <ScrollView>
                         <ActivityIndicator size="large" color="black"/>
                     </ScrollView>
                 </View>
         );}
 
+        const buttonStyles = (this.state.hasJoinedEvent) ? [styles.joinOrLeaveButton, styles.leaveButton] : [styles.joinOrLeaveButton, styles.joinButton];
         return(
             <View style={{flex:1}}>
-                <ScrollView 
-                    style = {{flexDirection: "column"}}
-                    refreshControl={<RefreshControl
-                        refreshing={this.state.refreshing}
-                        onRefresh={this.onRefresh.bind(this)}
-                      />}
-                >
+                <ScrollView style = {{flexDirection: "column"}}>
                     <View style={styles.header}>
                         <Text style={styles.headerText}>
-                            {this.state.dataSource.name}
+                            {this.state.event.name}
                         </Text>
                     </View>
                     <View style={styles.subheader}>
                         <Text style={styles.sportText}>
-                            {this.state.dataSource.sport}
+                            {this.state.event.sport}
                         </Text>
                         <Text style={styles.location}>
-                            {this.state.dataSource.address}
+                            {this.state.event.address}
                         </Text>
                         <Text style={styles.dateText}>
-                            {this.formatDate(this.state.dataSource.date)}
+                            {this.formatDate(this.state.event.date)}
                         </Text>
                     </View>
                     <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
                     <Text style={styles.bio}>
-                        {this.state.dataSource.description}
+                        {this.state.event.description}
                     </Text>
                     <Text style={styles.organizerTitle}>
                         Organizer
                     </Text>
                     <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
-                    {this.state.dataSource.organizers.map((organizer) => (
+                    {this.state.event.organizers.map((organizer) => (
                         <Text key={organizer._id} style={styles.organizer}>
                             {organizer.firstName}
                         </Text>
@@ -341,15 +263,15 @@ class TeamProfile extends Component {
                     </Text>
                     <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
                     <View style={styles.container}>
-                        { this.state.dataSource.players.map((item) => (
-                            <Text key={item._id} style={styles.players}> {item.firstName} </Text>)
+                        { this.state.event.players.map((player) => (
+                            <Text key={player._id} style={styles.players}> {player.firstName} </Text>)
                         )}
                     </View>
                 </ScrollView>
                 <View style={{flexDirection: "row"}}>
-                    <TouchableOpacity style={this.buttonStyle()} onPress = {() => this.join()}>
+                    <TouchableOpacity style={buttonStyles} onPress = {() => this._joinOrLeaveEvent()}>
                         <Text style={styles.joinText}>
-                            {this.state.joinedEvent? "Leave Event" : "Join Event"}
+                            {(this.state.hasJoinedEvent) ? "Leave Event" : "Join Event"}
                         </Text>
                     </TouchableOpacity>
                 </View>
