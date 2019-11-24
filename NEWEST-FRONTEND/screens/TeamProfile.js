@@ -166,7 +166,6 @@ class TeamProfile extends Component {
         const { navigation } = this.props;
 
         backendRequest("/events/" + navigation.getParam("id"),{},"GET").then((event) => {
-            console.log(JSON.stringify(event));
             this.setState({
              isLoading: false,
              event
