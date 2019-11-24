@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {SafeAreaView, ScrollView, FlatList, View} from "react-native";
+import {SafeAreaView, ScrollView, FlatList, View, Button} from "react-native";
 import ProfileHeader from "../components/ProfileHeader";
 import ProfileBio from "../components/ProfileBio";
 import Legend from "../components/Legend";
@@ -12,7 +12,7 @@ class Profile extends Component {
 
     renderItem = ({item}) => {
       return (
-        <SportCell sport = {item.sport} level = {item.level} />
+        <SportCell sport = {item.sport} level = {item.level}/>
       );
     }
 
@@ -21,9 +21,9 @@ class Profile extends Component {
         const isEditingProfile = this.props.isEditingProfile;
         return (
             <View>
-                <ProfileHeader firstName = {user.firstName} birthday = {user.birthday} gender = {user.gender} isEditingProfile = {isEditingProfile}/>
+                <ProfileHeader ref = {(header) => {this.header = header;}} firstName = {user.firstName} birthday = {user.birthday} gender = {user.gender} isEditingProfile = {isEditingProfile}/>
                 <ScrollView>
-                    <ProfileBio description = {user.description} />
+                    <ProfileBio ref = {(bio) => {this.bio = bio;}} description = {user.description} isEditingProfile = {isEditingProfile} />
                     <Legend />
                     <SafeAreaView>
                         <FlatList

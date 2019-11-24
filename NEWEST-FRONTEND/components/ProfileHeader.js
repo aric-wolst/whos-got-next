@@ -22,10 +22,12 @@ const styles = StyleSheet.create({
         height: 20
     },
     infoFieldColumn: {
+        flex: 1,
         flexDirection: "column",
         marginRight: 8,
     },
     infoFieldDescription: {
+        flex: 1,
         color: "#fff",
         fontWeight: "normal"
     },
@@ -43,6 +45,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1
     },
     personalInfo: {
+        flex: 1,
         marginHorizontal: 20,
         justifyContent: "center",
         flexDirection: "row"
@@ -54,7 +57,6 @@ export default class ProfileHeader extends Component {
         super(props);
         this.state = {
             firstName: this.props.firstName,
-            birthday: this.props.birthday,
             gender: this.props.gender
         };
     }
@@ -70,13 +72,11 @@ export default class ProfileHeader extends Component {
                     <View style={styles.infoFieldColumn}>
                     <Text style = {[styles.name, styles.infoFieldDescription]}>Name</Text>
                     <Text style = {[styles.profileInfo, styles.infoFieldDescription]}>Gender</Text>
-                    <Text style = {[styles.profileInfo, styles.infoFieldDescription]}>Birthday</Text>
                     </View>
                 }
                 <View style={styles.infoFieldColumn}>
                     <TextInput editable = {isEditing} style = {[styles.name, ...editableStyle]} onChangeText={(text) => {this.setState({ firstName: text});}} value={this.state.firstName} />
                     <TextInput editable = {isEditing} style = {[styles.profileInfo, ...editableStyle]} onChangeText={(text) => {this.setState({ gender: text});}} value={this.state.gender} />
-                    <TextInput editable = {isEditing} style = {[styles.profileInfo, ...editableStyle]} onChangeText={(text) => {this.setState({ birthday: text});}} value={this.state.birthday} />
                 </View>
             </View>
             </View>

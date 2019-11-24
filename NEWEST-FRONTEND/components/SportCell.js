@@ -47,8 +47,8 @@ class SportCell extends Component {
         const colorLevels = [layout.color.beginner,layout.color.intermediate,layout.color.elite];
         let color = colorLevels[this.props.level - 1];
 
-        const levels = ["Beginner", "Intermediate", "Elite"];
-        const level = levels[this.props.level - 1];
+        // const levels = ["Beginner", "Intermediate", "Elite"];
+        // const level = levels[this.props.level - 1];
 
         return (
             <View style = {[styles.sportTab, {backgroundColor: color}]} >
@@ -56,7 +56,7 @@ class SportCell extends Component {
                 <Image style = {styles.sportIcon} source={layout.sportIcons[this.props.sport]} />
               </View>
               <View style = {styles.label}>
-                <Text style = {styles.position}>{level}</Text>
+                <Text style = {styles.position}>{this.props.sport[0].toUpperCase() + this.props.sport.slice(1)}</Text>
               </View>
             </View>
         );
