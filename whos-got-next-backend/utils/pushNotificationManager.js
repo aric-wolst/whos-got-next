@@ -20,7 +20,7 @@ async function readReceipts(receipts) {
     // The receipts specify whether Apple or Google successfully received the
     // notification and information about an error, if one occurred.
     log.info(receipts);
-    
+
     for (let errorReceipt of receipts.filter((receipt) => {receipt.status === "error";})) {
         const receiptHasDetails = (errorReceipt.details && errorReceipt.details.error);
         const error = receiptHasDetails ? "The error code is " + errorReceipt.details.error : "There was an error sending a notification: " + errorReceipt.message;
@@ -117,7 +117,7 @@ async function sendNotifications(pushTokens, pushTitle, pushBody) {
     const receiptIds = await sendPushNotificationChunks(chunks, expo);
 
     // Retrieve and read the receipts for the push notifications.
-    retrieveReceipts(receiptIds);
+    retrieveReceipts(expo, receiptIds);
 }
 
 module.exports = sendNotifications;
