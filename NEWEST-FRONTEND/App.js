@@ -9,6 +9,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import Teams from "./screens/Teams";
 import * as Facebook from "expo-facebook";
 import TeamProfile from "./screens/TeamProfile";
+import PublicPlayerProfile from "./screens/PublicPlayerProfile";
 import registerForPushNotificationsAsync from "./utils/PushNotificationsManager";
 import config from "./config";
 import backendRequest from "./utils/RequestManager";
@@ -132,6 +133,7 @@ const TeamsStack = createStackNavigator({
   FindTeams: Teams,
   TeamProfile,
   CreateEvent,
+  PublicPlayerProfile
 }, { headerLayoutPreset: "center" });
 
 const MyProfileStack = createStackNavigator(
@@ -160,7 +162,7 @@ const AppTabs = createBottomTabNavigator(
           "Settings": "ios-settings"
         };
         const iconName = icons[routeName.toString()];
-        
+
         return <IconComponent name = {iconName} size = {25} color = {tintColor}/>;
       },
     }),

@@ -168,7 +168,7 @@ class Teams extends Component {
         var dateFormatOptions = { weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "numeric"};
         return new Date(date).toLocaleDateString("en-CA", dateFormatOptions);
     }
-
+    
     /* Renders each individual event, that redirects to e new page when the event is pressed */
     renderItem = (data) =>
     <View style = {{flexDirection: "row"}}>

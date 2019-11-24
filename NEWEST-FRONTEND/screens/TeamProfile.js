@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {StyleSheet, ScrollView, View, Text, ActivityIndicator, TouchableOpacity, Alert, AsyncStorage } from "react-native";
+import {Button, StyleSheet, ScrollView, View, Text, ActivityIndicator, TouchableOpacity, Alert, AsyncStorage } from "react-native";
 import backendRequest from "../utils/RequestManager";
 import config from "../config";
 
@@ -235,18 +235,24 @@ class TeamProfile extends Component {
                         Organizer
                     </Text>
                     <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
-                    {this.state.event.organizers.map((organizer) => (
-                        <Text key={organizer._id} style={styles.organizer}>
-                            {organizer.firstName}
-                        </Text>
-                    ))}
+                    {this.state.event.organizers.map((organizer) =>
+                        (<Button key={organizer._id} style={styles.organizers} title={organizer.firstName} onPress={() => {
+                            this.props.navigation.navigate("PublicPlayerProfile", {
+                                user: this.state.event.organizers.filter((user) => (user._id === organizer._id))[0]
+                            });
+                        } } />)
+                    )}
                     <Text style={styles.playersTitle}>
                         Players
                     </Text>
                     <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
                     <View style={styles.container}>
-                        { this.state.event.players.map((player) => (
-                            <Text key={player._id} style={styles.players}> {player.firstName} </Text>)
+                        { this.state.event.players.map((player) =>
+                            (<Button key={player._id} style={styles.players} title={player.firstName} onPress={() => {
+                                this.props.navigation.navigate("PublicPlayerProfile", {
+                                    user: this.state.event.players.filter((user) => (user._id === player._id))[0]
+                                });
+                            } } />)
                         )}
                     </View>
                 </ScrollView>

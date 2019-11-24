@@ -263,13 +263,13 @@ class MyProfile extends Component {
                                         this.setState({level: levelNo});
                                     }}
                                 />
-                                <View style = {{flexDirection: "row", justifyContent: 'center', flex: 1}}>
+                                <View style = {{flexDirection: "row", justifyContent: "center", flex: 1}}>
                                     <View style = {{flex: 1, margin: 10}}>
                                         <Button
                                             color = {layout.color.mainColor}
                                             style = {styles.button}
                                             title = "Add"
-                                            onPress = { () => { this.addSport() } }
+                                            onPress = { () => { this.addSport(); } }
                                         />
                                     </View>
                                     <View style = {{flex: 1, margin: 10}}>
@@ -277,7 +277,7 @@ class MyProfile extends Component {
                                             color = "grey"
                                             style = {styles.button}
                                             title = "Remove"
-                                            onPress = { () => { this.removeSport() } }
+                                            onPress = { () => { this.removeSport(); } }
                                         />
                                     </View>
                                 </View>
@@ -285,7 +285,7 @@ class MyProfile extends Component {
                         </View>
                     }
                     <View style = {{margin: 10}}>
-                        <Button color = "grey" title = "Sign Out" onPress = { () => { this.signOut() } } />
+                        <Button color = "grey" title = "Sign Out" onPress = { () => { this.signOut(); } } />
                     </View>
                 </ScrollView>
             );
