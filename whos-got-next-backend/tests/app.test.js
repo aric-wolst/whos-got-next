@@ -153,7 +153,7 @@ describe("Event Manager Test", () => {
         }
 
         // Create test event JSON.
-        eventData = {organizers: [userIds[0]], players: [], name: "Let's play!", description: "Right now!", location: {coordinates: [-123.24895412299878, 49.26156070119955], type:"Point"}, date: Date(), sport: "Basketball"};
+        eventData = {organizers: [userIds[0]], players: [], duration: 1, timezone: "America/Los_Angeles", name: "Let's play!", description: "Right now!", location: {coordinates: [-123.24895412299878, 49.26156070119955], type:"Point"}, date: Date(), sport: "Basketball"};
         done();
     });
 
@@ -162,7 +162,7 @@ describe("Event Manager Test", () => {
         .send(JSON.stringify({name: "Let's play!"})).expect(400, done);
     });
 
-    test("Post event should succeed", async (done) => {
+    test.only("Post event should succeed", async (done) => {
         request.post("/events").set({ requesttoken, Accept: "application/json","Content-Type": "application/json" })
         .send(JSON.stringify(eventData)).expect(200).then((response) => {
             eventId = response.body._id;

@@ -6,7 +6,7 @@
  */
 
 // Time zone manipulation
-const moment = require('moment');
+const moment = require('moment-timezone');
 
 const express = require("express");
 const router = new express.Router();
@@ -114,10 +114,10 @@ router.post("/", (req, res) => {
             const notification = {title: "New Event: " + savedEvent.name, body: "There is a new event near you."};
             sendPushNotificationToUsersNear(notification, savedEvent.location, 5);
         }).catch((err) => {
-            guardDefaultError(err);
+            guardDefaultError(err, res);
         });
     }).catch( (err) => {
-        guardErrors([{condition: true, status: 401, message: err}]);
+        guardErrors([{condition: true, status: 401, message: err}], res);
     });
 });
 
