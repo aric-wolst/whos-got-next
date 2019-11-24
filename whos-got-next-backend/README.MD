@@ -26,7 +26,7 @@ Read more here: https://stackoverflow.com/a/28039894.
 ## Running the tests
 Simply open terminal at the whos-got-next-backend directory and run `npm test`. To get a coverage report run
 ```
-cross-env NODE_ENV=production node app.js --coverage
+NODE_ENV=production node app.js --coverage
 ```
 
 ## Built With
