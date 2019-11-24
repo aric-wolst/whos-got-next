@@ -156,8 +156,8 @@ class Teams extends Component {
              width:"80%",
              backgroundColor:"#ff8c00",
              alignSelf: "center",
-             marginTop: "1%",
-             marginBottom: "1%"
+             marginTop: "0.25%",
+             marginBottom: "0.25%"
           }}
         />
         );
@@ -195,7 +195,8 @@ class Teams extends Component {
             date: data.item.date,
             location: data.item.address,
             organizer: data.item.organizers,
-            players: data.item.players
+            players: data.item.players,
+            id: data.item._id
         });}}>
             <View style = {{height: 150, width: "100%"}}>
                 <Text style={styles.sport}>{data.item.sport}</Text>
@@ -211,7 +212,9 @@ class Teams extends Component {
         if(this.state.refreshing){
             return( 
               <View style={styles.loader}> 
-                <ActivityIndicator size="large" color="black"/>
+                    <ScrollView>
+                        <ActivityIndicator size="large" color="black"/>
+                    </ScrollView>
               </View>
         );}
         
@@ -224,7 +227,7 @@ class Teams extends Component {
                                   refreshing={this.state.refreshing}
                                   onRefresh={this.onRefresh.bind(this)}
                                 />
-                              }>
+                }>
                     <TouchableOpacity /* Create event button */
                         style={{height: 70, textAlign: "center", justifyContent:"center", alignContent: "center"}}
                         onPress = {() => this.props.navigation.navigate("CreateEvent", {
@@ -241,7 +244,7 @@ class Teams extends Component {
                             ItemSeparatorComponent = {this.FlatListItemSeparator}
                             renderItem= {(item) => this.renderItem(item)}
                             keyExtractor={(item) => item._id}
-                        /> }
+                        />}
                     </View>
                 </ScrollView>
             </View>

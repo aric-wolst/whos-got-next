@@ -3,6 +3,7 @@ import { AsyncStorage, Alert, SafeAreaView, StyleSheet, Button, View, Text, Text
 import { Dropdown } from "react-native-material-dropdown";
 import backendRequest from "../utils/RequestManager";
 import config from "../config";
+import * as Localization from "expo-localization";
 
 
 const styles = StyleSheet.create({
@@ -79,9 +80,10 @@ export default class CreateEvent extends Component {
             const { navigation } = this.props;
             var latitude = navigation.getParam("latitude", 0);
             var longitude = navigation.getParam("longitude", 0);
-            var utcDate = new Date((new Date()).toUTCString());
-            utcDate.setHours(utcDate.getHours()-7);
-            var today = new Date(utcDate);
+            //var utcDate = new Date((new Date()).toUTCString());
+            //utcDate.setHours(utcDate.getHours()-7);
+           // var today = new Date(utcDate);
+            var deviceTimezone = Localization.timezone;
             var userArray = new Array();
             userArray[0] = userId;
             var eventLocation = {coordinates: [longitude, latitude], type: "Point",};
@@ -91,9 +93,9 @@ export default class CreateEvent extends Component {
                 "players": userArray,
                 "description": this.state.eventDescription,
                 "location": eventLocation,
-                "date": today,
                 "pendingPlayerRequests": [],
                 "sport": this.state.sport,
+                "timezone": deviceTimezone,
                 "duration": this.state.duration,
             }).then( () => {
                 Alert.alert("Success", "You have created a new event!");
@@ -147,12 +149,20 @@ export default class CreateEvent extends Component {
 
         return(
             <KeyboardAvoidingView style={{ flex: 1 }} behavior = "padding" enabled>
-                <SafeAreaView style={styles.container}>
+                <View style={styles.container}>
                     <Text style = {styles.header}>Create New Event</Text>
                     <Dropdown
                         data = {timeIntervals}
                         label = "Duration"
-                        onChangeText = {(duration) => this.setState({duration})}
+                        onChangeText = {(duration) => {
+                            if(duration === ("1 hour")) {
+                                this.setState({duration: 1});
+                            } else if (duration === ("2 hours")) {
+                                this.setState({duration: 2});
+                            } else {
+                                this.setState({duration: 3});
+                            }
+                        }}
                     />
                     <Dropdown
                         data = {sportsData}
@@ -178,7 +188,7 @@ export default class CreateEvent extends Component {
                         value = {this.state.eventDescription}
                     />
                     <Button color = "#ff8c00" title = "Post Event" onPress = {this.postEvent}/>
-                </SafeAreaView >
+                </View >
             </KeyboardAvoidingView>
         );
     }
