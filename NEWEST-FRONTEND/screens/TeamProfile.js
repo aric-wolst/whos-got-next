@@ -202,7 +202,8 @@ class TeamProfile extends Component {
         const eventId = this.state.event._id;
         backendRequest("/events/" + eventId, {}, "DELETE", {}).catch((error) => {
             Alert.alert("Cannot delete event", error.message);
-        });
+        }).then(this.props.navigation.goBack(null));
+
     }
 
     /* Displays the information about the event, given the parameters passed to the page */
