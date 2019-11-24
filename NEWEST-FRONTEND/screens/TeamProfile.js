@@ -134,6 +134,9 @@ const styles = StyleSheet.create({
     },
     leaveButton: {
         backgroundColor: "white"
+    },
+    deleteButton: {
+        backgroundColor: "#ff8c00"
     }
 });
 
@@ -196,6 +199,14 @@ class TeamProfile extends Component {
             });
         }).catch((error) => {
             Alert.alert("Cannot join event", error.message);
+        });
+    }
+
+    deleteEvent = async () => {
+        const userId = await AsyncStorage.getItem(config.userIdKey);
+        const eventId = this.state.event._id;
+        backendRequest("/events/" + eventId, {}, "DELETE", {}).catch((error) => {
+            Alert.alert("Cannot delete event", error.message);
         });
     }
 
@@ -274,6 +285,13 @@ class TeamProfile extends Component {
                         </Text>
                     </TouchableOpacity>
                 </View>}
+                    {(this.state.isOrganizer) && <View style={{flexDirection: "row"}}>
+                    <TouchableOpacity style={buttonStyles} onPress = {() => this.deleteEvent()}>
+                    <Text style={styles.joinText}>
+                    {"Delete Event"}
+                    </Text>
+                    </TouchableOpacity>
+                    </View>}
             </View>
         );
     }

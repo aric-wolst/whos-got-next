@@ -199,7 +199,7 @@ router.delete("/:eventId", (req, res) => {
             {condition: (err), status: 400, message: err},
             {condition: (!deletedEvent), status: 410, message: "No event found with id: " + eventId},
         ], res)) {return;}
-        res.status(200).send("Event deleted");
+        res.status(200).send();
     });
 });
 

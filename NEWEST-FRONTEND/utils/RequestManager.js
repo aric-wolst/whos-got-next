@@ -3,6 +3,7 @@ import { Alert, AsyncStorage } from "react-native";
 
 
 async function parseAPIResponse(response) {
+  console.log(JSON.stringify(response));
   const requestToken = response.headers.get("requesttoken");
   if (requestToken) { await AsyncStorage.setItem("requestToken", requestToken); }
 
