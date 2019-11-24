@@ -80,9 +80,6 @@ export default class CreateEvent extends Component {
             const { navigation } = this.props;
             var latitude = navigation.getParam("latitude", 0);
             var longitude = navigation.getParam("longitude", 0);
-            //var utcDate = new Date((new Date()).toUTCString());
-            //utcDate.setHours(utcDate.getHours()-7);
-           // var today = new Date(utcDate);
             var deviceTimezone = Localization.timezone;
             var userArray = new Array();
             userArray[0] = userId;
@@ -195,4 +192,3 @@ export default class CreateEvent extends Component {
 
 
 }
-

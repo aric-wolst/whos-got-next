@@ -270,7 +270,7 @@ router.put("/:eventId/requests/:userId/leave", (req,res) => {
 
             event.save((err,event) => {
                 if (guardDefaultError(err,res)) {return;}
-                
+
                 insertSubDocumentsInEvent(event).then((populatedEvent) => {
                     res.status(200).send(populatedEvent);
                 }).catch((err) => {

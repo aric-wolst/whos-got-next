@@ -157,25 +157,9 @@ class TeamProfile extends Component {
     }
 
     /* Takes the date and formats it to a readable state */
-    formatDate(data) {
-        var date = new Date(data);
-        var ampm = "AM";
-
-        var hour = date.getUTCHours();
-        var min = date.getUTCMinutes();
-
-        if(hour > 12 && hour <= 23){
-            hour = hour % 12;
-            ampm = "PM";
-        } else if(hour === 24){
-            hour = 12;
-        }
-
-        if(min < 10){
-            min = "0" + min;
-        }
-
-        return hour + ":" + min + " " + ampm + " " + (date.getUTCMonth() + 1) + "/" + date.getUTCDate() + "/" + date.getFullYear();
+    _formatDate(date) {
+        var dateFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric'};
+        return new Date(date).toLocaleDateString("en-CA", dateFormatOptions);
     }
 
     _getData = async () => {
@@ -224,7 +208,6 @@ class TeamProfile extends Component {
                     </ScrollView>
                 </View>
         );}
-
         const buttonStyles = (this.state.hasJoinedEvent) ? [styles.joinOrLeaveButton, styles.leaveButton] : [styles.joinOrLeaveButton, styles.joinButton];
         return(
             <View style={{flex:1}}>
@@ -242,7 +225,7 @@ class TeamProfile extends Component {
                             {this.state.event.address}
                         </Text>
                         <Text style={styles.dateText}>
-                            {this.formatDate(this.state.event.date)}
+                            {this._formatDate(this.state.event.date)}
                         </Text>
                     </View>
                     <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
