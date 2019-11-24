@@ -111,6 +111,26 @@ function sendPushNotificationToUsersNear(notification, location, distance) {
     });
 }
 
+async function insertSubDocumentsInEvent(event) {
+    return new Promise((resolve,reject) => {
+        User.find({_id: {$in: event.organizers}}, (err, organizers) => {
+            if (err) {reject(err);}
+            const populatedEvent = event._doc;
+            populatedEvent.organizers = organizers;
+
+            if (event.players.length > 0) {
+                User.find({_id: {$in: event.players}}, (err, players) => {
+                    if (err) {reject(err);}
+                    populatedEvent.players = players;
+                    resolve(populatedEvent);
+                });
+            } else {
+                resolve(populatedEvent);
+            }
+        });
+    });
+}
+
 router.post("/", (req, res) => {
     const event = new Event(req.body);
     if (guardErrors([
@@ -168,21 +188,10 @@ router.get("/:eventId", (req, res) => {
 
     Event.findById(req.params.eventId, (err,event) => {
         if (guardDefaultError(err,res)) {return;}
-
-        User.find({_id: {$in: event.organizers}}, (err, organizers) => {
-            if (guardDefaultError(err,res)) {return;}
-            const responseEvent = event._doc;
-            responseEvent.organizers = organizers;
-
-            if (event.players.length > 0) {
-                User.find({_id: {$in: event.players}}, (err, players) => {
-                    if (guardDefaultError(err,res)) {return;}
-                    responseEvent.players = players;
-                    res.status(200).send(responseEvent);
-                });
-            } else {
-                res.status(200).send(responseEvent);
-            }
+        insertSubDocumentsInEvent(event).then((populatedEvent) => {
+            res.status(200).send(populatedEvent);
+        }).catch((err) => {
+            guardDefaultError(err,res);
         });
     });
 });
@@ -228,7 +237,12 @@ router.put("/:eventId/requests/:userId/join", (req,res) => {
             event.players.push(userId);
             event.save((err,event) => {
                 if (guardDefaultError(err,res)) {return;}
-                res.status(200).send(event);
+
+                insertSubDocumentsInEvent(event).then((populatedEvent) => {
+                    res.status(200).send(populatedEvent);
+                }).catch((err) => {
+                    guardDefaultError(err,res);
+                });
             });
         });
 
@@ -256,7 +270,12 @@ router.put("/:eventId/requests/:userId/leave", (req,res) => {
 
             event.save((err,event) => {
                 if (guardDefaultError(err,res)) {return;}
-                res.status(200).send(event);
+                
+                insertSubDocumentsInEvent(event).then((populatedEvent) => {
+                    res.status(200).send(populatedEvent);
+                }).catch((err) => {
+                    guardDefaultError(err,res);
+                });
             });
         });
 

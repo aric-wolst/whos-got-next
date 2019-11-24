@@ -228,17 +228,7 @@ describe("Event Manager Test", () => {
         request.put("/events/" + eventId + "/requests/" + userIds[1] + "/join").set({ requesttoken })
         .expect(200).then((response) => {
             expect(response.body._id).toBe(eventId);
-            expect(response.body.players).toContain(userIds[1].toString());
-            done();
-        });
-    });
-
-    // Test get event.
-    test("Get event after user joined succeed", async (done) => {
-        request.get("/events/" + eventId).set({ requesttoken })
-        .expect(200).then((response) => {
-            expect(response.body.players[0]._id).toBe(userIds[1].toString());
-            expect(response.body._id).toBe(eventId);
+            expect(response.body.players.map((player) => player._id)).toContain(userIds[1].toString());
             done();
         });
     });
@@ -258,7 +248,7 @@ describe("Event Manager Test", () => {
         request.put("/events/" + eventId + "/requests/" + userIds[1] + "/leave").set({ requesttoken })
         .expect(200).then((response) => {
             expect(response.body._id).toBe(eventId);
-            expect(response.body.players).not.toContain(userIds[1].toString());
+            expect(response.body.players.map((player) => player._id)).not.toContain(userIds[1].toString());
             done();
         });
     });
