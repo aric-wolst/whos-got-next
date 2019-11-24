@@ -155,8 +155,10 @@ class Teams extends Component {
              height: 0.5,
              width:"80%",
              backgroundColor:"#ff8c00",
-             alignSelf: "center"
-        }}
+             alignSelf: "center",
+             marginTop: "1%",
+             marginBottom: "1%"
+          }}
         />
         );
     }
