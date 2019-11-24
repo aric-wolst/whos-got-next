@@ -68,81 +68,86 @@ class MyProfile extends Component {
     }
 
     removeSport = () => {
-        AsyncStorage.getItem(config.userIdKey)
-        .then((id) => {
-            let tempUser = {...this.state.user};
-            var i;
-            var sportExists = 0;
-            var arrayLength = tempUser.sports.length;
-            for(i = 0; i < arrayLength; i++) {
-                if(tempUser.sports[i].sport === this.state.sport) {
-                    sportExists = 1;
-                    break;
+        if(this.state.sport === "") {
+            Alert.alert("Invalid Entry", "Please fill in the Sport field.")
+        } else {
+            AsyncStorage.getItem(config.userIdKey)
+            .then((id) => {
+                let tempUser = {...this.state.user};
+                var i;
+                var sportExists = 0;
+                var arrayLength = tempUser.sports.length;
+                for(i = 0; i < arrayLength; i++) {
+                    if(tempUser.sports[i].sport === this.state.sport) {
+                        sportExists = 1;
+                        break;
+                    }
                 }
-            }
-            if(sportExists) {
-                tempUser.sports.splice(i,1);
-                backendRequest("/users/" + id, {}, "PUT", {
-                    "sports": tempUser.sports,
-                }).then ( (savedUser) => {
-                    this.setState({
-                        user: savedUser,
-                    });
-                    Alert.alert("Success", "You've removed a sport.");
-                })
-                .catch( (err) => Alert.alert("User Info Error", err.message));
-            } else {
-                Alert.alert("Error", "Sport does not exist in your profile.");
-            }
-        })
+                if(sportExists) {
+                    tempUser.sports.splice(i,1);
+                    backendRequest("/users/" + id, {}, "PUT", {
+                        "sports": tempUser.sports,
+                    }).then ( (savedUser) => {
+                        this.setState({
+                            user: savedUser,
+                        });
+                    })
+                    .catch( (err) => Alert.alert("User Info Error", err.message));
+                } else {
+                    Alert.alert("Error", "Sport does not exist in your profile.");
+                }
+            })
+        }
     }
 
     addSport = () => {
-        AsyncStorage.getItem(config.userIdKey)
-        .then((id) => {
-            let tempUser = {...this.state.user};
-            var i;
-            var sportExists = 0;
-            var sameLevel = 0;
-            var arrayLength = tempUser.sports.length;
-            for (i = 0; i < arrayLength; i++) {
-                if(tempUser.sports[i].sport === this.state.sport) {
-                    sportExists = 1;
-                    if(tempUser.sports[i].level === this.state.level) {
-                        sameLevel = 1;
+        if(this.state.sport === "" || this.state.level === 0 ) {
+            Alert.alert("Invalid Entry", "Please fill in the Sport/Level fields.")
+        } else {
+            AsyncStorage.getItem(config.userIdKey)
+            .then((id) => {
+                let tempUser = {...this.state.user};
+                var i;
+                var sportExists = 0;
+                var sameLevel = 0;
+                var arrayLength = tempUser.sports.length;
+                for (i = 0; i < arrayLength; i++) {
+                    if(tempUser.sports[i].sport === this.state.sport) {
+                        sportExists = 1;
+                        if(tempUser.sports[i].level === this.state.level) {
+                            sameLevel = 1;
+                            break;
+                        }
                         break;
                     }
-                    break;
                 }
-            }
-            if(sportExists && sameLevel) {
-                Alert.alert("Error","Sport/Level already exists on your profile.");
-            } else if( sportExists ) {
-                tempUser.sports[i].level = this.state.level;
-                backendRequest("/users/" + id, {}, "PUT", {
-                    "sports": tempUser.sports,
-                }).then ( (savedUser) => {
-                    this.setState({
-                        user: savedUser,
-                    });
-                    Alert.alert("Success", "You've updated your Level.");
-                })
-                .catch( (err) => Alert.alert("User Info Error", err.message));
-            } else {
-                var obj = {sport: this.state.sport, level: this.state.level};
-                tempUser.sports.push(obj);
-                backendRequest("/users/" + id, {}, "PUT", {
-                    "sports": tempUser.sports,
-                }).then ( (savedUser) => {
-                    this.setState({
-                        user: savedUser,
-                    });
-                    Alert.alert("Success", "You've added a new Sport/Level.");
-                })
-                .catch( (err) => Alert.alert("User Info Error", err.message));
-            }
-        })
-        .catch ( (err) => Alert.alert("User ID Error", err.message));
+                if(sportExists && sameLevel) {
+                    Alert.alert("Error","Sport/Level already exists on your profile.");
+                } else if( sportExists ) {
+                    tempUser.sports[i].level = this.state.level;
+                    backendRequest("/users/" + id, {}, "PUT", {
+                        "sports": tempUser.sports,
+                    }).then ( (savedUser) => {
+                        this.setState({
+                            user: savedUser,
+                        });
+                    })
+                    .catch( (err) => Alert.alert("User Info Error", err.message));
+                } else {
+                    var obj = {sport: this.state.sport, level: this.state.level};
+                    tempUser.sports.push(obj);
+                    backendRequest("/users/" + id, {}, "PUT", {
+                        "sports": tempUser.sports,
+                    }).then ( (savedUser) => {
+                        this.setState({
+                            user: savedUser,
+                        });
+                    })
+                    .catch( (err) => Alert.alert("User Info Error", err.message));
+                }
+            })
+            .catch ( (err) => Alert.alert("User ID Error", err.message));
+        }
     }
 
     _toggleEditingProfile = () => {

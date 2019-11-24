@@ -2,8 +2,7 @@ import config from "../config";
 import { Alert, AsyncStorage } from "react-native";
 
 
-async function parseAPIResponse(response) {  
-  console.log(JSON.stringify(response));
+async function parseAPIResponse(response) {
   const requestToken = response.headers.get("requesttoken");
   if (requestToken) { await AsyncStorage.setItem("requestToken", requestToken); }
 
@@ -26,7 +25,6 @@ export default async function backendRequest(endpoint,params,method,body) {
   if (params && Object.entries(params).length > 0) {
     url += "?" + Object.entries(params).map((keyvalue) => keyvalue.map(encodeURIComponent).join("=")).join("&");
   }
-  console.log(url);
   return new Promise((resolve) => {
     if (method === "GET") {
       fetch(url, {

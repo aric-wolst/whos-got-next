@@ -48,12 +48,12 @@ const styles = StyleSheet.create({
         color: "black"
     },
     info:{
-        width: 60, 
-        height: 60, 
-        borderRadius: 60/2, 
-        backgroundColor: "#ff8c00", 
-        padding: 8, 
-        alignItems: "center", 
+        width: 60,
+        height: 60,
+        borderRadius: 60/2,
+        backgroundColor: "#ff8c00",
+        padding: 8,
+        alignItems: "center",
         justifyContent: "center"
     },
     createEventText: {
@@ -99,7 +99,7 @@ class Teams extends Component {
         await this._getLocationAsync();
         try {
             const events = await backendRequest("/events/nearby", {
-                longitude: this.state.location.coords.longitude, 
+                longitude: this.state.location.coords.longitude,
                 latitude: this.state.location.coords.latitude
             }, "GET");
             this.setState({
@@ -108,8 +108,8 @@ class Teams extends Component {
             });
             const userId = await AsyncStorage.getItem(config.userIdKey);
             const userLocation = {coordinates: [
-                this.state.location.coords.longitude, 
-                this.state.location.coords.latitude], 
+                this.state.location.coords.longitude,
+                this.state.location.coords.latitude],
                 type: "Point",};
             backendRequest("/users/" + userId, {}, "PUT", {
                 "location": userLocation,
@@ -127,7 +127,7 @@ class Teams extends Component {
 
     /* Gets user's current location */
     _getLocationAsync = async () => {
-        
+
         /* Gets permission to retrieve user's location */
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (status !== "granted") {
@@ -140,14 +140,14 @@ class Teams extends Component {
         const locationSettings = {
             accuracy: Location.Accuracy.Highest,
         };
-    
+
         /* Sets the location state to the current location */
         let location = await Location.getCurrentPositionAsync(locationSettings,{});
         this.setState({
             location
         });
     };
-    
+
     /* Styling line separator between events */
     FlatListItemSeparator = () => {
         return (
@@ -164,27 +164,11 @@ class Teams extends Component {
     }
 
     /* Takes the date and formats it to a readable state */
-    formatDate(data) {
-        var date = new Date(data);
-        var ampm = "AM";
-
-        var hour = date.getUTCHours();
-        var min = date.getUTCMinutes();
-        
-        if(hour > 12 && hour <= 23){
-            hour = hour % 12;
-            ampm = "PM";
-        } else if(hour === 24){
-            hour = 12;
-        }
-
-        if(min < 10){
-            min = "0" + min;
-        }
-        
-        return hour + ":" + min + " " + ampm + " " + (date.getUTCMonth() + 1) + "/" + date.getUTCDate() + "/" + date.getFullYear();
+    formatDate(date) {
+        var dateFormatOptions = { weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "numeric"};
+        return new Date(date).toLocaleDateString("en-CA", dateFormatOptions);
     }
-    
+
     /* Renders each individual event, that redirects to e new page when the event is pressed */
     renderItem = (data) =>
     <View style = {{flexDirection: "row"}}>
@@ -206,18 +190,18 @@ class Teams extends Component {
             </View>
         </TouchableOpacity>
     </View>
-    
+
     render() {
         /* Renders a spinning wheel if we are refreshing */
         if(this.state.refreshing){
-            return( 
-              <View style={styles.loader}> 
+            return(
+              <View style={styles.loader}>
                     <ScrollView>
                         <ActivityIndicator size="large" color="black"/>
                     </ScrollView>
               </View>
         );}
-        
+
         /* Renders the page with the create event button and nearby events */
         return(
             <View style={{flex:1}}>

@@ -147,7 +147,6 @@ const AppTabs = createBottomTabNavigator(
   {
       MyProfile: MyProfileStack,
       Events: TeamsStack,
-      Settings,
   },
   {
     defaultNavigationOptions: ({navigation}) => ({
