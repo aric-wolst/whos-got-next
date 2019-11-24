@@ -153,6 +153,7 @@ class TeamProfile extends Component {
         this.state = {
           isLoading: true,
           hasJoinedEvent: false,
+            isOrganizer: false
         };
         this._getData();
     }
@@ -177,10 +178,11 @@ class TeamProfile extends Component {
 
     getJoinedStatus = async () => {
         const userId = await AsyncStorage.getItem(config.userIdKey);
-        const playerIds = this.state.event.players.map((player) => player._id);
         const organizerIds = this.state.event.organizers.map((organizer) => organizer._id);
-        const hasJoinedEvent = (playerIds.includes(userId.toString()) || organizerIds.includes(userId.toString()));
-        this.setState({ hasJoinedEvent });
+        const isOrganizer = organizerIds.includes(userId.toString());
+        const playerIds = this.state.event.players.map((player) => player._id);
+        const hasJoinedEvent = (playerIds.includes(userId.toString()) || isOrganizer);
+        this.setState({ hasJoinedEvent, isOrganizer });
     }
 
     _joinOrLeaveEvent = async () => {
@@ -265,13 +267,13 @@ class TeamProfile extends Component {
                         )}
                     </View>
                 </ScrollView>
-                <View style={{flexDirection: "row"}}>
+                {(!this.state.isOrganizer) && <View style={{flexDirection: "row"}}>
                     <TouchableOpacity style={buttonStyles} onPress = {() => this._joinOrLeaveEvent()}>
                         <Text style={styles.joinText}>
                             {(this.state.hasJoinedEvent) ? "Leave Event" : "Join Event"}
                         </Text>
                     </TouchableOpacity>
-                </View>
+                </View>}
             </View>
         );
     }
