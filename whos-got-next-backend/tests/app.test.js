@@ -153,7 +153,7 @@ describe("Event Manager Test", () => {
         }
 
         // Create test event JSON.
-        eventData = {organizers: [userIds[0]], players: [], pendingPlayerRequests: [], name: "Let's play!", description: "Right now!", location: {coordinates: [-123.24895412299878, 49.26156070119955], type:"Point"}, date: Date(), sport: "Basketball"};
+        eventData = {organizers: [userIds[0]], players: [], duration: 1, timezone: "America/Los_Angeles", name: "Let's play!", description: "Right now!", location: {coordinates: [-123.24895412299878, 49.26156070119955], type:"Point"}, date: Date(), sport: "Basketball"};
         done();
     });
 
@@ -162,7 +162,7 @@ describe("Event Manager Test", () => {
         .send(JSON.stringify({name: "Let's play!"})).expect(400, done);
     });
 
-    test("Post event should succeed", async (done) => {
+    test.only("Post event should succeed", async (done) => {
         request.post("/events").set({ requesttoken, Accept: "application/json","Content-Type": "application/json" })
         .send(JSON.stringify(eventData)).expect(200).then((response) => {
             eventId = response.body._id;
@@ -197,82 +197,28 @@ describe("Event Manager Test", () => {
         });
     });
 
-    test("Request to join event with non-existing user should fail", async (done) => {
-        request.put("/events/" + eventId + "/requests/" + fakeId + "/request-to-join").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+    test("Join event with non-existing user should fail", async (done) => {
+        request.put("/events/" + eventId + "/requests/" + fakeId + "/join").set({ requesttoken })
         .expect(401, done);
     });
 
-    test("Request to join non-existing event should fail", async (done) => {
-        request.put("/events/" + fakeId +"/requests/" + userIds[1] + "/request-to-join").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+    test("Join non-existing event should fail", async (done) => {
+        request.put("/events/" + fakeId +"/requests/" + userIds[1] + "/join").set({ requesttoken })
         .expect(402, done);
     });
 
-    test("Request to join event with user who is already attending should fail", async (done) => {
-        request.put("/events/" + eventId + "/requests/" + userIds[0] + "/request-to-join").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+    test("Join event with user who is already attending should fail", async (done) => {
+        request.put("/events/" + eventId + "/requests/" + userIds[0] + "/join").set({ requesttoken })
         .expect(403, done);
     });
 
-    test("Request to join event should succeed", async (done) => {
-        request.put("/events/" + eventId + "/requests/" + userIds[1] + "/request-to-join").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
+    test("Join event should succeed", async (done) => {
+        request.put("/events/" + eventId + "/requests/" + userIds[1] + "/join").set({ requesttoken })
         .expect(200).then((response) => {
             expect(response.body._id).toBe(eventId);
-            expect(response.body.pendingPlayerRequests).toContain(userIds[1].toString());
+            expect(response.body.players).toContain(userIds[1].toString());
             done();
         });
-    });
-
-    test("Accept event request should succeed", async (done) => {
-        const userId = userIds[1].toString();
-        request.put("/events/" + eventId + "/requests/" + userId + "/accept").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
-        .expect(200).then((response) => {
-            expect(response.body._id).toBe(eventId);
-            expect(response.body.pendingPlayerRequests).not.toContain(userId);
-            expect(response.body.players).toContain(userId);
-            done();
-        });
-    });
-
-    test("Accepting non-existing request to join event should fail", async (done) => {
-        request.put("/events/" + eventId + "/requests/" + fakeId + "/accept").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
-        .expect(401, done);
-    });
-
-    test("Accepting request to join non-existing event should fail", async (done) => {
-        request.put("/events/" + fakeId + "/requests/" + userIds[1] + "/accept").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
-        .expect(402, done);
-    });
-
-    test("Accepting already accepted event request should fail", async (done) => {
-        const userId = userIds[1].toString();
-        request.put("/events/" + eventId + "/requests/" + userId + "/accept").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
-        .expect(403, done);
-    });
-
-    test("Decline event request should succeed", async (done) => {
-        // Add the user to the pendingPlayerRequests array in the mock data.
-        const userId = userIds[2].toString();
-        const event = await Event.findById(eventId);
-        event.pendingPlayerRequests.push(userId);
-        await event.save();
-
-        // Test that declining request succeeds.
-        request.put("/events/" + eventId + "/requests/" + userId + "/decline").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
-        .expect(200).then((response) => {
-            expect(response.body._id).toBe(eventId);
-            expect(response.body.pendingPlayerRequests).not.toContain(userId);
-            expect(response.body.players).not.toContain(userId);
-            done();
-        });
-    });
-
-    test("Declining non-existing request to join event should fail", async (done) => {
-        request.put("/events/" + eventId + "/requests/" + userIds[2] + "/decline").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
-        .expect(401, done);
-    });
-
-    test("Declining request to join non-existing event should fail", async (done) => {
-        request.put("/events/" + fakeId + "/requests/" + userIds[1] + "/decline").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
-        .expect(402, done);
     });
 
     test("Delete event should succeed", async (done) => {

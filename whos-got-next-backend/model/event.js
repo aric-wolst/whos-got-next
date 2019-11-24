@@ -24,11 +24,7 @@ const eventSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        required: [true, "An event must have a date."]
-    },
-    pendingPlayerRequests: {
-        type: [String],
-        required: [true, "An event must have a (possibly empty) list of userIDs corresponding to players who wish to attend the event."]
+        required: [false]
     },
     sport: {
         type: String,
@@ -45,6 +41,14 @@ const eventSchema = new mongoose.Schema({
     address : {
         type : String,
         required: [false]
+    },
+    duration : {
+        type : Number,
+        required: [true]
+    },
+    timezone : {
+        type : String,
+        required: [true]
     }
 });
 
