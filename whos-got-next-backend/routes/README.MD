@@ -144,3 +144,17 @@ curl -X PUT http://whosgotnext.ca/events/5dab3e97f5bf8f09c5e4e163/requests/5da6e
 `401 BAD REQUEST` No user is found with `:userId`.
 `402 BAD REQUEST` No event is found with `:eventId`.
 `403 BAD REQUEST` User is already added to event.
+
+`PUT /events/:eventID/requests/:userId/leave`
+Request for user with `:userId` to leave event with `:eventId`. If succesfull the user is removed from the players property on the event.
+**Body** None.
+**Example**
+```bash
+curl -X PUT http://whosgotnext.ca/events/5dab3e97f5bf8f09c5e4e163/requests/5da6e183e89611f4370b1298/leave
+```
+**Success Responses** `200 OK` Returns updated Event object.
+**Error Responses**
+`400 BAD REQUEST` Bad Request.
+`401 BAD REQUEST` No user is found with `:userId`.
+`402 BAD REQUEST` No event is found with `:eventId`.
+`403 BAD REQUEST` User was not added to event.

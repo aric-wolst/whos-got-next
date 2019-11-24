@@ -8,6 +8,9 @@
 // Time zone manipulation
 const moment = require('moment-timezone');
 
+//Scheduler
+const schedule = require('node-schedule');
+
 const express = require("express");
 const router = new express.Router();
 const defineRegion = require("../utils/region.js");
@@ -75,6 +78,21 @@ function getNearbyEvents(req,res) {
     });
 }
 
+// Get the local time of an event given timezone
+function getTime(req) {
+    let currentDate = new Date();
+    let timezone = req.timezone;
+    let date = moment(currentDate).tz(timezone).format("YYYY-MM-DD HH:mm:ss");
+    let newDate = new Date(date);
+    return newDate;
+}
+
+function deleteExpiredEvent(id) {
+    Event.findByIdAndDelete(id, (err) => {
+        if (err) {log.error(err); return;}
+    });
+}
+
 function sendPushNotificationToUsersNear(notification, location, distance) {
     // Define a region of a given distance in km around the location.
     const {n, e, s, w} = defineRegion(location.coordinates[0], location.coordinates[1], distance);
@@ -108,11 +126,32 @@ router.post("/", (req, res) => {
     getAddress(url).then( (response) => {
         event.address = response; // Get the address of the event
         event.date = getTime(event); // Get the current time/date in the user's local timezone
+        console.log(event.date);
 
         event.save().then( (savedEvent) => {
             res.status(200).send(savedEvent);
             const notification = {title: "New Event: " + savedEvent.name, body: "There is a new event near you."};
             sendPushNotificationToUsersNear(notification, savedEvent.location, 5);
+
+            //Schedule event deletion after expiry
+            let currentDate = new Date();
+            let expiryDate = new Date(
+                currentDate.getFullYear(),
+                currentDate.getMonth(),
+                currentDate.getDate(),
+                currentDate.getHours()+savedEvent.duration, //Events expire after duration has passed
+                currentDate.getMinutes(),
+                currentDate.getSeconds()
+            );
+
+            console.log("Expiry date = " + expiryDate);
+
+            // Schedule deletion of event if not in test environment.
+            if (process.env.NODE_ENV !== "test") {
+                schedule.scheduleJob(expiryDate, function(){
+                    deleteExpiredEvent(savedEvent._id);
+                });
+            }
         }).catch((err) => {
             guardDefaultError(err, res);
         });
@@ -120,14 +159,6 @@ router.post("/", (req, res) => {
         guardErrors([{condition: true, status: 401, message: err}], res);
     });
 });
-
-// Get the local time of an event given timezone
-function getTime(req) {
-    let timezone = req.timezone;
-    let date = moment().tz(timezone).format();
-    console.log(date);
-    return date;
-}
 
 router.get("/:eventId", (req, res) => {
     if (req.params.eventId === "nearby") {
@@ -180,6 +211,34 @@ router.put("/:eventId/requests/:userId/join", (req,res) => {
             }], res)) { return; }
 
             event.players.push(userId);
+            event.save((err,event) => {
+                if (guardDefaultError(err,res)) {return;}
+                res.status(200).send(event);
+            });
+        });
+
+    });
+});
+
+router.put("/:eventId/requests/:userId/leave", (req,res) => {
+    const eventId = req.params.eventId;
+    Event.findById(eventId, (err,event) => {
+        if (guardDefaultError(err,res)) {return;}
+        const userId = req.params.userId;
+
+        User.findById(userId, (err,user) => {
+            if (guardErrors([
+                {condition: (err), status: 400, message: err},
+                {condition: (!user), status: 401, message: "No user matching id: " + userId},
+                {condition: (!event), status: 402, message: "No event matching id: " + eventId}
+            ], res)) { return; }
+
+            const playerIndex = event.players.indexOf(userId);
+            if (guardErrors([
+                {condition: (playerIndex < 0), status: 403, message: "No user matching user id " + userId + " in the event players array."}
+            ], res)) {return;}
+            event.players.splice(playerIndex, 1);
+
             event.save((err,event) => {
                 if (guardDefaultError(err,res)) {return;}
                 res.status(200).send(event);

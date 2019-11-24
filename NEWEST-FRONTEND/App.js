@@ -145,17 +145,14 @@ const AppTabs = createBottomTabNavigator(
       tabBarIcon: ({ tintColor }) => {
         const {routeName} = navigation.state;
         let IconComponent = Ionicons;
-        let iconName;
-        if(routeName === "Home") {
-          iconName = "ios-information-circle${focused ? '' : '-outline'}";
-        } else if (routeName === "MyProfile") {
-          iconName = "ios-contact";
-        } else if (routeName === "Events") {
-          iconName = "ios-people";
-        } else {
-          iconName = "ios-settings";
-        }
-
+        const icons = {
+          "Home": "ios-information-circle${focused ? '' : '-outline'}",
+          "MyProfile": "ios-contact",
+          "Events": "ios-people",
+          "Settings": "ios-settings"
+        };
+        const iconName = icons[routeName.toString()];
+        
         return <IconComponent name = {iconName} size = {25} color = {tintColor}/>;
       },
     }),

@@ -21,7 +21,7 @@ class Profile extends Component {
         const user = this.props.user;
         return (
             <View>
-                <ProfileHeader firstName = {user.firstName} birthday = {user.birthday} gender = {user.gender} />
+                <ProfileHeader authentication = {user.authentication} firstName = {user.firstName} birthday = {user.birthday} gender = {user.gender} />
                 <ScrollView>
                     <ProfileBio description = {user.description} />
                     <Legend />
