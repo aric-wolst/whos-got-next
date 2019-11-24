@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
         fontWeight: "normal"
     },
     name: {
+        backgroundColor: layout.color.mainColor,
         marginVertical: 3,
         fontSize: 26,
         fontWeight: "bold"
@@ -82,7 +83,7 @@ export default class ProfileHeader extends Component {
                     </View>
                 }
                 <View style={styles.infoFieldColumn2}>
-                    <TextInput editable = {isEditing} style = {[styles.name, ...editableStyle]} maxLength = {16} onChangeText={(text) => {this.setState({ firstName: text});}} value={this.state.firstName} />
+                    <TextInput editable = {isEditing} style = {[styles.name, ...editableStyle]} maxLength = {18} onChangeText={(text) => {this.setState({ firstName: text});}} value={this.state.firstName} />
                     <TextInput editable = {isEditing} style = {[styles.profileInfo, ...editableStyle]} maxLength = {30} onChangeText={(text) => {this.setState({ gender: text});}} value={this.state.gender} />
                 </View>
             </View>
