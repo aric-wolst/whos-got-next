@@ -98,13 +98,19 @@ class Teams extends Component {
         /* Get user's current location */
         await this._getLocationAsync();
         try {
-            const events = await backendRequest("/events/nearby", {longitude: this.state.location.coords.longitude, latitude: this.state.location.coords.latitude}, "GET");
+            const events = await backendRequest("/events/nearby", {
+                longitude: this.state.location.coords.longitude, 
+                latitude: this.state.location.coords.latitude
+            }, "GET");
             this.setState({
              refreshing: false,
              dataSource: events
             });
             const userId = await AsyncStorage.getItem(config.userIdKey);
-            const userLocation = {coordinates: [this.state.location.coords.longitude, this.state.location.coords.latitude], type: "Point",};
+            const userLocation = {coordinates: [
+                this.state.location.coords.longitude, 
+                this.state.location.coords.latitude], 
+                type: "Point",};
             backendRequest("/users/" + userId, {}, "PUT", {
                 "location": userLocation,
             });
@@ -185,7 +191,9 @@ class Teams extends Component {
             sport: data.item.sport,
             eventBio: data.item.description,
             date: data.item.date,
-            location: data.item.address
+            location: data.item.address,
+            organizer: data.item.organizers,
+            players: data.item.players
         });}}>
             <View style = {{height: 150, width: "100%"}}>
                 <Text style={styles.sport}>{data.item.sport}</Text>
@@ -207,7 +215,7 @@ class Teams extends Component {
         
         /* Renders the page with the create event button and nearby events */
         return(
-            <View>
+            <View style={{flex:1}}>
                 <ScrollView
                 refreshControl={
                                 <RefreshControl

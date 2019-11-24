@@ -59,8 +59,73 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         textAlign: "center",
         fontSize: 18,
-        margin: 5,
-    }
+        marginTop: 5,
+        marginLeft: 5,
+        marginRight: 5,
+        marginBottom: 10,
+    },
+    organizerTitle: {
+        marginTop: 5,
+        marginBottom: 5,
+        marginLeft: 5,
+        marginRight: 5,
+        fontSize: 25,
+        fontWeight: "bold",
+        color: "black",
+        alignSelf: "center",
+        textAlign: "center",
+    },
+    organizer:{
+
+    },
+    playersTitle: {
+        marginTop: 5,
+        marginBottom: 5,
+        marginLeft: 5,
+        marginRight: 5,
+        fontSize: 25,
+        fontWeight: "bold",
+        color: "black",
+        alignSelf: "center",
+        textAlign: "center",
+    },
+    players:{
+
+    },
+    joinButton: {
+        width: "40%", 
+        borderRadius: 10, 
+        padding: 12, 
+        backgroundColor: "#ff8c00", 
+        borderColor: "#ff8c00", 
+        borderWidth: 3,
+        marginLeft: "8%",
+        marginRight: "2%",
+        marginBottom: "2%"
+    },
+    joinText: {
+        color: "black", 
+        fontWeight: "bold", 
+        fontSize: 17,
+        alignSelf: "center"
+    },
+    leaveButton: {
+        width: "40%", 
+        borderRadius: 10, 
+        padding: 12, 
+        backgroundColor: "white", 
+        borderColor: "#ff8c00", 
+        borderWidth: 3,
+        marginRight: "8%",
+        marginLeft: "2%",
+        marginBottom: "2%"
+    },
+    leaveText: {
+        color: "black", 
+        fontWeight: "bold", 
+        fontSize: 17,
+        alignSelf: "center"
+    },
 });
 
 /* Displays information about an event */
@@ -107,28 +172,56 @@ class TeamProfile extends Component {
     render(){
         const { navigation } = this.props;
         return(
-            <ScrollView style = {{flexDirection: "column"}}>
-                <View style={styles.header}>
-                    <Text style={styles.headerText}>
-                        {navigation.getParam("eventName", "No Event Name")}
+            <View style={{flex:1}}>
+                <ScrollView style = {{flexDirection: "column"}}>
+                    <View style={styles.header}>
+                        <Text style={styles.headerText}>
+                            {navigation.getParam("eventName", "No Event Name")}
+                        </Text>
+                    </View>
+                    <View style={styles.subheader}>
+                        <Text style={styles.sportText}>
+                            {navigation.getParam("sport", "No Sport Specified")} 
+                        </Text>
+                        <Text style={styles.location}>
+                            {navigation.getParam("location", "No Location Specified")}
+                        </Text>
+                        <Text style={styles.dateText}>
+                            {this.formatDate(navigation.getParam("date", "No League Specified"))}
+                        </Text>
+                    </View>
+                    <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
+                    <Text style={styles.bio}>
+                        {navigation.getParam("eventBio", " ")}
                     </Text>
+                    <Text style={styles.organizerTitle}>
+                        Organizer
+                    </Text>
+                    <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
+                    <Text>
+                        {navigation.getParam("organizer", " ")}
+                    </Text>
+                    <Text style={styles.playersTitle}>
+                        Players
+                    </Text>
+                    <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
+                    <Text>
+                        {navigation.getParam("players", " ")}
+                    </Text>
+                </ScrollView>
+                <View style={{flexDirection: "row"}}>
+                    <TouchableOpacity style={styles.joinButton}>
+                        <Text style={styles.joinText}>
+                            Join Event
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.leaveButton}>
+                        <Text style={styles.leaveText}>
+                            Leave Event
+                        </Text>
+                    </TouchableOpacity>
                 </View>
-                <View style={styles.subheader}>
-                    <Text style={styles.sportText}>
-                        {navigation.getParam("sport", "No Sport Specified")} 
-                    </Text>
-                    <Text style={styles.location}>
-                        {navigation.getParam("location", "No Location Specified")}
-                    </Text>
-                    <Text style={styles.dateText}>
-                        {this.formatDate(navigation.getParam("date", "No League Specified"))}
-                    </Text>
-                </View>
-                <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
-                <Text style={styles.bio}>
-                    {navigation.getParam("eventBio", " ")}
-                </Text>
-            </ScrollView>
+            </View>
         );
     }
 }
