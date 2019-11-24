@@ -168,7 +168,22 @@ router.get("/:eventId", (req, res) => {
 
     Event.findById(req.params.eventId, (err,event) => {
         if (guardDefaultError(err,res)) {return;}
-        res.status(200).send(event);
+
+        User.find({_id: {$in: event.organizers}}, (err, organizers) => {
+            if (guardDefaultError(err,res)) {return;}
+            const responseEvent = event._doc;
+            responseEvent.organizers = organizers;
+            
+            if (event.players.length > 0) {
+                User.find({_id: {$in: event.players}}).then((err, players) => {
+                    if (guardDefaultError(err,res)) {return;}
+                    responseEvent.players = players;
+                    res.status(200).send(responseEvent);
+                });
+            } else {
+                res.status(200).send(responseEvent);
+            }
+        });
     });
 });
 
