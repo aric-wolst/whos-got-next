@@ -26,6 +26,7 @@
     ],
     "rules": {
         "react/prop-types": 0,
+        "react/display-name": 0,
         "eqeqeq": "error",
         "curly": "error",
         "guard-for-in": "error",
