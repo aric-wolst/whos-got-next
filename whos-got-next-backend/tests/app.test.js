@@ -39,6 +39,7 @@ describe("User Manager Test", () => {
     let userId;
     const expoPushToken = "ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]";
 
+    // Test create user.
     test("Post user with invalid data should fail", async (done) => {
         request.post("/users").set({ requesttoken, Accept: "application/json","Content-Type": "application/json" })
         .send(JSON.stringify({firstName: "John"})).expect(400, done);
@@ -58,6 +59,7 @@ describe("User Manager Test", () => {
         .send(JSON.stringify(userData)).expect(401, done);
     });
 
+    // Test get users/exists.
     test("User should exist in mongoDB after creation", async (done) => {
         request.get("/users/exists").set({ requesttoken })
         .query({type, identifier}).expect(200).then((response) => {
@@ -66,6 +68,7 @@ describe("User Manager Test", () => {
         });
     });
 
+    // Test get user.
     test("Get user should succeed", async (done) => {
         request.get("/users/" + userId).set({ requesttoken })
         .expect(200).then((response) => {
@@ -74,6 +77,7 @@ describe("User Manager Test", () => {
         });
     });
 
+    // Test Get self.
     test("Get self should succeed", async (done) => {
         request.get("/users/self").set({ requesttoken })
         .expect(200).then((response) => {
@@ -82,6 +86,7 @@ describe("User Manager Test", () => {
         });
     });
 
+    // Test put user.
     test("Put non-existing user should fail", async (done) => {
         request.put("/users/A").set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
         .send(JSON.stringify({firstName: "Jonathan"}))
@@ -97,6 +102,7 @@ describe("User Manager Test", () => {
         });
     });
 
+    // Test save expo push token to user.
     test("Save invalid ExpoPushToken should fail", async (done) => {
         request.put("/users/" + userId + "/save-expo-push-token/" + "x").set({ requesttoken })
         .expect(401, done);
@@ -111,6 +117,7 @@ describe("User Manager Test", () => {
         });
     });
 
+    // Test delete user
     test("Delete user should succeed", async (done) => {
         request.delete("/users/" + userId).set({ requesttoken }).expect(200).end(done);
     });
@@ -119,6 +126,7 @@ describe("User Manager Test", () => {
         request.delete("/users/" + userId).set({ requesttoken }).expect(410).end(done);
     });
 
+    // Test get users/exists.
     test("User should not exist in mongoDB after deletion", async (done) => {
         request.get("/users/exists").set({ requesttoken })
         .query({type, identifier}).expect(200).then((response) => {
@@ -130,8 +138,6 @@ describe("User Manager Test", () => {
 
 describe("Event Manager Test", () => {
     // Mock event data.
-    const eventSchema = require("../model/event.js");
-    const Event = mongoose.model("event", eventSchema, "event");
     const expoPushTokens = ["ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]", "ExponentPushToken[yyyyyyyyyyyyyyyyyyyyyy]", "ExponentPushToken[zzzzzzzzzzzzzzzzzzzzzz]"];
     let userIds = [];
     let eventData, eventId;
@@ -157,21 +163,22 @@ describe("Event Manager Test", () => {
         done();
     });
 
+    // Test create event.
     test("Post event with invalid data should fail", async (done) => {
         request.post("/events").set({ requesttoken, Accept: "application/json","Content-Type": "application/json" })
         .send(JSON.stringify({name: "Let's play!"})).expect(400, done);
     });
 
-    test.only("Post event should succeed", async (done) => {
+    test("Post event should succeed", async (done) => {
         request.post("/events").set({ requesttoken, Accept: "application/json","Content-Type": "application/json" })
         .send(JSON.stringify(eventData)).expect(200).then((response) => {
             eventId = response.body._id;
-            console.log("date: " + response.body.date);
             expect(eventId).toBeDefined();
             done();
         });
     });
 
+    // Test get event.
     test("Get event should succeed", async (done) => {
         request.get("/events/" + eventId).set({ requesttoken })
         .expect(200).then((response) => {
@@ -180,6 +187,7 @@ describe("Event Manager Test", () => {
         });
     });
 
+    // Test get nearby events.
     test("Get nearby events should succeed", async (done) => {
         request.get("/events/nearby").set({ requesttoken })
         .query({longitude: eventData.location.coordinates[0], latitude: eventData.location.coordinates[1]}).expect(200).then((response) => {
@@ -188,6 +196,7 @@ describe("Event Manager Test", () => {
         });
     });
 
+    // Test put Event.
     test("Put event should succeed", async (done) => {
         request.put("/events/" + eventId).set({ requesttoken, Accept: "application/json", "Content-Type": "application/json" })
         .send(JSON.stringify({name: "New Event Title", sport: "Volleyball"}))
@@ -198,6 +207,7 @@ describe("Event Manager Test", () => {
         });
     });
 
+    // Test join Event.
     test("Join event with non-existing user should fail", async (done) => {
         request.put("/events/" + eventId + "/requests/" + fakeId + "/join").set({ requesttoken })
         .expect(401, done);
@@ -222,6 +232,32 @@ describe("Event Manager Test", () => {
         });
     });
 
+    // Test leave event.
+    test("Leave event with non-existing user should fail", async (done) => {
+        request.put("/events/" + eventId + "/requests/" + fakeId + "/leave").set({ requesttoken })
+        .expect(401, done);
+    });
+
+    test("Leave non-existing event should fail", async (done) => {
+        request.put("/events/" + fakeId +"/requests/" + userIds[1] + "/leave").set({ requesttoken })
+        .expect(402, done);
+    });
+
+    test("Leave event should succeed", async (done) => {
+        request.put("/events/" + eventId + "/requests/" + userIds[1] + "/leave").set({ requesttoken })
+        .expect(200).then((response) => {
+            expect(response.body._id).toBe(eventId);
+            expect(response.body.players).not.toContain(userIds[1].toString());
+            done();
+        });
+    });
+
+    test("Leave event with user who is not attending should fail", async (done) => {
+        request.put("/events/" + eventId + "/requests/" + userIds[0] + "/leave").set({ requesttoken })
+        .expect(403, done);
+    });
+
+    // Test delete event.
     test("Delete event should succeed", async (done) => {
         request.delete("/events/" + eventId).set({ requesttoken }).expect(200).end(done);
     });

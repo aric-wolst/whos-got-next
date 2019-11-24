@@ -78,6 +78,21 @@ function getNearbyEvents(req,res) {
     });
 }
 
+// Get the local time of an event given timezone
+function getTime(req) {
+    let currentDate = new Date();
+    let timezone = req.timezone;
+    let date = moment(currentDate).tz(timezone).format("YYYY-MM-DD HH:mm:ss");
+    let newDate = new Date(date);
+    return newDate;
+}
+
+function deleteExpiredEvent(id) {
+    Event.findByIdAndDelete(id, (err) => {
+        if (err) {log.error(err); return;}
+    });
+}
+
 function sendPushNotificationToUsersNear(notification, location, distance) {
     // Define a region of a given distance in km around the location.
     const {n, e, s, w} = defineRegion(location.coordinates[0], location.coordinates[1], distance);
@@ -130,9 +145,13 @@ router.post("/", (req, res) => {
             );
 
             console.log("Expiry date = " + expiryDate);
-            schedule.scheduleJob(expiryDate, function(){
-                deleteExpiredEvent(savedEvent._id);
-            });
+
+            // Schedule deletion of event if not in test environment.
+            if (process.env.NODE_ENV !== "test") {
+                schedule.scheduleJob(expiryDate, function(){
+                    deleteExpiredEvent(savedEvent._id);
+                });
+            }
         }).catch((err) => {
             guardDefaultError(err, res);
         });
@@ -140,22 +159,6 @@ router.post("/", (req, res) => {
         guardErrors([{condition: true, status: 401, message: err}], res);
     });
 });
-
-// Get the local time of an event given timezone
-function getTime(req) {
-    let currentDate = new Date();
-    let timezone = req.timezone;
-    let date = moment(currentDate).tz(timezone).format("YYYY-MM-DD HH:mm:ss");
-    let newDate = new Date(date);
-    return newDate;
-}
-
-function deleteExpiredEvent(id) {
-    Event.findByIdAndDelete(id, (err, deletedEvent) => {
-        if (err) {log.error(err); return;}
-        console.log("Event deleted");
-    });
-}
 
 router.get("/:eventId", (req, res) => {
     if (req.params.eventId === "nearby") {
@@ -208,6 +211,34 @@ router.put("/:eventId/requests/:userId/join", (req,res) => {
             }], res)) { return; }
 
             event.players.push(userId);
+            event.save((err,event) => {
+                if (guardDefaultError(err,res)) {return;}
+                res.status(200).send(event);
+            });
+        });
+
+    });
+});
+
+router.put("/:eventId/requests/:userId/leave", (req,res) => {
+    const eventId = req.params.eventId;
+    Event.findById(eventId, (err,event) => {
+        if (guardDefaultError(err,res)) {return;}
+        const userId = req.params.userId;
+
+        User.findById(userId, (err,user) => {
+            if (guardErrors([
+                {condition: (err), status: 400, message: err},
+                {condition: (!user), status: 401, message: "No user matching id: " + userId},
+                {condition: (!event), status: 402, message: "No event matching id: " + eventId}
+            ], res)) { return; }
+
+            const playerIndex = event.players.indexOf(userId);
+            if (guardErrors([
+                {condition: (playerIndex < 0), status: 403, message: "No user matching user id " + userId + " in the event players array."}
+            ], res)) {return;}
+            event.players.splice(playerIndex, 1);
+
             event.save((err,event) => {
                 if (guardDefaultError(err,res)) {return;}
                 res.status(200).send(event);
