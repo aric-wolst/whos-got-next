@@ -151,8 +151,10 @@ function getTime(req) {
 }
 
 function deleteExpiredEvent(id) {
-    Event.findByIdAndDelete(id);
-    console.log("Event deleted");
+    Event.findByIdAndDelete(id, (err, deletedEvent) => {
+        if (err) {log.error(err); return;}
+        console.log("Event deleted");
+    });
 }
 
 router.get("/:eventId", (req, res) => {
