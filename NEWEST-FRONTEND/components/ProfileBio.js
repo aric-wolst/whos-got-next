@@ -18,8 +18,9 @@ const styles = StyleSheet.create({
         color: "rgba(0,0,0, 0.6)"
     },
     editable: {
-        borderBottomColor: "#000",
-        borderBottomWidth: 3,
+        backgroundColor: "lightgrey",
+        width: "100%",
+        paddingTop: 3,
     }
 });
 

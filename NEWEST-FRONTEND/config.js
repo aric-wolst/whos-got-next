@@ -1,5 +1,5 @@
 const config = {
-  apiUrl: "http://34.220.132.159/",
+  apiUrl: "https://whosgotnext.ca/",
   apiVersion: 1.0,
   userIdKey: "myId"
 };

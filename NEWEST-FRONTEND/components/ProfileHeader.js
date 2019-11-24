@@ -21,8 +21,13 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20
     },
-    infoFieldColumn: {
+    infoFieldColumn1: {
         flex: 1,
+        flexDirection: "column",
+        marginRight: 8,
+    },
+    infoFieldColumn2: {
+        flex: 2,
         flexDirection: "column",
         marginRight: 8,
     },
@@ -41,8 +46,8 @@ const styles = StyleSheet.create({
         fontSize: 14
     },
     editable: {
-        borderBottomColor: "#fff",
-        borderBottomWidth: 1
+        backgroundColor: "#fff",
+        paddingLeft: 3,
     },
     personalInfo: {
         flex: 1,
@@ -71,12 +76,12 @@ export default class ProfileHeader extends Component {
             {(!fbUserId) && <Image style = {styles.profilepic} source={require("../assets/img/profilepic.jpg")} />}
             <View style = {styles.personalInfo}>
                 {isEditing &&
-                    <View style={styles.infoFieldColumn}>
+                    <View style={styles.infoFieldColumn1}>
                     <Text style = {[styles.name, styles.infoFieldDescription]}>Name</Text>
                     <Text style = {[styles.profileInfo, styles.infoFieldDescription]}>Gender</Text>
                     </View>
                 }
-                <View style={styles.infoFieldColumn}>
+                <View style={styles.infoFieldColumn2}>
                     <TextInput editable = {isEditing} style = {[styles.name, ...editableStyle]} onChangeText={(text) => {this.setState({ firstName: text});}} value={this.state.firstName} />
                     <TextInput editable = {isEditing} style = {[styles.profileInfo, ...editableStyle]} onChangeText={(text) => {this.setState({ gender: text});}} value={this.state.gender} />
                 </View>
