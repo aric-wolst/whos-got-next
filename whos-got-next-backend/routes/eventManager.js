@@ -119,10 +119,19 @@ router.post("/", (req, res) => {
             sendPushNotificationToUsersNear(notification, savedEvent.location, 5);
 
             //Schedule event deletion after expiry
-            let expiryDate = event.date;
-            expiryDate.setMinutes(event.date.getMinutes()+2);
+            let currentDate = new Date();
+            let expiryDate = new Date(
+                currentDate.getFullYear(),
+                currentDate.getMonth(),
+                currentDate.getDate(),
+                currentDate.getHours(),
+                currentDate.getMinutes()+2,
+                currentDate.getSeconds()
+            );
             console.log("Expiry date = " + expiryDate);
-            schedule.scheduleJob(expiryDate, deleteExpiredEvent(event._id));
+            schedule.scheduleJob(expiryDate, function(){
+                deleteExpiredEvent(savedEvent._id);
+            });
         }).catch((err) => {
             guardDefaultError(err, res);
         });
