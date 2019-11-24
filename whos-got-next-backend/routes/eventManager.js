@@ -124,8 +124,8 @@ router.post("/", (req, res) => {
                 currentDate.getFullYear(),
                 currentDate.getMonth(),
                 currentDate.getDate(),
-                currentDate.getHours(),
-                currentDate.getMinutes()+2,
+                currentDate.getHours()+savedEvent.duration, //Events expire after duration has passed
+                currentDate.getMinutes(),
                 currentDate.getSeconds()
             );
 
