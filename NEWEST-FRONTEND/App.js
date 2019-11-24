@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { AsyncStorage, ActivityIndicator, StatusBar, StyleSheet, Text, View, TouchableOpacity, Alert, Image } from "react-native";
 import MyProfile from "./screens/MyProfile";
 import { createBottomTabNavigator } from "react-navigation-tabs";
-import { createAppContainer, createSwitchNavigator } from "react-navigation";
+import { createAppContainer, createSwitchNavigator, NavigationActions } from "react-navigation";
 import { Ionicons } from "@expo/vector-icons";
 import { createStackNavigator } from "react-navigation-stack";
 import Events from "./screens/Events";
@@ -14,6 +14,7 @@ import config from "./config";
 import backendRequest from "./utils/RequestManager";
 import CreateEvent from "./screens/CreateEvent";
 import logo from "./assets/img/logo.png";
+import { Notifications } from "expo";
 
 const styles = StyleSheet.create({
   logo: {
@@ -176,7 +177,7 @@ const AuthStack = createStackNavigator({
 });
 
 
-export default createAppContainer(
+const AppContainer = createAppContainer(
   createSwitchNavigator(
     {
       AuthLoading: AuthLoadingScreen,
@@ -188,3 +189,42 @@ export default createAppContainer(
     }
   )
 );
+
+export default class App extends Component {
+    navigator;
+
+    constructor(props) {
+        super(props);
+    }
+
+    componentDidMount() {
+        this._notificationSubscription = Notifications.addListener(this._handleNotification);
+    }
+
+    componentDidUpdate() {
+        if (this.state.notification) {
+            this._navigateToNotification();
+        }
+    }
+
+    _handleNotification = (notification: any) => {
+        if (notification.origin === "selected") {
+            this.setState({notification});
+            this._navigateToNotification();
+        }
+    }
+
+    _navigateToNotification() {
+        const navigator = this.navigator;
+        if (navigator) {
+            navigator.dispatch(
+                NavigationActions.navigate({ routeName: "Events", })
+            );
+            this.setState({ notification: null });
+        }
+    }
+
+    render() {
+        return (<AppContainer ref={(nav) => { this.navigator = nav; }}/>);
+    }
+}
