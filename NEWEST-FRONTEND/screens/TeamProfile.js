@@ -91,7 +91,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginLeft: 5,
         marginRight: 5,
-        marginTop: 5
+        marginTop: 5,
+        alignSelf: "center"
     },
     playersTitle: {
         marginTop: 10,
@@ -236,11 +237,15 @@ class TeamProfile extends Component {
                     </Text>
                     <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
                     {this.state.event.organizers.map((organizer) =>
-                        (<Button key={organizer._id} style={styles.organizers} title={organizer.firstName} onPress={() => {
-                            this.props.navigation.navigate("PublicPlayerProfile", {
-                                user: this.state.event.organizers.filter((user) => (user._id === organizer._id))[0]
-                            });
-                        } } />)
+                        (
+                            <TouchableOpacity key={organizer._id} style={styles.organizer} onPress={() => {
+                                this.props.navigation.navigate("PublicPlayerProfile", {
+                                    user: this.state.event.organizers.filter((user) => (user._id === organizer._id))[0]
+                                });
+                            } }>
+                                <Text style = {{fontSize: 18, color: "#007AFF"}}>{organizer.firstName}</Text>
+                            </TouchableOpacity>
+                        )
                     )}
                     <Text style={styles.playersTitle}>
                         Players
@@ -248,11 +253,15 @@ class TeamProfile extends Component {
                     <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
                     <View style={styles.container}>
                         { this.state.event.players.map((player) =>
-                            (<Button key={player._id} style={styles.players} title={player.firstName} onPress={() => {
-                                this.props.navigation.navigate("PublicPlayerProfile", {
-                                    user: this.state.event.players.filter((user) => (user._id === player._id))[0]
-                                });
-                            } } />)
+                            (
+                                <TouchableOpacity key={player._id} style={styles.players} onPress={() => {
+                                    this.props.navigation.navigate("PublicPlayerProfile", {
+                                        user: this.state.event.players.filter((user) => (user._id === player._id))[0]
+                                    });
+                                } }>
+                                    <Text style = {{fontSize: 18, color: "#007AFF"}}>{player.firstName}</Text>
+                                </TouchableOpacity>
+                            )
                         )}
                     </View>
                 </ScrollView>
