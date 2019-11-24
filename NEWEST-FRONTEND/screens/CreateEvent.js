@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { AsyncStorage, Alert, StyleSheet, Button, View, Text, TextInput, KeyboardAvoidingView } from "react-native";
+import { AsyncStorage, Alert, StyleSheet, Button, View, Text, TextInput, KeyboardAvoidingView, Keyboard, ScrollView } from "react-native";
 import { Dropdown } from "react-native-material-dropdown";
 import backendRequest from "../utils/RequestManager";
 import config from "../config";
@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
         alignSelf: "stretch",
     },
     header: {
+        marginTop: 20,
         fontSize: 24,
         paddingBottom: 10,
         borderBottomColor: "#ff8c00",
@@ -146,47 +147,53 @@ export default class CreateEvent extends Component {
           }];
 
         return(
-            <KeyboardAvoidingView style={{ flex: 1 }} behavior = "padding" enabled>
-                <View style={styles.container}>
-                    <Text style = {styles.header}>Create New Event</Text>
-                    <Dropdown
-                        data = {timeIntervals}
-                        label = "Duration"
-                        onChangeText = {(duration) => {
-                            if(duration === ("1 hour")) {
-                                this.setState({duration: 1});
-                            } else if (duration === ("2 hours")) {
-                                this.setState({duration: 2});
-                            } else {
-                                this.setState({duration: 3});
-                            }
-                        }}
-                    />
-                    <Dropdown
-                        data = {sportsData}
-                        label = "Sport"
-                        onChangeText = {(sport) => this.setState({sport})}
-                    />
-                    <View style = {{height: 20}}></View>
-                    <Text>Event Name</Text>
-                    <TextInput
-                        style = {styles.textinput}
-                        placeholder = "Your event name"
-                        onChangeText = {(eventName) => this.setState({eventName})}
-                        maxLength = {28}
-                        value = {this.state.eventName}
-                     />
-                    <Text>Event Description</Text>
-                    <TextInput
-                        style = {styles.textinputdescription}
-                        placeholder = "Your event description"
-                        multiline = {true}
-                        numberOfLines = {3}
-                        onChangeText = {(eventDescription) => this.setState({eventDescription})}
-                        value = {this.state.eventDescription}
-                    />
-                    <Button color = "#ff8c00" title = "Post Event" onPress = {this.postEvent}/>
-                </View >
+            <KeyboardAvoidingView style={{ flex: 1}} behavior = "padding" enabled keyboardVerticalOffset={75}>
+                <ScrollView>
+                    <View style={styles.container}>
+                        <Text style = {styles.header}>Create New Event</Text>
+                        <Dropdown
+                            data = {timeIntervals}
+                            label = "Duration"
+                            onChangeText = {(duration) => {
+                                if(duration === ("1 hour")) {
+                                    this.setState({duration: 1});
+                                } else if (duration === ("2 hours")) {
+                                    this.setState({duration: 2});
+                                } else {
+                                    this.setState({duration: 3});
+                                }
+                            }}
+                        />
+                        <Dropdown
+                            data = {sportsData}
+                            label = "Sport"
+                            onChangeText = {(sport) => this.setState({sport})}
+                        />
+                        <View style = {{height: 20}}></View>
+                        <Text>Event Name</Text>
+                        <TextInput
+                            style = {styles.textinput}
+                            placeholder = "Your event name"
+                            onChangeText = {(eventName) => this.setState({eventName})}
+                            maxLength = {28}
+                            value = {this.state.eventName}
+                        />
+                        <Text>Event Description</Text>
+                        <TextInput
+                            ref={(c) => {
+                                this.textInputRef = c;
+                            }}
+                            onSubmitEditing={() => this.textInputRef.blur()}
+                            style = {styles.textinputdescription}
+                            placeholder = "Your event description"
+                            multiline = {true}
+                            numberOfLines = {3}
+                            onChangeText = {(eventDescription) => this.setState({eventDescription})}
+                            value = {this.state.eventDescription}
+                        />
+                        <Button color = "#ff8c00" title = "Post Event" onPress = {this.postEvent}/>
+                    </View >
+                </ScrollView>
             </KeyboardAvoidingView>
         );
     }
