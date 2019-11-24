@@ -179,7 +179,7 @@ class TeamProfile extends Component {
     }
 
     onRefresh() {
-        this.setState({ dataSource: [], joinedEvent: false });
+        this.setState({ dataSource: []});
         this._getData();
     }
 
@@ -209,9 +209,7 @@ class TeamProfile extends Component {
         const { navigation } = this.props;
 
         try {
-            const eventInfo = await backendRequest("/events/" + navigation.getParam("id", "invalid_id"), "GET");
-            await this.getName(eventInfo.organizers);
-            await this.setPlayers(eventInfo.players);
+            const eventInfo = await backendRequest("/events/" + navigation.getParam("id", "invalid_id"),{},"GET");
             this.setState({
              refreshing: false,
              dataSource: eventInfo,
@@ -225,8 +223,10 @@ class TeamProfile extends Component {
 
     joinStatus = async () => {
         const userId = await AsyncStorage.getItem(config.userIdKey);
-        var players = this.state.dataSource.players;
-        var joined = (players.includes(userId.toString()) || this.state.dataSource.organizers.includes(userId.toString()));
+        var playerIds = this.state.dataSource.players.map((player) => {player._id;});
+        const organizerIds = this.state.dataSource.organizers.map((organizer) => {organizer._id;});
+        console.log(this.state.dataSource.players);
+        var joined = (playerIds.includes(userId.toString()) || organizerIds.includes(userId.toString()));
 
         this.setState({
             joinedEvent: joined
@@ -242,13 +242,11 @@ class TeamProfile extends Component {
                 this.setState({
                     joinedEvent: false
                 });
-                this.setPlayers();
             } else {
                 await backendRequest("/events/" + eventId + "/requests/" + userId + "/join", {}, "PUT", {});
                 this.setState({
                     joinedEvent: true
                 });
-                this.setPlayers();
             }
             this.onRefresh();
         } catch(error){
@@ -287,42 +285,6 @@ class TeamProfile extends Component {
             };
         }
     }
-
-    getName = async(userId) => {
-        const userInfo = await (backendRequest("/users/" + userId, "GET"));
-        this.setState({
-            organizer : userInfo
-        });
-    }
-
-    setPlayers = async(players) => {
-        var playerNames = [];
-        var length = players.length;
-        for(var i = 0; i < length; i++){
-            const userInfo = await (backendRequest("/users/" + players[i], "GET"));
-            playerNames[i] = userInfo;
-        }
-        this.setState({
-            players : playerNames
-        });
-    }
-
-    getPlayer = async(userId) => {
-        const userInfo = await (backendRequest("/users/" + userId, "GET"));
-        const name = userInfo.firstName;
-        return{
-            name
-        };
-    }
-
-    renderItem = (data) =>
-    <View style = {{flexDirection: "row"}}>
-        <TouchableOpacity>
-            <View style = {{height: 150, width: "100%"}}>
-                <Text style={styles.players}>{data.item}</Text>
-            </View>
-        </TouchableOpacity>
-    </View>
 
     /* Displays the information about the event, given the parameters passed to the page */
     render(){
@@ -369,15 +331,17 @@ class TeamProfile extends Component {
                         Organizer
                     </Text>
                     <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
-                    <Text style={styles.organizer}>
-                        {this.state.organizer.firstName}
-                    </Text>
+                    {this.state.dataSource.organizers.map((organizer) => (
+                        <Text key={organizer._id} style={styles.organizer}>
+                            {organizer.firstName}
+                        </Text>
+                    ))}
                     <Text style={styles.playersTitle}>
                         Players
                     </Text>
                     <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
                     <View style={styles.container}>
-                        { this.state.players.map((item, key) => (
+                        { this.state.dataSource.players.map((item) => (
                             <Text key={item._id} style={styles.players}> {item.firstName} </Text>)
                         )}
                     </View>
