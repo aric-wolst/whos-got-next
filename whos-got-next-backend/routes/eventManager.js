@@ -108,6 +108,7 @@ router.post("/", (req, res) => {
     getAddress(url).then( (response) => {
         event.address = response; // Get the address of the event
         event.date = getTime(event); // Get the current time/date in the user's local timezone
+        console.log(event.date);
 
         event.save().then( (savedEvent) => {
             res.status(200).send(savedEvent);

@@ -166,6 +166,7 @@ describe("Event Manager Test", () => {
         request.post("/events").set({ requesttoken, Accept: "application/json","Content-Type": "application/json" })
         .send(JSON.stringify(eventData)).expect(200).then((response) => {
             eventId = response.body._id;
+            console.log("date: " + response.body.date);
             expect(eventId).toBeDefined();
             done();
         });
