@@ -2,7 +2,7 @@ import config from "../config";
 import { Alert, AsyncStorage } from "react-native";
 
 
-async function parseAPIResponse(response) {  
+async function parseAPIResponse(response) {
   const requestToken = response.headers.get("requesttoken");
   if (requestToken) { await AsyncStorage.setItem("requestToken", requestToken); }
 

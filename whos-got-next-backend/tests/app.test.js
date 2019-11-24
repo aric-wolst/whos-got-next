@@ -8,6 +8,9 @@ const requesttoken = "test";
 let server;
 let request;
 
+//Region module
+let defineRegion = require("../utils/region.js");
+
 // Setup the mongoDB Connection before running any tests.
 beforeAll(async (done) => {
     server = await startServer();
@@ -142,6 +145,10 @@ describe("Event Manager Test", () => {
     let userIds = [];
     let eventData, eventId;
     const fakeId = new mongoose.Types.ObjectId();
+    defineRegion = jest.fn( () => (
+        {n: 49.315910512631355, e: -123.18009871066731, s: 49.22597835203948, w: -123.31792937568396}
+    ));
+
 
     beforeAll(async (done) => {
         // Save test users in in-memory database.
@@ -159,7 +166,7 @@ describe("Event Manager Test", () => {
         }
 
         // Create test event JSON.
-        eventData = {organizers: [userIds[0]], players: [], duration: 1, timezone: "America/Los_Angeles", name: "Let's play!", description: "Right now!", location: {coordinates: [-123.24895412299878, 49.26156070119955], type:"Point"}, date: Date(), sport: "Basketball"};
+        eventData = {organizers: [userIds[0]], players: [], duration: 1, timezone: "America/Los_Angeles", name: "Let's play!", description: "Right now!", location: {coordinates: [-123.2489631, 49.2712192], type:"Point"}, date: Date(), sport: "Basketball"};
         done();
     });
 
@@ -228,17 +235,7 @@ describe("Event Manager Test", () => {
         request.put("/events/" + eventId + "/requests/" + userIds[1] + "/join").set({ requesttoken })
         .expect(200).then((response) => {
             expect(response.body._id).toBe(eventId);
-            expect(response.body.players).toContain(userIds[1].toString());
-            done();
-        });
-    });
-
-    // Test get event.
-    test("Get event after user joined succeed", async (done) => {
-        request.get("/events/" + eventId).set({ requesttoken })
-        .expect(200).then((response) => {
-            expect(response.body.players[0]._id).toBe(userIds[1].toString());
-            expect(response.body._id).toBe(eventId);
+            expect(response.body.players.map((player) => player._id)).toContain(userIds[1].toString());
             done();
         });
     });
@@ -258,7 +255,7 @@ describe("Event Manager Test", () => {
         request.put("/events/" + eventId + "/requests/" + userIds[1] + "/leave").set({ requesttoken })
         .expect(200).then((response) => {
             expect(response.body._id).toBe(eventId);
-            expect(response.body.players).not.toContain(userIds[1].toString());
+            expect(response.body.players.map((player) => player._id)).not.toContain(userIds[1].toString());
             done();
         });
     });
@@ -275,5 +272,14 @@ describe("Event Manager Test", () => {
 
     test("Delete non-existing event should fail", async (done) => {
         request.delete("/events/" + eventId).set({ requesttoken }).expect(410).end(done);
+    });
+});
+
+describe("Region Calculation Test", () => {
+
+    test("testing region calculation", async (done) => {
+        expect(defineRegion(-123.2489631, 49.2712192, 5))
+            .toMatchObject({n: 49.315910512631355, e: -123.18009871066731, s: 49.22597835203948, w: -123.31792937568396});
+        done();
     });
 });
