@@ -92,6 +92,7 @@ export default class CreateEvent extends Component {
                 "location": eventLocation,
                 "pendingPlayerRequests": [],
                 "sport": this.state.sport,
+                "date": new Date(),
                 "timezone": deviceTimezone,
                 "duration": this.state.duration,
             }).then( () => {

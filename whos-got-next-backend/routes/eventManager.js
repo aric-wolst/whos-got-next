@@ -78,15 +78,6 @@ function getNearbyEvents(req,res) {
     });
 }
 
-// Get the local time of an event given timezone
-function getTime(req) {
-    let currentDate = new Date();
-    let timezone = req.timezone;
-    let date = moment(currentDate).tz(timezone).format("YYYY-MM-DD HH:mm:ss");
-    let newDate = new Date(date);
-    return newDate;
-}
-
 function deleteExpiredEvent(id) {
     Event.findByIdAndDelete(id, (err) => {
         if (err) {log.error(err); return;}
@@ -145,23 +136,20 @@ router.post("/", (req, res) => {
     const url = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + latitude + "&lon=" + longitude;
     getAddress(url).then( (response) => {
         event.address = response; // Get the address of the event
-        event.date = getTime(event); // Get the current time/date in the user's local timezone
-        console.log(event.date);
-
         event.save().then( (savedEvent) => {
             res.status(200).send(savedEvent);
             const notification = {title: "New Event: " + savedEvent.name, body: "There is a new event near you."};
             sendPushNotificationToUsersNear(notification, savedEvent.location, 5);
 
             //Schedule event deletion after expiry
-            let currentDate = new Date();
+            let eventDate = event.date;
             let expiryDate = new Date(
-                currentDate.getFullYear(),
-                currentDate.getMonth(),
-                currentDate.getDate(),
-                currentDate.getHours()+savedEvent.duration, //Events expire after duration has passed
-                currentDate.getMinutes(),
-                currentDate.getSeconds()
+                eventDate.getFullYear(),
+                eventDate.getMonth(),
+                eventDate.getDate(),
+                eventDate.getHours()+savedEvent.duration, //Events expire after duration has passed
+                eventDate.getMinutes(),
+                eventDate.getSeconds()
             );
 
             console.log("Expiry date = " + expiryDate);
