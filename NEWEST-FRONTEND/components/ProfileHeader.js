@@ -38,9 +38,12 @@ const styles = StyleSheet.create({
 
 export default class ProfileHeader extends Component {
     render() {
+        console.log(JSON.stringify(this.props));
+        const fbUserId = (this.props.authentication.type === "facebookId") ? this.props.authentication.identifier : null;
         return(
             <View style = {styles.headerBackground}>
-            <Image style = {styles.profilepic} source={require("../assets/img/profilepic.jpg")} />
+            {(fbUserId) && <Image style = {styles.profilepic} source={{uri: "https://graph.facebook.com/"+ fbUserId +"/picture?width=100&height=100"}} />}
+            {(!fbUserId) && <Image style = {styles.profilepic} source={require("../assets/img/profilepic.jpg")} />}
             <View style = {styles.personalInfo}>
                 <Text style = {styles.name}>{this.props.firstName}</Text>
                 <Text style = {styles.profileInfo}>{this.props.birthday}</Text>
