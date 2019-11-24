@@ -158,7 +158,7 @@ class TeamProfile extends Component {
 
     /* Takes the date and formats it to a readable state */
     _formatDate(date) {
-        var dateFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric'};
+        var dateFormatOptions = { weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "numeric"};
         return new Date(date).toLocaleDateString("en-CA", dateFormatOptions);
     }
 
