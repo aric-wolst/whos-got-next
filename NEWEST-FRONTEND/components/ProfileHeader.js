@@ -82,8 +82,8 @@ export default class ProfileHeader extends Component {
                     </View>
                 }
                 <View style={styles.infoFieldColumn2}>
-                    <TextInput editable = {isEditing} style = {[styles.name, ...editableStyle]} onChangeText={(text) => {this.setState({ firstName: text});}} value={this.state.firstName} />
-                    <TextInput editable = {isEditing} style = {[styles.profileInfo, ...editableStyle]} onChangeText={(text) => {this.setState({ gender: text});}} value={this.state.gender} />
+                    <TextInput editable = {isEditing} style = {[styles.name, ...editableStyle]} maxLength = {16} onChangeText={(text) => {this.setState({ firstName: text});}} value={this.state.firstName} />
+                    <TextInput editable = {isEditing} style = {[styles.profileInfo, ...editableStyle]} maxLength = {30} onChangeText={(text) => {this.setState({ gender: text});}} value={this.state.gender} />
                 </View>
             </View>
             </View>
