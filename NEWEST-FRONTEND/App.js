@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { AsyncStorage, ActivityIndicator, StatusBar, StyleSheet, Text, View, TouchableOpacity, Alert, Image } from "react-native";
 import MyProfile from "./screens/MyProfile";
-import Settings from "./screens/Settings";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { Ionicons } from "@expo/vector-icons";
@@ -86,7 +85,7 @@ class SignInScreen extends React.Component {
                 "firstName": json.name,
                 "lastName": json.name,
                 "birthday": json.birthday,
-                "description": "Go to Settings to change your bio.",
+                "description": "You can edit this bio.",
                 "sports": []
               }).then( (user) => {
                 AsyncStorage.setItem(config.userIdKey, user._id).then(() => {
@@ -159,7 +158,6 @@ const AppTabs = createBottomTabNavigator(
           "Home": "ios-information-circle${focused ? '' : '-outline'}",
           "MyProfile": "ios-contact",
           "Events": "ios-people",
-          "Settings": "ios-settings"
         };
         const iconName = icons[routeName.toString()];
 
