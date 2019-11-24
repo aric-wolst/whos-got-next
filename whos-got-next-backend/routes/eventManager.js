@@ -5,11 +5,8 @@
  * Retrieval requests for a specific event are also handled here.
  */
 
-// Time zone manipulation
-const moment = require('moment-timezone');
-
 //Scheduler
-const schedule = require('node-schedule');
+const schedule = require("node-schedule");
 
 const express = require("express");
 const router = new express.Router();

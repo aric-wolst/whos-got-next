@@ -11,6 +11,8 @@
     "@react-native-community/async-storage": "^1.6.2",
     "expo": "^35.0.0",
     "expo-facebook": "^7.0.0",
+    "expo-localization": "~7.0.0",
+    "moment": "^2.24.0",
     "react": "16.8.3",
     "react-dom": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
@@ -20,8 +22,7 @@
     "react-native-web": "^0.11.7",
     "react-navigation": "^4.0.10",
     "react-navigation-stack": "^1.9.3",
-    "react-navigation-tabs": "^2.5.6",
-    "expo-localization": "~7.0.0"
+    "react-navigation-tabs": "^2.5.6"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
