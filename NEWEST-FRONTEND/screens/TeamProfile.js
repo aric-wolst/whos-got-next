@@ -129,10 +129,10 @@ const styles = StyleSheet.create({
         borderColor: "#ff8c00"
     },
     joinButton: {
-        backgroundColor: "white"
+        backgroundColor: "#ff8c00"
     },
     leaveButton: {
-        backgroundColor: "#ff8c00"
+        backgroundColor: "white"
     }
 });
 
