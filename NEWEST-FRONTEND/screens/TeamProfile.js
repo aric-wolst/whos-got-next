@@ -1,9 +1,20 @@
 import React, { Component } from "react";
-import { Image, SafeAreaView, StyleSheet, ScrollView, Button, FlatList, View, Text, ActivityIndicator, TouchableOpacity, ListView } from "react-native";
-import { createStackNavigator } from "react-navigation-stack";
+import {StyleSheet, ScrollView, View, Text, ActivityIndicator, TouchableOpacity, RefreshControl, Alert, AsyncStorage, FlatList } from "react-native";
+import backendRequest from "../utils/RequestManager";
+import config from "../config";
 
 /* Style sheet for rendered items */
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#fff"
+       },
+    loader:{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#fff"
+    },
     header: {
         backgroundColor: "#ff8c00",
         alignContent: "center",
@@ -76,10 +87,14 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     organizer:{
-
+        textAlign: "center",
+        fontSize: 20,
+        marginLeft: 5,
+        marginRight: 5,
+        marginTop: 5
     },
     playersTitle: {
-        marginTop: 5,
+        marginTop: 10,
         marginBottom: 5,
         marginLeft: 5,
         marginRight: 5,
@@ -90,7 +105,12 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     players:{
-
+        textAlign: "center",
+        fontSize: 20,
+        marginLeft: 5,
+        marginRight: 5,
+        marginTop: 5,
+        alignSelf: "center"
     },
     joinButton: {
         width: "40%", 
@@ -99,9 +119,10 @@ const styles = StyleSheet.create({
         backgroundColor: "#ff8c00", 
         borderColor: "#ff8c00", 
         borderWidth: 3,
-        marginLeft: "8%",
-        marginRight: "2%",
-        marginBottom: "2%"
+        marginLeft: "30%",
+        marginRight: "30%",
+        marginBottom: "2%",
+        marginTop: "2%"
     },
     joinText: {
         color: "black", 
@@ -116,9 +137,10 @@ const styles = StyleSheet.create({
         backgroundColor: "white", 
         borderColor: "#ff8c00", 
         borderWidth: 3,
-        marginRight: "8%",
-        marginLeft: "2%",
-        marginBottom: "2%"
+        marginRight: "30%",
+        marginLeft: "30%",
+        marginBottom: "2%",
+        marginTop: "2%"
     },
     leaveText: {
         color: "black", 
@@ -146,6 +168,21 @@ class TeamProfile extends Component {
         }
     };
 
+    constructor(props) {
+        super(props);
+        this.state = {
+          refreshing: true,
+          dataSource: null,
+          joinedEvent: false,
+         };
+        this._getData();
+    }
+
+    onRefresh() {
+        this.setState({ dataSource: [], joinedEvent: false });
+        this._getData();
+    }
+
     /* Takes the date and formats it to a readable state */
     formatDate(data) {
         var date = new Date(data);
@@ -168,56 +205,187 @@ class TeamProfile extends Component {
         return hour + ":" + min + " " + ampm + " " + (date.getUTCMonth() + 1) + "/" + date.getUTCDate() + "/" + date.getFullYear();
     }
 
+    _getData = async () => {
+        const { navigation } = this.props;
+
+        try {
+            const eventInfo = await backendRequest("/events/" + navigation.getParam("id", "invalid_id"), "GET");
+            await this.getName(eventInfo.organizers);
+            await this.setPlayers(eventInfo.players);
+            this.setState({
+             refreshing: false,
+             dataSource: eventInfo,
+            });
+            this.joinStatus();
+
+        } catch(error) {
+            Alert.alert("Get Event Info Error",error.message);
+        }
+    }
+
+    joinStatus = async () => {
+        const userId = await AsyncStorage.getItem(config.userIdKey);
+        var players = this.state.dataSource.players;
+        var joined = (players.includes(userId.toString()) || this.state.dataSource.organizers.includes(userId.toString()));
+
+        this.setState({
+            joinedEvent: joined
+        });
+    }
+
+    join = async () => {
+        const userId = await AsyncStorage.getItem(config.userIdKey);
+        const eventId = this.state.dataSource._id;
+        try{
+            if(this.state.joinedEvent){
+                await backendRequest("/events/" + eventId + "/requests/" + userId + "/leave", {}, "PUT", {});
+                this.setState({
+                    joinedEvent: false
+                });
+                this.setPlayers();
+            } else {
+                await backendRequest("/events/" + eventId + "/requests/" + userId + "/join", {}, "PUT", {});
+                this.setState({
+                    joinedEvent: true
+                });
+                this.setPlayers();
+            }
+            this.onRefresh();
+        } catch(error){
+            Alert.alert("Cannot join event",error.message);
+        }
+    }
+
+    buttonStyle(){
+        if(this.state.joinedEvent){
+            return {
+                width: "40%", 
+                borderRadius: 10, 
+                padding: 12, 
+                backgroundColor: "white", 
+                borderColor: "#ff8c00", 
+                borderWidth: 3,
+                marginRight: "30%",
+                marginLeft: "30%",
+                marginBottom: "2%",
+                marginTop: "2%",
+                alignSelf: "center"
+            };
+        } else {
+            return {
+                width: "40%", 
+                borderRadius: 10, 
+                padding: 12, 
+                backgroundColor: "#ff8c00", 
+                borderColor: "#ff8c00", 
+                borderWidth: 3,
+                marginLeft: "30%",
+                marginRight: "30%",
+                marginBottom: "2%",
+                marginTop: "2%",
+                alignSelf: "center"
+            };
+        }
+    }
+
+    getName = async(userId) => {
+        const userInfo = await (backendRequest("/users/" + userId, "GET"));
+        this.setState({
+            organizer : userInfo
+        });
+    }
+
+    setPlayers = async(players) => {
+        var playerNames = [];
+        var length = players.length;
+        for(var i = 0; i < length; i++){
+            const userInfo = await (backendRequest("/users/" + players[i], "GET"));
+            playerNames[i] = userInfo;
+        }
+        this.setState({
+            players : playerNames
+        });
+    }
+
+    getPlayer = async(userId) => {
+        const userInfo = await (backendRequest("/users/" + userId, "GET"));
+        const name = userInfo.firstName;
+        return{
+            name
+        };
+    }
+
+    renderItem = (data) =>
+    <View style = {{flexDirection: "row"}}>
+        <TouchableOpacity>
+            <View style = {{height: 150, width: "100%"}}>
+                <Text style={styles.players}>{data.item}</Text>
+            </View>
+        </TouchableOpacity>
+    </View>
+
     /* Displays the information about the event, given the parameters passed to the page */
     render(){
-        const { navigation } = this.props;
+        /* Renders a spinning wheel if we are refreshing */
+        if(this.state.refreshing){
+            return( 
+                <View style={styles.loader}> 
+                    <ScrollView>
+                        <ActivityIndicator size="large" color="black"/>
+                    </ScrollView>
+                </View>
+        );}
+
         return(
             <View style={{flex:1}}>
-                <ScrollView style = {{flexDirection: "column"}}>
+                <ScrollView 
+                    style = {{flexDirection: "column"}}
+                    refreshControl={<RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this.onRefresh.bind(this)}
+                      />}
+                >
                     <View style={styles.header}>
                         <Text style={styles.headerText}>
-                            {navigation.getParam("eventName", "No Event Name")}
+                            {this.state.dataSource.name}
                         </Text>
                     </View>
                     <View style={styles.subheader}>
                         <Text style={styles.sportText}>
-                            {navigation.getParam("sport", "No Sport Specified")} 
+                            {this.state.dataSource.sport}
                         </Text>
                         <Text style={styles.location}>
-                            {navigation.getParam("location", "No Location Specified")}
+                            {this.state.dataSource.address}
                         </Text>
                         <Text style={styles.dateText}>
-                            {this.formatDate(navigation.getParam("date", "No League Specified"))}
+                            {this.formatDate(this.state.dataSource.date)}
                         </Text>
                     </View>
                     <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
                     <Text style={styles.bio}>
-                        {navigation.getParam("eventBio", " ")}
+                        {this.state.dataSource.description}
                     </Text>
                     <Text style={styles.organizerTitle}>
                         Organizer
                     </Text>
                     <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
-                    <Text>
-                        {navigation.getParam("organizer", " ")}
+                    <Text style={styles.organizer}>
+                        {this.state.organizer.firstName}
                     </Text>
                     <Text style={styles.playersTitle}>
                         Players
                     </Text>
                     <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
-                    <Text>
-                        {navigation.getParam("players", " ")}
-                    </Text>
+                    <View style={styles.container}>
+                        { this.state.players.map((item, key) => (
+                            <Text key={item._id} style={styles.players}> {item.firstName} </Text>)
+                        )}
+                    </View>
                 </ScrollView>
                 <View style={{flexDirection: "row"}}>
-                    <TouchableOpacity style={styles.joinButton}>
+                    <TouchableOpacity style={this.buttonStyle()} onPress = {() => this.join()}>
                         <Text style={styles.joinText}>
-                            Join Event
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.leaveButton}>
-                        <Text style={styles.leaveText}>
-                            Leave Event
+                            {this.state.joinedEvent? "Leave Event" : "Join Event"}
                         </Text>
                     </TouchableOpacity>
                 </View>
