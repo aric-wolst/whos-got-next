@@ -4,6 +4,7 @@ import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import backendRequest from "../utils/RequestManager";
 import config from "../config";
+import formatDate from "../utils/formatDate";
 
 /* Style sheet for rendered items */
 const styles = StyleSheet.create({
@@ -163,12 +164,6 @@ class Teams extends Component {
         );
     }
 
-    /* Takes the date and formats it to a readable state */
-    formatDate(date) {
-        var dateFormatOptions = { weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "numeric"};
-        return new Date(date).toLocaleDateString("en-CA", dateFormatOptions);
-    }
-    
     /* Renders each individual event, that redirects to e new page when the event is pressed */
     renderItem = (data) =>
     <View style = {{flexDirection: "row"}}>
@@ -185,7 +180,7 @@ class Teams extends Component {
             <View style = {{height: 150, width: "100%"}}>
                 <Text style={styles.sport}>{data.item.sport}</Text>
                 <Text style={styles.titleName}>{data.item.name}</Text>
-                <Text style={styles.date}>{this.formatDate(data.item.date)}</Text>
+                <Text style={styles.date}>{formatDate(data.item.date)}</Text>
                 <Text style={styles.location}>{data.item.address}</Text>
             </View>
         </TouchableOpacity>

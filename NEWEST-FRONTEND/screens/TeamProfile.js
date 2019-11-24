@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {Button, StyleSheet, ScrollView, View, Text, ActivityIndicator, TouchableOpacity, Alert, AsyncStorage } from "react-native";
 import backendRequest from "../utils/RequestManager";
 import config from "../config";
+import formatDate from "../utils/formatDate";
 
 /* Style sheet for rendered items */
 const styles = StyleSheet.create({
@@ -161,12 +162,6 @@ class TeamProfile extends Component {
         this._getData();
     }
 
-    /* Takes the date and formats it to a readable state */
-    _formatDate(date) {
-        var dateFormatOptions = { weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "numeric"};
-        return new Date(date).toLocaleDateString("en-CA", dateFormatOptions);
-    }
-
     _getData = async () => {
         const { navigation } = this.props;
 
@@ -238,7 +233,7 @@ class TeamProfile extends Component {
                             {this.state.event.address}
                         </Text>
                         <Text style={styles.dateText}>
-                            {this._formatDate(this.state.event.date)}
+                            {formatDate(this.state.event.date)}
                         </Text>
                     </View>
                     <View style={{height: 0.5, width:"80%", backgroundColor:"#ff8c00", alignSelf: "center"}}/>
