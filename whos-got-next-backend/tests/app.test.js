@@ -233,6 +233,16 @@ describe("Event Manager Test", () => {
         });
     });
 
+    // Test get event.
+    test("Get event after user joined succeed", async (done) => {
+        request.get("/events/" + eventId).set({ requesttoken })
+        .expect(200).then((response) => {
+            expect(response.body.players[0]._id).toBe(userIds[1].toString());
+            expect(response.body._id).toBe(eventId);
+            done();
+        });
+    });
+
     // Test leave event.
     test("Leave event with non-existing user should fail", async (done) => {
         request.put("/events/" + eventId + "/requests/" + fakeId + "/leave").set({ requesttoken })
