@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Button, StyleSheet, ScrollView, View, Text, ActivityIndicator, TouchableOpacity, Alert, AsyncStorage } from "react-native";
+import {StyleSheet, ScrollView, View, Text, ActivityIndicator, TouchableOpacity, Alert, AsyncStorage } from "react-native";
 import backendRequest from "../utils/RequestManager";
 import config from "../config";
 import formatDate from "../utils/formatDate";
@@ -198,7 +198,6 @@ class EventProfile extends Component {
     }
 
     deleteEvent = async () => {
-        const userId = await AsyncStorage.getItem(config.userIdKey);
         const eventId = this.state.event._id;
         backendRequest("/events/" + eventId, {}, "DELETE", {}).catch((error) => {
             Alert.alert("Cannot delete event", error.message);

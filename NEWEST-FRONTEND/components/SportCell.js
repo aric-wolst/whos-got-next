@@ -47,9 +47,6 @@ class SportCell extends Component {
         const colorLevels = [layout.color.beginner,layout.color.intermediate,layout.color.elite];
         let color = colorLevels[this.props.level - 1];
 
-        // const levels = ["Beginner", "Intermediate", "Elite"];
-        // const level = levels[this.props.level - 1];
-
         return (
             <View style = {[styles.sportTab, {backgroundColor: color}]} >
               <View style = {styles.logo}>

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { AppRegistry, StyleSheet, Text, View, Image, TextInput } from "react-native";
+import { StyleSheet, Text, View, TextInput } from "react-native";
 
 
 const styles = StyleSheet.create({
@@ -42,6 +42,5 @@ export default class ProfileBio extends Component {
                 <TextInput multiline = {true} editable = {isEditing} maxLength = {200} style = {[styles.textBox, ...editableStyle]} onChangeText={(text) => {this.setState({ description: text});}} value={this.state.description} />
             </View>
         );
- {   }
-m}
+    }
 }

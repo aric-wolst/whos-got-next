@@ -81,7 +81,7 @@ class SignInScreen extends React.Component {
                   {
                     "type": "facebookId",
                     "identifier": json.id,
-                    "token": token
+                    token
                   },
                 "firstName": json.name,
                 "lastName": json.name,

@@ -69,7 +69,7 @@ class MyProfile extends Component {
 
     removeSport = () => {
         if(this.state.sport === "") {
-            Alert.alert("Invalid Entry", "Please fill in the Sport field.")
+            Alert.alert("Invalid Entry", "Please fill in the Sport field.");
         } else {
             AsyncStorage.getItem(config.userIdKey)
             .then((id) => {
@@ -78,7 +78,7 @@ class MyProfile extends Component {
                 var sportExists = 0;
                 var arrayLength = tempUser.sports.length;
                 for(i = 0; i < arrayLength; i++) {
-                    if(tempUser.sports[i].sport === this.state.sport) {
+                    if(tempUser.sports[parseInt(i)].sport === this.state.sport) {
                         sportExists = 1;
                         break;
                     }
@@ -96,13 +96,13 @@ class MyProfile extends Component {
                 } else {
                     Alert.alert("Error", "Sport does not exist in your profile.");
                 }
-            })
+            });
         }
     }
 
     addSport = () => {
         if(this.state.sport === "" || this.state.level === 0 ) {
-            Alert.alert("Invalid Entry", "Please fill in the Sport/Level fields.")
+            Alert.alert("Invalid Entry", "Please fill in the Sport/Level fields.");
         } else {
             AsyncStorage.getItem(config.userIdKey)
             .then((id) => {
@@ -112,9 +112,9 @@ class MyProfile extends Component {
                 var sameLevel = 0;
                 var arrayLength = tempUser.sports.length;
                 for (i = 0; i < arrayLength; i++) {
-                    if(tempUser.sports[i].sport === this.state.sport) {
+                    if(tempUser.sports[parseInt(i)].sport === this.state.sport) {
                         sportExists = 1;
-                        if(tempUser.sports[i].level === this.state.level) {
+                        if(tempUser.sports[parseInt(i)].level === this.state.level) {
                             sameLevel = 1;
                             break;
                         }
@@ -124,7 +124,7 @@ class MyProfile extends Component {
                 if(sportExists && sameLevel) {
                     Alert.alert("Error","Sport/Level already exists on your profile.");
                 } else if( sportExists ) {
-                    tempUser.sports[i].level = this.state.level;
+                    tempUser.sports[parseInt(i)].level = this.state.level;
                     backendRequest("/users/" + id, {}, "PUT", {
                         "sports": tempUser.sports,
                     }).then ( (savedUser) => {
@@ -153,8 +153,8 @@ class MyProfile extends Component {
     _toggleEditingProfile = () => {
         this.props.navigation.setParams({editButtonTitle: (this.state.isEditingProfile) ? "Edit" : "Done"});
         if (this.state.isEditingProfile) {
-            if(this.state.user.firstName != this.userProfile.header.state.firstName || this.state.user.gender != this.userProfile.header.state.gender
-                || this.state.user.description != this.userProfile.bio.state.description ) {
+            if(this.state.user.firstName !== this.userProfile.header.state.firstName || this.state.user.gender !== this.userProfile.header.state.gender
+                || this.state.user.description !== this.userProfile.bio.state.description ) {
                 AsyncStorage.getItem(config.userIdKey)
                 .then((id) => {
                     backendRequest("/users/" + id, {}, "PUT", {

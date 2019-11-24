@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { AsyncStorage, Alert, StyleSheet, Button, View, Text, TextInput, KeyboardAvoidingView, Keyboard, ScrollView } from "react-native";
+import { AsyncStorage, Alert, StyleSheet, Button, View, Text, TextInput, KeyboardAvoidingView, ScrollView } from "react-native";
 import { Dropdown } from "react-native-material-dropdown";
 import backendRequest from "../utils/RequestManager";
 import config from "../config";
