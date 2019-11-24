@@ -123,10 +123,11 @@ router.post("/", (req, res) => {
 
 // Get the local time of an event given timezone
 function getTime(req) {
+    let currentDate = new Date();
     let timezone = req.timezone;
-    let date = moment().tz(timezone).format();
-    console.log(date);
-    return date;
+    let date = moment(currentDate).tz(timezone).format("YYYY-MM-DD HH:mm:ss");
+    let newDate = new Date(date);
+    return newDate;
 }
 
 router.get("/:eventId", (req, res) => {
