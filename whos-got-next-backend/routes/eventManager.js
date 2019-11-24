@@ -8,6 +8,9 @@
 // Time zone manipulation
 const moment = require('moment-timezone');
 
+//Scheduler
+const schedule = require('node-schedule');
+
 const express = require("express");
 const router = new express.Router();
 const defineRegion = require("../utils/region.js");
@@ -114,6 +117,12 @@ router.post("/", (req, res) => {
             res.status(200).send(savedEvent);
             const notification = {title: "New Event: " + savedEvent.name, body: "There is a new event near you."};
             sendPushNotificationToUsersNear(notification, savedEvent.location, 5);
+
+            //Schedule event deletion after expiry
+            let expiryDate = event.date;
+            expiryDate.setMinutes(event.date.getMinutes()+2);
+            console.log("Expiry date = " + expiryDate);
+            schedule.scheduleJob(expiryDate, deleteExpiredEvent(event._id));
         }).catch((err) => {
             guardDefaultError(err, res);
         });
@@ -129,6 +138,11 @@ function getTime(req) {
     let date = moment(currentDate).tz(timezone).format("YYYY-MM-DD HH:mm:ss");
     let newDate = new Date(date);
     return newDate;
+}
+
+function deleteExpiredEvent(id) {
+    Event.findByIdAndDelete(id);
+    console.log("Event deleted");
 }
 
 router.get("/:eventId", (req, res) => {
