@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold"
     },
     profileInfo: {
+        backgroundColor: layout.color.mainColor,
         marginVertical: 3,
         fontSize: 14
     },
