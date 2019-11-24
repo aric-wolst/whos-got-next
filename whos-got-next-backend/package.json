@@ -28,9 +28,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "moment-timezone": "^0.5.27",
-    "mongoose": "^5.7.5",
-    "passport-auth-token": "^1.0.1",
-    "passport-facebook": "^3.0.0"
+    "mongoose": "^5.7.5"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.7.1",

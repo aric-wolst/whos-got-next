@@ -24,12 +24,10 @@ git pull --depth=1 origin master
 Read more here: https://stackoverflow.com/a/28039894.
 
 ## Running the tests
-
-*Missing explanation of how to run automated tests (currently there are none).*
-
-### Break down into end to end tests
-
-*Missing description of tests (currently there are none).*
+Simply open terminal at the whos-got-next-backend directory and run `npm test`. To get a coverage report run
+```
+cross-env NODE_ENV=production node app.js --coverage
+```
 
 ## Built With
 
@@ -37,4 +35,8 @@ Read more here: https://stackoverflow.com/a/28039894.
 * npm (https://www.npmjs.com) - Package manager.
 * express.js (https://expressjs.com) - Lightweight framework for setting up an HTTP REST server more easily.
 * mongoose (https://mongoosejs.com/) - Schema-based framework for mongoDB (provides validation, type-casting and more).
-* expo-server-sdk (https://github.com/expo/expo-server-sdk-node)
+* expo-server-sdk (https://github.com/expo/expo-server-sdk-node) - Server-side library for working with Expo using Node.js (used for sending push notifications).
+* axios (https://github.com/axios/axios) - Promise based client for making HTTP requests.
+* bunyan (https://github.com/trentm/node-bunyan) -  Simple and fast JSON logging module.
+* jsonwebtoken (https://jwt.io) - Node library for Generation and Authentication of Request tokens used to secure requests.
+* moment-timezone (https://momentjs.com/timezone/) - Node library for parsing and displaying dates in any timezone (used for dates in events).
