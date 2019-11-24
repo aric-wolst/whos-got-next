@@ -173,9 +173,9 @@ router.get("/:eventId", (req, res) => {
             if (guardDefaultError(err,res)) {return;}
             const responseEvent = event._doc;
             responseEvent.organizers = organizers;
-            
+
             if (event.players.length > 0) {
-                User.find({_id: {$in: event.players}}).then((err, players) => {
+                User.find({_id: {$in: event.players}}, (err, players) => {
                     if (guardDefaultError(err,res)) {return;}
                     responseEvent.players = players;
                     res.status(200).send(responseEvent);
