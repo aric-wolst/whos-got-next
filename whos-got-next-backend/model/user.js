@@ -1,9 +1,15 @@
 const mongoose = require("mongoose");
 const Auth = require("../model/auth.js");
 const pointSchema = require("../model/point.js");
-const localconfig = require("../localconfig");
-const key = localconfig.privateKey;
-const jwt = require('jsonwebtoken');
+
+// Load Local Config if not in test environment.catch
+let key;
+if (process.env.NODE_ENV !== "test") {
+    const localconfig = require("../localconfig");
+    key = localconfig.privateKey;
+}
+
+const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema({
     authentication: {
@@ -63,6 +69,9 @@ const userSchema = new mongoose.Schema({
 
 //Generate Authentication Token
 userSchema.methods.generateAuthToken = function() {
+    // Generate random request token in test environment.
+    if (process.env.NODE_ENV === "test") { return "TestKey"; }
+
     const token = jwt.sign({fbToken: this.authentication.token}, key);
     return token;
 };

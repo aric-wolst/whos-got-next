@@ -7,18 +7,22 @@ const bunyan = require("bunyan");
 const log = bunyan.createLogger({name: "whosgotnext-authentication"});
 
 //Get facebook app config strings
-const localconfig = require("../localconfig");
-const appID = localconfig.fbAppID;
-const appSecret =localconfig.fbAppSecret;
-const key = localconfig.privateKey;
-
-//Get access_token to pass to pass to authentication request
-const accessTokenUrl = "https://graph.facebook.com/oauth/access_token?client_id="
+let appID, appSecret, key, accessTokenUrl;
+if (process.env.NODE_ENV !== "test") {
+    const localconfig = require("../localconfig");
+    appID = localconfig.fbAppID;
+    appSecret =localconfig.fbAppSecret;
+    key = localconfig.privateKey;
+    accessTokenUrl = "https://graph.facebook.com/oauth/access_token?client_id="
                         + appID + "&client_secret=" + appSecret
                         + "&grant_type=client_credentials";
+}
 
 async function authenticateWithFB(inputToken) {
     return new Promise((resolve,reject) => {
+        // Accept any request token in test environment.
+        if (process.env.NODE_ENV === "test") { return resolve(); }
+
         axios.get(accessTokenUrl).then((response) => {
             const appToken = response.data.access_token;
             const authUrl = "https://graph.facebook.com/debug_token?input_token="
